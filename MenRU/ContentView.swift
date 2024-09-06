@@ -26,27 +26,47 @@ let placesShortened = [
     "Neilson Dining Hall" : "Neilson",
     "The Atrium" : "The Atrium"
 ];
+let meals = [
+    "Breakfast",
+    "Lunch",
+    "Dinner"
+]
 
 struct ContentView: View {
     @State private var menu : [Category] = [Category]()
+    @State private var selectedMeal = "Breakfast"
     
     var body: some View {
         NavigationStack {
             List {
                 ForEach(Array(places.keys), id: \.self) { place in
                     NavigationLink {
-                        List {
-                            ForEach(menu) { category in
-                                Section(header: Text(category.name)) {
-                                    ForEach(category.items) { item in
-                                        Text(item.name)
+                        VStack {
+                            Picker("Meal", selection: $selectedMeal) {
+                                ForEach(meals, id: \.self) { meal in
+                                    Text(meal)
+                                }
+                            }
+                            .onChange(of: selectedMeal) {
+                                Task {
+                                    menu = try! await fetchMenu(place: place, meal: selectedMeal)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                            .fixedSize()
+                            List {
+                                ForEach(menu) { category in
+                                    Section(header: Text(category.name)) {
+                                        ForEach(category.items) { item in
+                                            Text(item.name)
+                                        }
                                     }
                                 }
                             }
+                            .navigationTitle(placesShortened[place]! + " Menu")
                         }
-                        .navigationTitle(placesShortened[place]! + " Menu")
                         .task {
-                            menu = try! await fetchMenu(place: place)
+                            menu = try! await fetchMenu(place: place, meal: selectedMeal)
                         }
                     } label: {
                         VStack (alignment: HorizontalAlignment.leading) {
@@ -71,8 +91,8 @@ struct ContentView: View {
         let id = UUID()
     }
     
-    func fetchMenu(place: String) async throws -> [Category] {
-        let url = URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/pickmenu.aspx?locationNum=" + places[place]! + "&locationName=" + place.replacingOccurrences(of: " ", with: "+") + "&dtdate=09/06/2024&activeMeal=Breakfast&sName=Rutgers+University+Dining")!
+    func fetchMenu(place: String, meal: String) async throws -> [Category] {
+        let url = URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/pickmenu.aspx?locationNum=" + places[place]! + "&locationName=" + place.replacingOccurrences(of: " ", with: "+") + "&dtdate=09/06/2024&activeMeal=" + meal + "&sName=Rutgers+University+Dining")!
         
         let (data, _) = try await URLSession.shared.data(from: url)
         
