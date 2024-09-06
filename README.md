@@ -6,6 +6,8 @@ Rutgers dining hall menu app for iOS in Swift using SwiftUI and [SwiftSoup](http
 - Parses data using SwiftSoup
 
 ## Screenshots
-![](dining-hall.png)
-![](menu.png)
-![](items.png)
+<div display="flex">
+  <img src="./screenshots/dining-halls.png" width="33%">
+  <img src="./screenshots/menu.png" width="33%">
+  <img src="./screenshots/items.png" width="33%">
+</div>
