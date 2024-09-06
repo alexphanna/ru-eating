@@ -14,6 +14,8 @@
 		FA8A329F2C8B5ECA00D30147 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = FA8A329E2C8B5ECA00D30147 /* SwiftSoup */; };
 		FA8A32A12C8B84F900D30147 /* DiningHallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8A32A02C8B84F900D30147 /* DiningHallView.swift */; };
 		FA8A32A32C8B8A7A00D30147 /* ItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8A32A22C8B8A7A00D30147 /* ItemsView.swift */; };
+		FA8A32A52C8B94E700D30147 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8A32A42C8B94E700D30147 /* Item.swift */; };
+		FA8A32A72C8B990F00D30147 /* ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8A32A62C8B990F00D30147 /* ItemView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		FA8A32942C8B585F00D30147 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		FA8A32A02C8B84F900D30147 /* DiningHallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningHallView.swift; sourceTree = "<group>"; };
 		FA8A32A22C8B8A7A00D30147 /* ItemsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsView.swift; sourceTree = "<group>"; };
+		FA8A32A42C8B94E700D30147 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		FA8A32A62C8B990F00D30147 /* ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +67,8 @@
 				FA8A32912C8B585F00D30147 /* Assets.xcassets */,
 				FA8A32932C8B585F00D30147 /* Preview Content */,
 				FA8A32A22C8B8A7A00D30147 /* ItemsView.swift */,
+				FA8A32A42C8B94E700D30147 /* Item.swift */,
+				FA8A32A62C8B990F00D30147 /* ItemView.swift */,
 			);
 			path = MenRU;
 			sourceTree = "<group>";
@@ -151,6 +157,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA8A32A52C8B94E700D30147 /* Item.swift in Sources */,
+				FA8A32A72C8B990F00D30147 /* ItemView.swift in Sources */,
 				FA8A32A12C8B84F900D30147 /* DiningHallView.swift in Sources */,
 				FA8A32902C8B585D00D30147 /* ContentView.swift in Sources */,
 				FA8A328E2C8B585D00D30147 /* MenRUApp.swift in Sources */,

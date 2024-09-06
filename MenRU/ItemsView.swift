@@ -21,15 +21,15 @@ struct ItemsView : View {
         "Dinner"
     ]
     
-    @State private var items : Set<String> = Set<String>()
+    @State private var items : Set<Item> = Set<Item>()
     @State private var searchText = ""
     
-    var searchResults: [String] {
+    var searchResults: [Item] {
         if (searchText.isEmpty) {
-            return Array(items).sorted()
+            return Array(items)
         }
         else {
-            return Array(items).sorted().filter { $0.lowercased().contains(searchText.lowercased()) }
+            return Array(items).filter { $0.name.lowercased().contains(searchText.lowercased()) }
         }
     }
     
@@ -37,7 +37,11 @@ struct ItemsView : View {
         NavigationStack {
             List {
                 ForEach(searchResults, id: \.self) { item in
-                    Text(item)
+                    NavigationLink {
+                        ItemView(item: item)
+                    } label: {
+                        Text(item.name)
+                    }
                 }
             }
             .task {
@@ -54,8 +58,8 @@ struct ItemsView : View {
         .searchable(text: $searchText)
     }
     
-    func fetchItems() async throws -> Set<String> {
-        var items: Set = Set<String>()
+    func fetchItems() async throws -> Set<Item> {
+        var items: Set = Set<Item>()
         for place in Array(places.keys) {
             for meal in meals {
                 let url = URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/pickmenu.aspx?locationNum=" + places[place]! + "&locationName=" + place.replacingOccurrences(of: " ", with: "+") + "&dtdate=09/06/2024&activeMeal=" + meal + "&sName=Rutgers+University+Dining")!
@@ -66,10 +70,9 @@ struct ItemsView : View {
                 
                 let labels = try! doc.select("div.menuBox fieldset div.col-1 label").array()
                 
-                var menu = [Category]();
                 for label in labels {
                     // capitalize items
-                    items.insert(try! label.attr("name").capitalized)
+                    items.insert(Item(name: try! label.attr("name").capitalized, id: try! label.attr("for")))
                 }
             }
         }

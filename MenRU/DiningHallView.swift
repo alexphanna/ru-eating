@@ -58,7 +58,11 @@ struct DiningHallView : View {
                                 ForEach(menu) { category in
                                     Section(header: Text(category.name)) {
                                         ForEach(category.items) { item in
-                                            Text(item.name)
+                                            NavigationLink {
+                                                ItemView(item: item)
+                                            } label: {
+                                                Text(item.name)
+                                            }
                                         }
                                     }
                                 }
@@ -86,11 +90,6 @@ struct DiningHallView : View {
         let id = UUID()
     }
     
-    struct Item : Hashable, Identifiable {
-        let name : String
-        let id = UUID()
-    }
-    
     func fetchMenu(place: String, meal: String) async throws -> [Category] {
         let url = URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/pickmenu.aspx?locationNum=" + places[place]! + "&locationName=" + place.replacingOccurrences(of: " ", with: "+") + "&dtdate=09/06/2024&activeMeal=" + meal + "&sName=Rutgers+University+Dining")!
         
@@ -110,7 +109,7 @@ struct DiningHallView : View {
             }
             if (element.tagName() == "label") {
                 // capitalize items
-                menu[menu.count - 1].items.append(Item(name: try! element.attr("name").capitalized))
+                menu[menu.count - 1].items.append(Item(name: try! element.attr("name").capitalized, id: try! element.attr("for")))
             }
         }
         
