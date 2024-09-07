@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftSoup
 
-struct DiningHallView : View {
+struct DiningHallsView : View {
     let places = [
         "Busch Dining Hall" : "04",
         "Livingston Dining Commons" : "03",
@@ -35,25 +35,14 @@ struct DiningHallView : View {
 
     @State private var menu : [Category] = [Category]()
     @State private var selectedMeal = "Breakfast"
+    @State private var selectedDate = Date.now
     
     var body : some View {
         NavigationStack {
             List {
-                ForEach(Array(places.keys), id: \.self) { place in
+                ForEach(Array(places.keys).sorted(), id: \.self) { place in
                     NavigationLink {
                         VStack {
-                            Picker("Meal", selection: $selectedMeal) {
-                                ForEach(meals, id: \.self) { meal in
-                                    Text(meal)
-                                }
-                            }
-                            .onChange(of: selectedMeal) {
-                                Task {
-                                    menu = try! await fetchMenu(place: place, meal: selectedMeal)
-                                }
-                            }
-                            .pickerStyle(.segmented)
-                            .padding()
                             List {
                                 ForEach(menu) { category in
                                     Section(header: Text(category.name)) {
@@ -67,7 +56,24 @@ struct DiningHallView : View {
                                     }
                                 }
                             }
-                            .navigationTitle(placesShortened[place]! + " Menu")
+                        }
+                        .navigationTitle("")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .principal) {
+                                Picker("Meal", selection: $selectedMeal) {
+                                    ForEach(meals, id: \.self) { meal in
+                                        Text(meal)
+                                    }
+                                }
+                                .onChange(of: selectedMeal) {
+                                    Task {
+                                        menu = try! await fetchMenu(place: place, meal: selectedMeal)
+                                    }
+                                }
+                                .pickerStyle(.segmented)
+                                .fixedSize()
+                            }
                         }
                         .task {
                             menu = try! await fetchMenu(place: place, meal: selectedMeal)
@@ -91,12 +97,9 @@ struct DiningHallView : View {
     }
     
     func fetchMenu(place: String, meal: String) async throws -> [Category] {
-        let url = URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/pickmenu.aspx?locationNum=" + places[place]! + "&locationName=" + place.replacingOccurrences(of: " ", with: "+") + "&dtdate=09/06/2024&activeMeal=" + meal + "&sName=Rutgers+University+Dining")!
-        
-        let (data, _) = try await URLSession.shared.data(from: url)
-        
-        let doc = try! SwiftSoup.parse(String(data: data, encoding: .utf8)!)
-        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yyyy"
+        let doc = try await fetchDoc(url: URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/pickmenu.aspx?locationNum=" + places[place]! + "&locationName=" + place.replacingOccurrences(of: " ", with: "+") + "&dtdate=" + dateFormatter.string(from: Date.now) + "&activeMeal=" + meal + "&sName=Rutgers+University+Dining")!)
         let elements = try! doc.select("div.menuBox h3, div.menuBox fieldset div.col-1 label").array()
         
         var menu = [Category]();
@@ -113,7 +116,6 @@ struct DiningHallView : View {
             }
         }
         
-        // remove duplicate items
         return menu;
     }
 }

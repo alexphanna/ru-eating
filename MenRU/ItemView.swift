@@ -9,10 +9,62 @@ import SwiftUI
 import SwiftSoup
 
 struct ItemView: View {
-    let facts = [
+    
+    @State var item: Item
+    @State private var amounts = [String : String]()
+    @State private var dailyValues = [String : String]()
+    @State private var ingredients : String = ""
+    @State private var selectedUnit : String = "Amount"
+    var body : some View {
+        
+        let dict = [
+            "Amount" : amounts,
+            "Daily Value" : dailyValues
+        ]
+        
+        NavigationStack {
+            VStack {
+                if amounts.isEmpty {
+                    Text("Nutritional information is not available for this item")
+                }
+                else {
+                    List {
+                        Section("Nutrition Facts") {
+                            Picker("Unit", selection: $selectedUnit) {
+                                ForEach (["Amount", "Daily Value"], id: \.self) { unit in
+                                    Text(unit)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                            .listRowSeparator(.hidden)
+                            .padding()
+                            .listRowInsets(EdgeInsets())
+                            ForEach(Array(dict[selectedUnit]!.keys), id: \.self) { key in
+                                LabeledContent(key, value: dict[selectedUnit]![key]!)
+                            }
+                        }
+                        Section("Ingredients") {
+                            Text(ingredients).font(.footnote).italic().foregroundStyle(.gray)
+                        }
+                    }
+                }
+            }
+            .navigationTitle(item.name)
+            .navigationBarTitleDisplayMode(.inline)
+            .task {
+                amounts = try! await fetchAmounts(itemID: item.id)
+                
+                dailyValues = try! await fetchDailyValues(itemID: item.id)
+                
+                ingredients = try! await fetchIngredients(itemID: item.id)
+            }
+        }
+    }
+    
+    let amountNutrients = [
         "Calories" : "Calories",
-        "Total Fat" : "Total Fat",
-        "Tot. Carb" : "Total Carbohydrates",
+        "Total Fat" : "Fat",
+        "Tot. Carb." : "Carbohydrates",
         "Sat. Fat" : "Saturated Fat",
         "Dietary Fiber" : "Dietary Fiber",
         "Trans Fat" : "Trans Fat",
@@ -21,77 +73,74 @@ struct ItemView: View {
         "Protein" : "Protein",
         "Sodium" : "Sodium"
     ]
+    let dailyValueNutrients = [
+        "Calories" : "Calories",
+        "Protein" : "Protein",
+        "Fat" : "Fat",
+        "Carbohydrates" : "Carbohydrates",
+        "Cholesterol" : "Cholesterol",
+        "Total Sugars" : "Sugars",
+        "Dietary Fiber" : "Dietary Fiber",
+        "Sodium" : "Sodium",
+        "Saturated Fat" : "Saturated Fat",
+        "Calcium" : "Calcium",
+        "Trans Fatty Acid" : "Trans Fat",
+        "Mono Fat" : "Mono Fat",
+        "Poly Fat" : "Poly Fat",
+        "Iron" : "Iron"
+    ];
     
-    @State var item: Item
-    @State private var nutrition = [NutritionFact]()
-    @State private var ingredients : String = ""
+    func hasNutritionalReport(doc: Document) -> Bool {
+        return try! doc.select("h2:contains(Nutritional Information is not available for this recipe.)").array().count == 0
+    }
     
-    var body : some View {
-        NavigationStack {
-            List {
-                Section("Nutrition Facts") {
-                    ForEach(nutrition) { fact in
-                        LabeledContent(fact.nutrient, value: fact.amount)
-                    }
-                }
-                Section("Ingredients") {
-                    Text(ingredients).font(.footnote).italic().foregroundStyle(.gray)
-                }
-            }
-            .navigationTitle(item.name)
-            .task {
-                nutrition = try! await fetchNutrition(itemID: item.id)
-                
-                ingredients = try! await fetchIngredients(itemID: item.id)
-            }
+    func fetchAmounts(itemID: String) async throws -> [String : String] {
+        let doc = try await fetchDoc(url: URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/label.aspx?&RecNumAndPort=" + itemID + "*1")!)
+        if !hasNutritionalReport(doc: doc) {
+            return [String : String]()
         }
-    }
-    
-    struct NutritionFact: Hashable, Identifiable {
-        let nutrient: String
-        let amount: String
-        let id = UUID()
-    }
-    
-    func fetchNutrition(itemID: String) async throws -> [NutritionFact] {
-        let url = URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/label.aspx?&RecNumAndPort=" + itemID + "*1")!
+        let elements = try! doc.select("div#nutritional-info table td, div#nutritional-info p.strong").array()
         
-        let (data, _) = try await URLSession.shared.data(from: url)
-        
-        let doc = try! SwiftSoup.parse(String(data: data, encoding: .utf8)!)
-        
-        let elements = try! doc.select("table td, div#nutritional-info p.strong").array()
-        
-        var nutrition = [NutritionFact]();
-        var nutrient = ""
+        var amounts = [String : String]();
         for element in elements {
             let text = try! element.text()
-            var isFact = false;
-            for fact in Array(facts.keys) {
-                if text.contains(fact) {
-                    isFact = true
-                    nutrient = fact
-                    break
-                }
-            }
+            let textArray = text.split(separator: "\u{00A0}")
             
-            if isFact {
-                let textArray = text.split(separator: "\u{00A0}")
-                
-                nutrition.append(NutritionFact(nutrient: facts[nutrient]!, amount: String(textArray[1])))
+            if textArray.count != 2 {
+                continue
             }
+            amounts[amountNutrients[String(textArray[0])]!] = String(textArray[1])
         }
         
-        return nutrition;
+        return amounts;
+    }
+    
+    func fetchDailyValues(itemID: String) async throws -> [String : String] {
+        let doc = try await fetchDoc(url: URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/label.aspx?&RecNumAndPort=" + itemID + "*1")!)
+        if !hasNutritionalReport(doc: doc) {
+            return [String : String]()
+        }
+        let elements = try! doc.select("div#nutritional-info ul li").array()
+        
+        var dailyValues = [String : String]();
+        for element in elements {
+            let text = try! element.text()
+            let textArray = text.split(separator: " \u{00A0}\u{00A0}")
+            
+            if textArray.count != 2 {
+                continue
+            }
+            dailyValues[dailyValueNutrients[String(textArray[0])]!] = String(textArray[1])
+        }
+        
+        return dailyValues;
     }
     
     func fetchIngredients(itemID: String) async throws -> String {
-        let url = URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/label.aspx?&RecNumAndPort=" + itemID + "*1")!
-        
-        let (data, _) = try await URLSession.shared.data(from: url)
-        
-        let doc = try! SwiftSoup.parse(String(data: data, encoding: .utf8)!)
-        
+        let doc = try await fetchDoc(url: URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/label.aspx?&RecNumAndPort=" + itemID + "*1")!)
+        if !hasNutritionalReport(doc: doc) {
+            return ""
+        }
         let elements = try! doc.select("div.col-md-12 > p").array()
         
         let text = try! elements[0].text()
