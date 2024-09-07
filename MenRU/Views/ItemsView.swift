@@ -37,11 +37,7 @@ struct ItemsView : View {
         NavigationStack {
             List {
                 ForEach(searchResults, id: \.self) { item in
-                    NavigationLink {
-                        ItemView(item: item)
-                    } label: {
-                        Text(item.name)
-                    }
+                    ItemView(item: item)
                 }
             }
             .task {

@@ -36,27 +36,20 @@ struct DiningHallsView : View {
     @State private var menu : [Category] = [Category]()
     @State private var selectedMeal = "Breakfast"
     @State private var selectedDate = Date.now
+    @State private var isShowingSheet = false
+    @Environment(Settings.self) private var settings
     
     var body : some View {
         NavigationStack {
             List {
                 ForEach(Array(places.keys).sorted(), id: \.self) { place in
                     NavigationLink {
-                        VStack {
-                            List {
-                                ForEach(menu) { category in
-                                    Section(header: Text(category.name)) {
-                                        ForEach(category.items) { item in
-                                            NavigationLink {
-                                                ItemView(item: item)
-                                            } label: {
-                                                Text(item.name)
-                                            }
-                                        }
-                                    }
-                                }
+                        List {
+                            ForEach(menu) { category in
+                                MenuSectionView(category: category)
                             }
                         }
+                        .listStyle(.sidebar)
                         .navigationTitle("")
                         .navigationBarTitleDisplayMode(.inline)
                         .toolbar {
@@ -87,13 +80,17 @@ struct DiningHallsView : View {
                 }
             }
             .navigationTitle("Dining Halls")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: { isShowingSheet = true }, label: {
+                        Image(systemName: "gear")
+                    })
+                }
+            }
+            .sheet(isPresented: $isShowingSheet, content: {
+                SettingsView(settings: settings)
+            })
         }
-    }
-    
-    struct Category : Hashable, Identifiable {
-        let name : String
-        var items : [Item]
-        let id = UUID()
     }
     
     func fetchMenu(place: String, meal: String) async throws -> [Category] {
