@@ -1,4 +1,4 @@
-# <img src="MenRU/Assets.xcassets/AppIcon.appiconset/MenRU.png" width="32" /> MenRU
+# <img src="MenRU/Assets.xcassets/AppIcon.appiconset/MenRU.png" width="22" /> MenRU
 Rutgers dining hall menu app for iOS in Swift using SwiftUI and [SwiftSoup](https://github.com/scinfu/SwiftSoup).
 
 ## Features
