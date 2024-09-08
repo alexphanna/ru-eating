@@ -13,3 +13,7 @@ func fetchDoc(url: URL) async throws -> Document {
     
     return try! SwiftSoup.parse(String(data: data, encoding: .utf8)!)
 }
+
+func hasNutritionalReport(doc: Document) -> Bool {
+    return try! doc.select("h2:contains(Nutritional Information is not available for this recipe.)").array().count == 0
+}

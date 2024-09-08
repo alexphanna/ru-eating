@@ -9,11 +9,11 @@ import SwiftUI
 
 struct MenuSectionView : View {
     @State var category: Category
-    @State var sectionExpanded: Bool = true
+    @Bindable var menuSectionSettings: MenuSectionSettings = MenuSectionSettings()
     
     var body : some View {
         Section(
-            isExpanded: $sectionExpanded,
+            isExpanded: $menuSectionSettings.sectionExpanded,
             content: {
                 ForEach(category.items) { item in
                     ItemView(item: item)
@@ -21,4 +21,9 @@ struct MenuSectionView : View {
             },
             header: { Text(category.name) })
     }
+}
+
+// persists collapsed sections when going in and out of view
+@Observable class MenuSectionSettings {
+    var sectionExpanded: Bool = true
 }

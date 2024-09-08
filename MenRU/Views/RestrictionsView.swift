@@ -16,7 +16,7 @@ struct RestrictionsView : View {
             ForEach(settings.restrictions, id: \.self) { restriction in
                 Text(restriction)
             }
-            .onDelete(perform: delete)
+            .onDelete(perform: { settings.restrictions.remove(atOffsets: $0) })
         }
         .navigationTitle("Dietary Restrictions")
         .toolbar {
@@ -32,9 +32,5 @@ struct RestrictionsView : View {
         .sheet(isPresented: $isSheetShowing) {
             AddRestrictionView(settings: settings)
         }
-    }
-    
-    func delete(at offsets: IndexSet) {
-        settings.restrictions.remove(atOffsets: offsets)
     }
 }

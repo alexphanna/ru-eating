@@ -8,7 +8,11 @@
 import SwiftUI
 import SwiftSoup
 
-struct ItemsView : View {
+struct AddItemsView : View {
+    @Environment(\.dismiss) var dismiss
+    @Environment(Settings.self) private var settings
+    @State var meal: Category
+    
     let places = [
         "Busch Dining Hall" : "04",
         "Livingston Dining Commons" : "03",
@@ -21,7 +25,7 @@ struct ItemsView : View {
         "Dinner"
     ]
     
-    @State private var items : Set<Item> = Set<Item>()
+    @State private var items = OrderedSet<Item>()
     @State private var searchText = ""
     
     var searchResults: [Item] {
@@ -37,25 +41,36 @@ struct ItemsView : View {
         NavigationStack {
             List {
                 ForEach(searchResults, id: \.self) { item in
-                    ItemView(item: item)
+                    if !meal.items.contains(item) {
+                        Button(item.name) {
+                            meal.items.append(item)
+                            dismiss()
+                        }
+                        .foregroundStyle(.primary)
+                    }
                 }
             }
             .task {
                 do {
-                    items = try await fetchItems()
+                    try await fetchItems()
                 } catch is CancellationError {
                     print("task cancelled")
                 } catch {
                     print("\(error)")
                 }
             }
+            .navigationTitle("Add Item")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel", action: { dismiss() })
+                }
+            }
         }
-        .navigationTitle("Items")
         .searchable(text: $searchText)
     }
     
-    func fetchItems() async throws -> Set<Item> {
-        var items: Set = Set<Item>()
+    func fetchItems() async throws {
         for place in Array(places.keys) {
             for meal in meals {
                 let url = URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/pickmenu.aspx?locationNum=" + places[place]! + "&locationName=" + place.replacingOccurrences(of: " ", with: "+") + "&dtdate=09/06/2024&activeMeal=" + meal + "&sName=Rutgers+University+Dining")!
@@ -68,11 +83,9 @@ struct ItemsView : View {
                 
                 for label in labels {
                     // capitalize items
-                    items.insert(Item(name: try! label.attr("name").capitalized, id: try! label.attr("for")))
+                    items.append(Item(name: try! label.attr("name").capitalized, id: try! label.attr("for"), isFavorite: settings.favoriteItemsIDs.contains(try! label.attr("for"))))
                 }
             }
         }
-        
-        return items
     }
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftSoup
 
-struct DiningHallsView : View {
+struct MenusView : View {
     let places = [
         "Busch Dining Hall" : "04",
         "Livingston Dining Commons" : "03",
@@ -33,7 +33,7 @@ struct DiningHallsView : View {
         "Dinner"
     ]
 
-    @State private var menu : [Category] = [Category]()
+    @State private var menu : Menu = Menu()
     @State private var selectedMeal = "Breakfast"
     @State private var selectedDate = Date.now
     @State private var isShowingSheet = false
@@ -45,7 +45,7 @@ struct DiningHallsView : View {
                 ForEach(Array(places.keys).sorted(), id: \.self) { place in
                     NavigationLink {
                         List {
-                            ForEach(menu) { category in
+                            ForEach(menu.categories) { category in
                                 MenuSectionView(category: category)
                             }
                         }
@@ -61,7 +61,7 @@ struct DiningHallsView : View {
                                 }
                                 .onChange(of: selectedMeal) {
                                     Task {
-                                        menu = try! await fetchMenu(place: place, meal: selectedMeal)
+                                        menu.categories = try! await fetchMenu(place: place, meal: selectedMeal)
                                     }
                                 }
                                 .pickerStyle(.segmented)
@@ -69,7 +69,9 @@ struct DiningHallsView : View {
                             }
                         }
                         .task {
-                            menu = try! await fetchMenu(place: place, meal: selectedMeal)
+                            if menu.categories.isEmpty {
+                                menu.categories = try! await fetchMenu(place: place, meal: selectedMeal)
+                            }
                         }
                     } label: {
                         VStack (alignment: HorizontalAlignment.leading) {
@@ -79,7 +81,7 @@ struct DiningHallsView : View {
                     }
                 }
             }
-            .navigationTitle("Dining Halls")
+            .navigationTitle("Menus")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: { isShowingSheet = true }, label: {
@@ -105,7 +107,7 @@ struct DiningHallsView : View {
                 var heading = String(try! element.text())
                 // remove "-- " and " --" from headings and capitalize headings
                 heading = String(heading[heading.index(after: heading.firstIndex(of: " ")!)..<heading.lastIndex(of: " ")!]).capitalized
-                menu.append(Category(name: heading, items: []))
+                menu.append(Category(name: heading))
             }
             if (element.tagName() == "label") {
                 // check if item is already on the menu
@@ -126,7 +128,7 @@ struct DiningHallsView : View {
                 }
                 
                 // capitalize items
-                menu[menu.count - 1].items.append(Item(name: try! element.attr("name").capitalized, id: try! element.attr("for")))
+                menu[menu.count - 1].items.append(Item(name: try! element.attr("name").capitalized.replacingOccurrences(of: "  ", with: " "), id: try! element.attr("for"), isFavorite: settings.favoriteItemsIDs.contains(try! element.attr("for"))))
             }
         }
         
