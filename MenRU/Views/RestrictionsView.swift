@@ -7,22 +7,18 @@
 
 import SwiftUI
 
-struct AllergiesView : View {
+struct RestrictionsView : View {
     @Bindable var settings: Settings
     @State private var isSheetShowing: Bool = false
     
     var body: some View {
         List {
-            Section {
-                ForEach(settings.allergies, id: \.self) { allergy in
-                    Text(allergy)
-                }
-                .onDelete(perform: delete)
-            } footer: {
-                Text("When adding allergies, make sure that you write it singular to increase accuracy. For example, add \"Peanut\" not \"Peanuts\".")
+            ForEach(settings.restrictions, id: \.self) { restriction in
+                Text(restriction)
             }
+            .onDelete(perform: delete)
         }
-        .navigationTitle("Allergies")
+        .navigationTitle("Dietary Restrictions")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: { isSheetShowing = true }) {
@@ -34,11 +30,11 @@ struct AllergiesView : View {
             }
         }
         .sheet(isPresented: $isSheetShowing) {
-            AddAllergyView(settings: settings)
+            AddRestrictionView(settings: settings)
         }
     }
     
     func delete(at offsets: IndexSet) {
-        settings.allergies.remove(atOffsets: offsets)
+        settings.restrictions.remove(atOffsets: offsets)
     }
 }

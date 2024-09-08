@@ -25,88 +25,75 @@ struct ItemView: View {
             "Daily Value" : dailyValues
         ]
         
-        NavigationLink {
-            NavigationStack {
-                VStack {
-                    if amounts.isEmpty {
-                        Text("Nutritional information is not available for this item")
-                    }
-                    else {
-                        List {
-                            Section("Nutrition Facts") {
-                                Picker("Unit", selection: $selectedUnit) {
-                                    ForEach (["Amount", "Daily Value"], id: \.self) { unit in
-                                        Text(unit)
+        if (settings.hideRestricted && !ingredientsContainRestriction(ingredients: ingredients)) || !settings.hideRestricted {
+            NavigationLink {
+                NavigationStack {
+                    VStack {
+                        if amounts.isEmpty {
+                            Text("Nutritional information is not available for this item")
+                        }
+                        else {
+                            List {
+                                Label("Item Contains Dietary Restrictions", systemImage: "exclamationmark.triangle.fill")
+                                Section("Nutrition Facts") {
+                                    Picker("Unit", selection: $selectedUnit) {
+                                        ForEach(["Amount", "Daily Value"], id: \.self) { unit in
+                                            Text(unit)
+                                        }
+                                    }
+                                    .pickerStyle(.segmented)
+                                    .listRowSeparator(.hidden)
+                                    .padding()
+                                    .listRowInsets(EdgeInsets())
+                                    // Stepper("Servings", value: $servings)
+                                    ForEach(Array(dict[selectedUnit]!.keys), id: \.self) { key in
+                                        LabeledContent(key, value: dict[selectedUnit]![key]!)
                                     }
                                 }
-                                .pickerStyle(.segmented)
-                                .listRowSeparator(.hidden)
-                                .padding()
-                                .listRowInsets(EdgeInsets())
-                                // Stepper("Servings", value: $servings)
-                                ForEach(Array(dict[selectedUnit]!.keys), id: \.self) { key in
-                                    LabeledContent(key, value: dict[selectedUnit]![key]!)
+                                Section("Ingredients") {
+                                    Text(ingredients).font(.footnote).italic().foregroundStyle(.gray)
                                 }
-                            }
-                            Section("Ingredients") {
-                                Text(ingredients).font(.footnote).italic().foregroundStyle(.gray)
                             }
                         }
                     }
+                    .navigationTitle(item.name)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .task {
+                        amounts = try! await fetchAmounts(itemID: item.id)
+                        
+                        dailyValues = try! await fetchDailyValues(itemID: item.id)
+                    }
                 }
-                .navigationTitle(item.name)
-                .navigationBarTitleDisplayMode(.inline)
-                .task {
-                    amounts = try! await fetchAmounts(itemID: item.id)
-                    
-                    dailyValues = try! await fetchDailyValues(itemID: item.id)
+            } label: {
+                if settings.filterIngredients && ingredientsContainRestriction(ingredients: ingredients) {
+                    Label(item.name, systemImage: "exclamationmark.triangle.fill")
+                }
+                else {
+                    Text(item.name)
                 }
             }
-        } label: {
-            if settings.allergic && ingredientsContainAllergy(ingredients: ingredients) {
-                Label(item.name, systemImage: "exclamationmark.triangle.fill")
-            }
-            else {
-                Text(item.name)
-            }
-        }
-        .onAppear {
-            Task {
-                ingredients = try! await fetchIngredients(itemID: item.id)
+            .onAppear {
+                Task {
+                    ingredients = try! await fetchIngredients(itemID: item.id)
+                }
             }
         }
     }
     
-    let amountNutrients = [
-        "Calories" : "Calories",
-        "Total Fat" : "Fat",
-        "Tot. Carb." : "Carbohydrates",
-        "Sat. Fat" : "Saturated Fat",
-        "Dietary Fiber" : "Dietary Fiber",
-        "Trans Fat" : "Trans Fat",
-        "Sugars" : "Sugars",
-        "Cholesterol" : "Cholesterol",
-        "Protein" : "Protein",
-        "Sodium" : "Sodium"
-    ]
-    let dailyValueNutrients = [
-        "Calories" : "Calories",
-        "Protein" : "Protein",
-        "Fat" : "Fat",
-        "Carbohydrates" : "Carbohydrates",
-        "Cholesterol" : "Cholesterol",
-        "Total Sugars" : "Sugars",
-        "Dietary Fiber" : "Dietary Fiber",
-        "Sodium" : "Sodium",
-        "Saturated Fat" : "Saturated Fat",
-        "Calcium" : "Calcium",
-        "Trans Fatty Acid" : "Trans Fat",
-        "Mono Fat" : "Mono Fat",
-        "Poly Fat" : "Poly Fat",
-        "Iron" : "Iron"
-    ];
-    
     func fetchAmounts(itemID: String) async throws -> OrderedDictionary<String, String> {
+        let amountNutrients = [
+            "Calories" : "Calories",
+            "Total Fat" : "Fat",
+            "Tot. Carb." : "Carbohydrates",
+            "Sat. Fat" : "Saturated Fat",
+            "Dietary Fiber" : "Dietary Fiber",
+            "Trans Fat" : "Trans Fat",
+            "Sugars" : "Sugars",
+            "Cholesterol" : "Cholesterol",
+            "Protein" : "Protein",
+            "Sodium" : "Sodium"
+        ]
+        
         let doc = try await fetchDoc(url: URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/label.aspx?&RecNumAndPort=" + itemID + "*1")!)
         if !hasNutritionalReport(doc: doc) {
             return OrderedDictionary<String, String>()
@@ -132,6 +119,23 @@ struct ItemView: View {
     }
     
     func fetchDailyValues(itemID: String) async throws -> OrderedDictionary<String, String> {
+        let dailyValueNutrients = [
+            "Calories" : "Calories",
+            "Protein" : "Protein",
+            "Fat" : "Fat",
+            "Carbohydrates" : "Carbohydrates",
+            "Cholesterol" : "Cholesterol",
+            "Total Sugars" : "Sugars",
+            "Dietary Fiber" : "Dietary Fiber",
+            "Sodium" : "Sodium",
+            "Saturated Fat" : "Saturated Fat",
+            "Calcium" : "Calcium",
+            "Trans Fatty Acid" : "Trans Fat",
+            "Mono Fat" : "Mono Fat",
+            "Poly Fat" : "Poly Fat",
+            "Iron" : "Iron"
+        ];
+        
         let doc = try await fetchDoc(url: URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/label.aspx?&RecNumAndPort=" + itemID + "*1")!)
         if !hasNutritionalReport(doc: doc) {
             return OrderedDictionary<String, String>()
@@ -156,9 +160,9 @@ struct ItemView: View {
         return try! doc.select("h2:contains(Nutritional Information is not available for this recipe.)").array().count == 0
     }
     
-    func ingredientsContainAllergy(ingredients: String) -> Bool {
-        for allergy in settings.allergies {
-            if ingredients.lowercased().contains(allergy.lowercased()) {
+    func ingredientsContainRestriction(ingredients: String) -> Bool {
+        for restriction in settings.restrictions {
+            if ingredients.lowercased().contains(restriction.lowercased()) && item.name.lowercased().contains(restriction.lowercased()) {
                 return true
             }
         }

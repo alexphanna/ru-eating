@@ -108,6 +108,23 @@ struct DiningHallsView : View {
                 menu.append(Category(name: heading, items: []))
             }
             if (element.tagName() == "label") {
+                // check if item is already on the menu
+                var duplicate = false
+                for category in menu {
+                    for item in category.items {
+                        if try! item.id == element.attr("for") {
+                            duplicate = true;
+                            break
+                        }
+                    }
+                    if duplicate {
+                        break
+                    }
+                }
+                if (duplicate) {
+                    continue
+                }
+                
                 // capitalize items
                 menu[menu.count - 1].items.append(Item(name: try! element.attr("name").capitalized, id: try! element.attr("for")))
             }

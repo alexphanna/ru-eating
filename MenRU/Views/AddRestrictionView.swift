@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AddAllergyView: View {
+struct AddRestrictionView: View {
     @Environment(\.dismiss) var dismiss
     @State private var ingredient: String = ""
     @Bindable var settings: Settings
@@ -15,11 +15,15 @@ struct AddAllergyView: View {
     var body: some View {
         NavigationStack {
             Form {
-                LabeledContent {
-                    TextField("Peanut", text: $ingredient)
-                        .multilineTextAlignment(.trailing)
-                } label: {
-                    Text("Ingredient")
+                Section {
+                    LabeledContent {
+                        TextField("Peanut", text: $ingredient)
+                            .multilineTextAlignment(.trailing)
+                    } label: {
+                        Text("Ingredient")
+                    }
+                } footer: {
+                    Text("When adding dietary restrictions, make sure that you write it singular to increase accuracy. For example, add \"Peanut\" not \"Peanuts\".")
                 }
             }
             .navigationTitle("Add Ingredient")
@@ -30,9 +34,11 @@ struct AddAllergyView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {
-                        settings.allergies.append(ingredient)
+                        settings.restrictions.append(ingredient.trimmingCharacters(in: .whitespaces))
                         dismiss()
                     }
+                    .disabled(ingredient.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .disabled(settings.restrictions.contains(ingredient.trimmingCharacters(in: .whitespaces)))
                 }
             }
         }

@@ -9,11 +9,13 @@ import SwiftData
 
 @Model
 class Settings {
-    var allergic: Bool
-    var allergies: [String]
+    var filterIngredients: Bool
+    var restrictions: [String]
+    var hideRestricted: Bool
     
-    init(allergic: Bool = false, allergies: [String] = []) {
-        self.allergic = allergic
-        self.allergies = allergies
+    init(filterIngredients: Bool = false, restrictions: [String] = [], hideRestricted: Bool = false) {
+        self.filterIngredients = filterIngredients
+        self.hideRestricted = hideRestricted
+        self.restrictions = restrictions
     }
 }
