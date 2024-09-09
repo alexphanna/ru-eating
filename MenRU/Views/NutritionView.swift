@@ -44,10 +44,15 @@ struct NutritionView: View {
             .listRowSeparator(.hidden)
             .padding()
             .listRowInsets(EdgeInsets())
-            // Stepper("Servings", value: $servings)
+            // change later
+            if category.items.count == 1 {
+                LabeledContent("Serving Size", value: String(category.items[0].servingSize) + " " + category.items[0].servingSizeUnit)
+                    .fontWeight(.bold)
+            }
             ForEach(Array(dict[selectedUnit]!.keys), id: \.self) { key in
                 if selectedUnit == "Amount" {
                     LabeledContent(key, value: String(dict[selectedUnit]![key]!.formatted(.number.precision(.fractionLength(1)))) + nutrientUnits[key]!)
+                        .fontWeight(key == "Calories" ? .bold : .regular)
                 }
                 else if selectedUnit == "Daily Value" {
                     LabeledContent(key, value: String(dict[selectedUnit]![key]!.formatted(.number.precision(.fractionLength(0)))) + "%")
@@ -105,10 +110,10 @@ struct NutritionView: View {
                     continue
                 }
                 if amounts[amountNutrients[String(textArray[0])]!] == nil {
-                    amounts[amountNutrients[String(textArray[0])]!] = Float(textArray[1].replacingOccurrences(of: nutrientUnits[amountNutrients[String(textArray[0])]!]!, with: ""))! * Float(item.portion)
+                    amounts[amountNutrients[String(textArray[0])]!] = Float(textArray[1].replacingOccurrences(of: nutrientUnits[amountNutrients[String(textArray[0])]!]!, with: ""))! * Float(item.portion) * Float(item.servingSize)
                 }
                 else {
-                    amounts[amountNutrients[String(textArray[0])]!]! += Float(textArray[1].replacingOccurrences(of: nutrientUnits[amountNutrients[String(textArray[0])]!]!, with: ""))! * Float(item.portion)
+                    amounts[amountNutrients[String(textArray[0])]!]! += Float(textArray[1].replacingOccurrences(of: nutrientUnits[amountNutrients[String(textArray[0])]!]!, with: ""))! * Float(item.portion) * Float(item.servingSize)
                 }
             }
         }
@@ -150,10 +155,10 @@ struct NutritionView: View {
                     continue
                 }
                 if dailyValues[dailyValueNutrients[String(textArray[0])]!] == nil {
-                    dailyValues[dailyValueNutrients[String(textArray[0])]!] = Float(textArray[1].replacingOccurrences(of: "%", with: ""))! * Float(item.portion)
+                    dailyValues[dailyValueNutrients[String(textArray[0])]!] = Float(textArray[1].replacingOccurrences(of: "%", with: ""))! * Float(item.portion) * Float(item.servingSize)
                 }
                 else {
-                    dailyValues[dailyValueNutrients[String(textArray[0])]!]! += Float(textArray[1].replacingOccurrences(of: "%", with: ""))! * Float(item.portion)
+                    dailyValues[dailyValueNutrients[String(textArray[0])]!]! += Float(textArray[1].replacingOccurrences(of: "%", with: ""))! * Float(item.portion) * Float(item.servingSize)
                 }
             }
         }

@@ -7,8 +7,8 @@
 
 import Foundation
 
-@Observable class Menu: Hashable {
-    static func == (lhs: Menu, rhs: Menu) -> Bool {
+@Observable class FoodMenu: Hashable {
+    static func == (lhs: FoodMenu, rhs: FoodMenu) -> Bool {
         return lhs.categories == rhs.categories
     }
     

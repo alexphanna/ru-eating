@@ -15,7 +15,7 @@ struct MenuSectionView : View {
         Section(
             isExpanded: $menuSectionSettings.sectionExpanded,
             content: {
-                ForEach(category.items) { item in
+                ForEach(category.items.sorted(by: { $0.name < $1.name })) { item in
                     ItemView(item: item)
                 }
             },

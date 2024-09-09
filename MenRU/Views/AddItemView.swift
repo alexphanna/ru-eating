@@ -80,10 +80,16 @@ struct AddItemsView : View {
                 let doc = try! SwiftSoup.parse(String(data: data, encoding: .utf8)!)
                 
                 let labels = try! doc.select("div.menuBox fieldset div.col-1 label").array()
+                let servings = try! doc.select("div.menuBox fieldset div.col-2 label").array()
                 
-                for label in labels {
+                for i in 0..<labels.count {
+                    let label = labels[i]
+                    let serving = servings[i]
+                    
+                    let servingSize = try? Int(serving.attr("aria-label").first!.description) ?? 1
+                    let servingSizeUnit = try? serving.attr("aria-label").replacingOccurrences(of: serving.attr("aria-label").first!.description + " ", with: "").lowercased()
                     // capitalize items
-                    items.append(Item(name: try! label.attr("name").capitalized, id: try! label.attr("for"), isFavorite: settings.favoriteItemsIDs.contains(try! label.attr("for"))))
+                    items.append(Item(name: try! label.attr("name").capitalized, id: try! label.attr("for"), servingSize: servingSize!, servingSizeUnit: servingSizeUnit!, isFavorite: settings.favoriteItemsIDs.contains(try! label.attr("for"))))
                 }
             }
         }

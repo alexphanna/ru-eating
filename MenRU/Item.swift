@@ -21,7 +21,9 @@ import Foundation
     var name : String
     var id : String
     var ingredients: String
-    var portion: Int
+    var servingSize: Int
+    var servingSizeUnit: String
+    var portion: Int // number of servings
     var isFavorite: Bool
     
     func incrementPortion() {
@@ -33,11 +35,13 @@ import Foundation
         if portion < 0 { portion = 0 }
     }
     
-    init(name: String, id: String, portion: Int = 1, isFavorite: Bool = false) {
+    init(name: String, id: String, servingSize: Int, servingSizeUnit: String, portion: Int = 1, isFavorite: Bool = false) {
         self.name = name
         self.id = id
-        self.ingredients = ""
+        self.servingSize = servingSize
+        self.servingSizeUnit = servingSizeUnit
         self.portion = portion
         self.isFavorite = isFavorite
+        self.ingredients = ""
     }
 }

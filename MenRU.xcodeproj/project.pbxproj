@@ -12,7 +12,8 @@
 		FA79D0D82C8CC41600F60AC4 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA79D0D72C8CC41600F60AC4 /* Settings.swift */; };
 		FA79D0DA2C8CCD7C00F60AC4 /* RestrictionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA79D0D92C8CCD7C00F60AC4 /* RestrictionsView.swift */; };
 		FA79D0DD2C8CD17300F60AC4 /* AddRestrictionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA79D0DC2C8CD17300F60AC4 /* AddRestrictionView.swift */; };
-		FA86475F2C8E0E93000037C6 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA86475E2C8E0E93000037C6 /* Menu.swift */; };
+		FA7E45172C8E69A800D95D96 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7E45162C8E69A800D95D96 /* MenuView.swift */; };
+		FA86475F2C8E0E93000037C6 /* FoodMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA86475E2C8E0E93000037C6 /* FoodMenu.swift */; };
 		FA8647612C8E1A95000037C6 /* MealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8647602C8E1A95000037C6 /* MealView.swift */; };
 		FA8647632C8E21CA000037C6 /* NutritionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8647622C8E21CA000037C6 /* NutritionView.swift */; };
 		FA8A328E2C8B585D00D30147 /* MenRUApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8A328D2C8B585D00D30147 /* MenRUApp.swift */; };
@@ -34,7 +35,8 @@
 		FA79D0D72C8CC41600F60AC4 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		FA79D0D92C8CCD7C00F60AC4 /* RestrictionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictionsView.swift; sourceTree = "<group>"; };
 		FA79D0DC2C8CD17300F60AC4 /* AddRestrictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRestrictionView.swift; sourceTree = "<group>"; };
-		FA86475E2C8E0E93000037C6 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
+		FA7E45162C8E69A800D95D96 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
+		FA86475E2C8E0E93000037C6 /* FoodMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodMenu.swift; sourceTree = "<group>"; };
 		FA8647602C8E1A95000037C6 /* MealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealView.swift; sourceTree = "<group>"; };
 		FA8647622C8E21CA000037C6 /* NutritionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NutritionView.swift; sourceTree = "<group>"; };
 		FA8A328A2C8B585D00D30147 /* MenRU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenRU.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -69,6 +71,7 @@
 			children = (
 				FA8A328F2C8B585D00D30147 /* ContentView.swift */,
 				FA8A32A02C8B84F900D30147 /* MenusView.swift */,
+				FA7E45162C8E69A800D95D96 /* MenuView.swift */,
 				FA8A32A62C8B990F00D30147 /* ItemView.swift */,
 				FA9453F62C8C121B00059258 /* MenuSectionView.swift */,
 				FA79D0D52C8CB9EF00F60AC4 /* SettingsView.swift */,
@@ -106,7 +109,7 @@
 				FA8A32932C8B585F00D30147 /* Preview Content */,
 				FA8A32A42C8B94E700D30147 /* Item.swift */,
 				FA9453F82C8C128600059258 /* Category.swift */,
-				FA86475E2C8E0E93000037C6 /* Menu.swift */,
+				FA86475E2C8E0E93000037C6 /* FoodMenu.swift */,
 				FA9453F42C8BF75C00059258 /* Fetch.swift */,
 				FA79D0D72C8CC41600F60AC4 /* Settings.swift */,
 			);
@@ -201,11 +204,12 @@
 			files = (
 				FA8A32A52C8B94E700D30147 /* Item.swift in Sources */,
 				FA8A32A72C8B990F00D30147 /* ItemView.swift in Sources */,
-				FA86475F2C8E0E93000037C6 /* Menu.swift in Sources */,
+				FA86475F2C8E0E93000037C6 /* FoodMenu.swift in Sources */,
 				FA8A32A12C8B84F900D30147 /* MenusView.swift in Sources */,
 				FA9453F52C8BF75C00059258 /* Fetch.swift in Sources */,
 				FA8647632C8E21CA000037C6 /* NutritionView.swift in Sources */,
 				FA8A32902C8B585D00D30147 /* ContentView.swift in Sources */,
+				FA7E45172C8E69A800D95D96 /* MenuView.swift in Sources */,
 				FA79D0D62C8CB9EF00F60AC4 /* SettingsView.swift in Sources */,
 				FA79D0DA2C8CCD7C00F60AC4 /* RestrictionsView.swift in Sources */,
 				FA9453F92C8C128600059258 /* Category.swift in Sources */,
