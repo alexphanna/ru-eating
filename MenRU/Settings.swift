@@ -13,11 +13,13 @@ class Settings {
     var restrictions: [String]
     var hideRestricted: Bool
     var favoriteItemsIDs: [String]
+    var hideUnfavorited: Bool
     
-    init(filterIngredients: Bool = false, restrictions: [String] = [], hideRestricted: Bool = false) {
+    init(filterIngredients: Bool = false, restrictions: [String] = [], hideRestricted: Bool = false, hideUnfavorited: Bool = false) {
         self.filterIngredients = filterIngredients
         self.hideRestricted = hideRestricted
         self.restrictions = restrictions
         self.favoriteItemsIDs = [String]()
+        self.hideUnfavorited = hideUnfavorited
     }
 }

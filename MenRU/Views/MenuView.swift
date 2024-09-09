@@ -49,7 +49,9 @@ struct MenuView: View {
                     }
                     else {
                         ForEach(category.items.sorted(by: { $0.name < $1.name })) { item in
-                            ItemView(item: item)
+                            if (settings.hideUnfavorited && item.isFavorite) || !settings.hideUnfavorited {
+                                ItemView(item: item)
+                            }
                         }
                     }
                 }
@@ -74,18 +76,36 @@ struct MenuView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
-                        Picker(selection: $group) {
-                            Text("On").tag(true)
-                            Text("Off").tag(false)
-                        } label: {
-                            Button(action: {}) {
-                                Text("Group By Category")
-                                Text(group ? "On" : "Off")
-                                    .font(.callout)
-                                    .foregroundStyle(.gray)
+                        Section {
+                            Button(action: { settings.hideUnfavorited = !settings.hideUnfavorited }) {
+                                HStack {
+                                    Text(settings.hideUnfavorited ? "Show Unfavorited" : "Hide Unfavorited")
+                                    Spacer()
+                                    Image(systemName: settings.hideUnfavorited ? "eye" : "eye.slash")
+                                }
                             }
                         }
-                        .pickerStyle(.menu)
+                        Section {
+                            Picker(selection: $group) {
+                                Text("On").tag(true)
+                                Text("Off").tag(false)
+                            } label: {
+                                Button(action: {}) {
+                                    HStack {
+                                        VStack {
+                                            Text("Group By Category")
+                                            Text(group ? "On" : "Off")
+                                                .font(.callout)
+                                                .foregroundStyle(.gray)
+                                            
+                                        }
+                                        Spacer()
+                                        Image(systemName: "rectangle.3.group")
+                                    }
+                                }
+                            }
+                            .pickerStyle(.menu)
+                        }
                     } label: {
                         Image(systemName: "ellipsis.circle")
                     }
@@ -106,7 +126,7 @@ struct MenuView: View {
         let elements = try! doc.select("div.menuBox h3, div.menuBox fieldset div.col-1 label, div.menuBox fieldset div.col-2 label").array()
         
         var menu = [Category]();
-        for var i in 0..<elements.count {
+        for i in 0..<elements.count {
             let element = elements[i]
             
             if (element.tagName() == "h3") {
@@ -133,11 +153,11 @@ struct MenuView: View {
                     continue
                 }
                 
-                let servingSize = try? Int(elements[i + 1].attr("aria-label").first!.description) ?? 1
-                let servingSizeUnit = try? elements[i + 1].attr("aria-label").replacingOccurrences(of: elements[i + 1].attr("aria-label").first!.description, with: "").lowercased()
+                let servingsNumber = try? Int(elements[i + 1].attr("aria-label").first!.description) ?? 1
+                let servingsUnit = try? elements[i + 1].attr("aria-label").replacingOccurrences(of: String(servingsNumber!), with: "").lowercased()
                 
                 // capitalize items
-                menu[menu.count - 1].items.append(Item(name: try! element.attr("name").capitalized.replacingOccurrences(of: "  ", with: " "), id: try! element.attr("for"), servingSize: servingSize!, servingSizeUnit: servingSizeUnit!, isFavorite: settings.favoriteItemsIDs.contains(try! element.attr("for"))))
+                menu[menu.count - 1].items.append(Item(name: try! element.attr("name").capitalized.replacingOccurrences(of: "  ", with: " "), id: try! element.attr("for"), servingsNumber: servingsNumber!, servingsUnit: servingsUnit!, isFavorite: settings.favoriteItemsIDs.contains(try! element.attr("for"))))
             }
         }
         

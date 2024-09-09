@@ -10,6 +10,7 @@ import OrderedCollections
 
 struct NutritionView: View {
     @Bindable var category: Category
+    @State var showServingSize: Bool = false
     @State private var amounts = OrderedDictionary<String, Float>()
     @State private var dailyValues = OrderedDictionary<String, Float>()
     @State private var selectedUnit : String = "Amount"
@@ -44,15 +45,19 @@ struct NutritionView: View {
             .listRowSeparator(.hidden)
             .padding()
             .listRowInsets(EdgeInsets())
-            // change later
-            if category.items.count == 1 {
-                LabeledContent("Serving Size", value: String(category.items[0].servingSize) + " " + category.items[0].servingSizeUnit)
+            if showServingSize {
+                LabeledContent("Serving Size", value: category.items[0].servingSize)
                     .fontWeight(.bold)
             }
             ForEach(Array(dict[selectedUnit]!.keys), id: \.self) { key in
                 if selectedUnit == "Amount" {
-                    LabeledContent(key, value: String(dict[selectedUnit]![key]!.formatted(.number.precision(.fractionLength(1)))) + nutrientUnits[key]!)
-                        .fontWeight(key == "Calories" ? .bold : .regular)
+                    if key == "Calories" {
+                        LabeledContent(key, value: String(dict[selectedUnit]![key]!.formatted(.number.precision(.fractionLength(0)))) + nutrientUnits[key]!)
+                            .fontWeight(key == "Calories" ? .bold : .regular)
+                    }
+                    else {
+                        LabeledContent(key, value: String(dict[selectedUnit]![key]!.formatted(.number.precision(.fractionLength(1)))) + nutrientUnits[key]!)
+                    }
                 }
                 else if selectedUnit == "Daily Value" {
                     LabeledContent(key, value: String(dict[selectedUnit]![key]!.formatted(.number.precision(.fractionLength(0)))) + "%")
@@ -110,10 +115,10 @@ struct NutritionView: View {
                     continue
                 }
                 if amounts[amountNutrients[String(textArray[0])]!] == nil {
-                    amounts[amountNutrients[String(textArray[0])]!] = Float(textArray[1].replacingOccurrences(of: nutrientUnits[amountNutrients[String(textArray[0])]!]!, with: ""))! * Float(item.portion) * Float(item.servingSize)
+                    amounts[amountNutrients[String(textArray[0])]!] = Float(textArray[1].replacingOccurrences(of: nutrientUnits[amountNutrients[String(textArray[0])]!]!, with: ""))! * Float(item.portion) * Float(item.servingsNumber)
                 }
                 else {
-                    amounts[amountNutrients[String(textArray[0])]!]! += Float(textArray[1].replacingOccurrences(of: nutrientUnits[amountNutrients[String(textArray[0])]!]!, with: ""))! * Float(item.portion) * Float(item.servingSize)
+                    amounts[amountNutrients[String(textArray[0])]!]! += Float(textArray[1].replacingOccurrences(of: nutrientUnits[amountNutrients[String(textArray[0])]!]!, with: ""))! * Float(item.portion) * Float(item.servingsNumber)
                 }
             }
         }
@@ -155,10 +160,10 @@ struct NutritionView: View {
                     continue
                 }
                 if dailyValues[dailyValueNutrients[String(textArray[0])]!] == nil {
-                    dailyValues[dailyValueNutrients[String(textArray[0])]!] = Float(textArray[1].replacingOccurrences(of: "%", with: ""))! * Float(item.portion) * Float(item.servingSize)
+                    dailyValues[dailyValueNutrients[String(textArray[0])]!] = Float(textArray[1].replacingOccurrences(of: "%", with: ""))! * Float(item.portion) * Float(item.servingsNumber)
                 }
                 else {
-                    dailyValues[dailyValueNutrients[String(textArray[0])]!]! += Float(textArray[1].replacingOccurrences(of: "%", with: ""))! * Float(item.portion) * Float(item.servingSize)
+                    dailyValues[dailyValueNutrients[String(textArray[0])]!]! += Float(textArray[1].replacingOccurrences(of: "%", with: ""))! * Float(item.portion) * Float(item.servingsNumber)
                 }
             }
         }

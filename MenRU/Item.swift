@@ -21,8 +21,13 @@ import Foundation
     var name : String
     var id : String
     var ingredients: String
-    var servingSize: Int
-    var servingSizeUnit: String
+    var servingsNumber: Int
+    private var servingsUnit: String
+    var servingSize: String {
+        get {
+            return "\(servingsNumber) \(servingsUnit)"
+        }
+    }
     var portion: Int // number of servings
     var isFavorite: Bool
     
@@ -35,11 +40,11 @@ import Foundation
         if portion < 0 { portion = 0 }
     }
     
-    init(name: String, id: String, servingSize: Int, servingSizeUnit: String, portion: Int = 1, isFavorite: Bool = false) {
+    init(name: String, id: String, servingsNumber: Int, servingsUnit: String, portion: Int = 1, isFavorite: Bool = false) {
         self.name = name
         self.id = id
-        self.servingSize = servingSize
-        self.servingSizeUnit = servingSizeUnit
+        self.servingsNumber = servingsNumber
+        self.servingsUnit = servingsUnit
         self.portion = portion
         self.isFavorite = isFavorite
         self.ingredients = ""

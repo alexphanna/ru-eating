@@ -10,16 +10,21 @@ import SwiftUI
 struct MenuSectionView : View {
     @State var category: Category
     @Bindable var menuSectionSettings: MenuSectionSettings = MenuSectionSettings()
+    @Environment(Settings.self) private var settings
     
     var body : some View {
-        Section(
-            isExpanded: $menuSectionSettings.sectionExpanded,
-            content: {
-                ForEach(category.items.sorted(by: { $0.name < $1.name })) { item in
-                    ItemView(item: item)
-                }
-            },
-            header: { Text(category.name) })
+        if (settings.hideUnfavorited && !category.items.allSatisfy({ $0.isFavorite == false })) || !settings.hideUnfavorited {
+            Section(
+                isExpanded: $menuSectionSettings.sectionExpanded,
+                content: {
+                    ForEach(category.items.sorted(by: { $0.name < $1.name })) { item in
+                        if (settings.hideUnfavorited && item.isFavorite) || !settings.hideUnfavorited {
+                            ItemView(item: item)
+                        }
+                    }
+                },
+                header: { Text(category.name) })
+        }
     }
 }
 

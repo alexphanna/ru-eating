@@ -25,9 +25,11 @@ struct ItemView: View {
                         else {
                             List {
                                 if restricted {
-                                    Label("Item Contains Dietary Restrictions", systemImage: "exclamationmark.triangle.fill")
+                                    Section("Warning") {
+                                        Label("Item may contain dietary restrictions.", systemImage: "exclamationmark.triangle.fill")
+                                    }
                                 }
-                                NutritionView(category: Category(name: "", items: [item]))
+                                NutritionView(category: Category(name: "", items: [item]), showServingSize: true)
                                 Section("Ingredients") {
                                     Text(item.ingredients).font(.footnote).italic().foregroundStyle(.gray)
                                 }
@@ -39,15 +41,7 @@ struct ItemView: View {
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
                             // toggle was changing background color, so I use button
-                            Button(action: {
-                                item.isFavorite = !item.isFavorite
-                                if item.isFavorite {
-                                    settings.favoriteItemsIDs.append(item.id)
-                                }
-                                else if !item.isFavorite {
-                                    settings.favoriteItemsIDs.removeAll(where: { $0 == item.id })
-                                }
-                            }) {
+                            Button(action: { favorite(item: item) }) {
                                 Image(systemName: item.isFavorite ? "star.fill" : "star")
                                     .foregroundStyle(.yellow)
                             }
@@ -70,6 +64,12 @@ struct ItemView: View {
                     Text(item.name)
                 }
             }
+            .swipeActions {
+                Button(action: { favorite(item: item) }) {
+                    Image(systemName: item.isFavorite ? "star.slash.fill" : "star.fill")
+                }
+                .tint(.yellow)
+            }
             .task {
                 if item.ingredients.isEmpty {
                     do {
@@ -80,6 +80,16 @@ struct ItemView: View {
                     }
                 }
             }
+        }
+    }
+    
+    func favorite(item: Item) {
+        item.isFavorite = !item.isFavorite
+        if item.isFavorite {
+            settings.favoriteItemsIDs.append(item.id)
+        }
+        else if !item.isFavorite {
+            settings.favoriteItemsIDs.removeAll(where: { $0 == item.id })
         }
     }
     

@@ -86,10 +86,10 @@ struct AddItemsView : View {
                     let label = labels[i]
                     let serving = servings[i]
                     
-                    let servingSize = try? Int(serving.attr("aria-label").first!.description) ?? 1
-                    let servingSizeUnit = try? serving.attr("aria-label").replacingOccurrences(of: serving.attr("aria-label").first!.description + " ", with: "").lowercased()
+                    let servingsNumber = try? Int(serving.attr("aria-label").first!.description) ?? 1
+                    let servingsUnit = try? serving.attr("aria-label").replacingOccurrences(of: String(servingsNumber!), with: "").lowercased()
                     // capitalize items
-                    items.append(Item(name: try! label.attr("name").capitalized, id: try! label.attr("for"), servingSize: servingSize!, servingSizeUnit: servingSizeUnit!, isFavorite: settings.favoriteItemsIDs.contains(try! label.attr("for"))))
+                    items.append(Item(name: try! label.attr("name").capitalized, id: try! label.attr("for"), servingsNumber: servingsNumber!, servingsUnit: servingsUnit!, isFavorite: settings.favoriteItemsIDs.contains(try! label.attr("for"))))
                 }
             }
         }
