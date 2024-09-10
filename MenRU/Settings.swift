@@ -22,4 +22,14 @@ class Settings {
         self.favoriteItemsIDs = [String]()
         self.hideUnfavorited = hideUnfavorited
     }
+    
+    func favorite(item: Item) {
+        item.isFavorite = !item.isFavorite
+        if item.isFavorite {
+            favoriteItemsIDs.append(item.id)
+        }
+        else if !item.isFavorite {
+            favoriteItemsIDs.removeAll(where: { $0 == item.id })
+        }
+    }
 }

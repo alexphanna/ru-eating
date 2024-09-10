@@ -9,37 +9,25 @@ import SwiftUI
 import SwiftSoup
 
 struct MenusView : View {
-    let places = [
-        "Busch Dining Hall" : "04",
-        "Livingston Dining Commons" : "03",
-        "Neilson Dining Hall" : "05",
-        "The Atrium" : "13"
-    ]
-    let campuses = [
-        "Busch Dining Hall" : "Busch",
-        "Livingston Dining Commons" : "Livingston",
-        "Neilson Dining Hall" : "Cook/Douglass",
-        "The Atrium" : "College Ave"
-    ]
-    let placesShortened = [
-        "Busch Dining Hall" : "Busch",
-        "Livingston Dining Commons" : "Livingston",
-        "Neilson Dining Hall" : "Neilson",
-        "The Atrium" : "The Atrium"
-    ];
     @State private var isShowingSheet = false
     @Environment(Settings.self) private var settings
     
     var body : some View {
         NavigationStack {
             List {
-                ForEach(Array(places.keys).sorted(), id: \.self) { place in
-                    NavigationLink {
-                        MenuView(place: place)
-                    } label: {
-                        VStack (alignment: HorizontalAlignment.leading) {
-                            Text(place)
-                            Text(campuses[place]!).font(.footnote).italic().foregroundStyle(.gray)
+                let openPlaces = getOpenPlaces()
+                if openPlaces.count > 0 {
+                    Section("Open") {
+                        ForEach(openPlaces, id: \.self) { place in
+                            MenuView(place: place)
+                        }
+                    }
+                }
+                let closedPlaces = getClosedPlaces()
+                if closedPlaces.count > 0 {
+                    Section("Closed") {
+                        ForEach(closedPlaces, id: \.self) { place in
+                            MenuView(place: place)
                         }
                     }
                 }
@@ -56,5 +44,25 @@ struct MenusView : View {
                 SettingsView(settings: settings)
             })
         }
+    }
+    
+    func getOpenPlaces() -> [Place]  {
+        var openPlaces = [Place]()
+        for place in places {
+            if place.isOpen {
+                openPlaces.append(place)
+            }
+        }
+        return openPlaces
+    }
+    
+    func getClosedPlaces() -> [Place] {
+        var closedPlaces = [Place]()
+        for place in places {
+            if !place.isOpen {
+                closedPlaces.append(place)
+            }
+        }
+        return closedPlaces
     }
 }

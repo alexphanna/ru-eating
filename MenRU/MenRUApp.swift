@@ -10,6 +10,7 @@ import SwiftData
 
 @main
 struct MenRUApp: App {
+    
     var body: some Scene {
         WindowGroup {
             RootView()

@@ -13,18 +13,6 @@ struct AddItemsView : View {
     @Environment(Settings.self) private var settings
     @State var meal: Category
     
-    let places = [
-        "Busch Dining Hall" : "04",
-        "Livingston Dining Commons" : "03",
-        "Neilson Dining Hall" : "05",
-        "The Atrium" : "13"
-    ]
-    let meals = [
-        "Breakfast",
-        "Lunch",
-        "Dinner"
-    ]
-    
     @State private var items = OrderedSet<Item>()
     @State private var searchText = ""
     
@@ -71,9 +59,9 @@ struct AddItemsView : View {
     }
     
     func fetchItems() async throws {
-        for place in Array(places.keys) {
+        for place in places {
             for meal in meals {
-                let url = URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/pickmenu.aspx?locationNum=" + places[place]! + "&locationName=" + place.replacingOccurrences(of: " ", with: "+") + "&dtdate=09/06/2024&activeMeal=" + meal + "&sName=Rutgers+University+Dining")!
+                let url = place.getURL(meal: meal)
                 
                 let (data, _) = try await URLSession.shared.data(from: url)
                 
@@ -89,7 +77,7 @@ struct AddItemsView : View {
                     let servingsNumber = try? Int(serving.attr("aria-label").first!.description) ?? 1
                     let servingsUnit = try? serving.attr("aria-label").replacingOccurrences(of: String(servingsNumber!), with: "").lowercased()
                     // capitalize items
-                    items.append(Item(name: try! label.attr("name").capitalized, id: try! label.attr("for"), servingsNumber: servingsNumber!, servingsUnit: servingsUnit!, isFavorite: settings.favoriteItemsIDs.contains(try! label.attr("for"))))
+                    items.append(Item(name: try! label.attr("name").capitalized.replacingOccurrences(of: "  ", with: " "), id: try! label.attr("for"), servingsNumber: servingsNumber!, servingsUnit: servingsUnit!, isFavorite: settings.favoriteItemsIDs.contains(try! label.attr("for"))))
                 }
             }
         }

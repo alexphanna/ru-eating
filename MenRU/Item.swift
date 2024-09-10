@@ -21,6 +21,7 @@ import Foundation
     var name : String
     var id : String
     var ingredients: String
+    var restricted: Bool
     var servingsNumber: Int
     private var servingsUnit: String
     var servingSize: String {
@@ -48,5 +49,19 @@ import Foundation
         self.portion = portion
         self.isFavorite = isFavorite
         self.ingredients = ""
+        self.restricted = false
+    }
+    
+    func fetchIngredients() async throws -> String {
+        let doc = try await fetchDoc(url: URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/label.aspx?&RecNumAndPort=" + id + "*1")!)
+        if !hasNutritionalReport(doc: doc) {
+            return ""
+        }
+        let elements = try! doc.select("div.col-md-12 > p").array()
+        
+        let text = try! elements[0].text()
+        let textArray = text.split(separator: "\u{00A0}")
+        
+        return String(textArray[textArray.count - 1]).capitalized;
     }
 }

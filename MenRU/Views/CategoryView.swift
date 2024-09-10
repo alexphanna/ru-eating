@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MenuSectionView : View {
+struct CategoryView : View {
     @State var category: Category
     @Bindable var menuSectionSettings: MenuSectionSettings = MenuSectionSettings()
     @Environment(Settings.self) private var settings

@@ -11,11 +11,10 @@ import SwiftData
 
 struct ItemView: View {
     @State var item: Item
-    @State private var restricted: Bool = false
     @Environment(Settings.self) private var settings
     
     var body : some View {
-        if (settings.hideRestricted && !restricted) || !settings.hideRestricted {
+        if (settings.hideRestricted && !item.restricted) || !settings.hideRestricted {
             NavigationLink {
                 NavigationStack {
                     VStack {
@@ -24,7 +23,7 @@ struct ItemView: View {
                         }
                         else {
                             List {
-                                if restricted {
+                                if item.restricted {
                                     Section("Warning") {
                                         Label("Item may contain dietary restrictions.", systemImage: "exclamationmark.triangle.fill")
                                     }
@@ -41,7 +40,7 @@ struct ItemView: View {
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
                             // toggle was changing background color, so I use button
-                            Button(action: { favorite(item: item) }) {
+                            Button(action: { settings.favorite(item: item) }) {
                                 Image(systemName: item.isFavorite ? "star.fill" : "star")
                                     .foregroundStyle(.yellow)
                             }
@@ -57,7 +56,7 @@ struct ItemView: View {
                             .foregroundStyle(.yellow)
                     }
                 }
-                else if settings.filterIngredients && restricted {
+                else if settings.filterIngredients && item.restricted {
                     Label(item.name, systemImage: "exclamationmark.triangle.fill")
                 }
                 else {
@@ -65,7 +64,7 @@ struct ItemView: View {
                 }
             }
             .swipeActions {
-                Button(action: { favorite(item: item) }) {
+                Button(action: { settings.favorite(item: item) }) {
                     Image(systemName: item.isFavorite ? "star.slash.fill" : "star.fill")
                 }
                 .tint(.yellow)
@@ -73,8 +72,8 @@ struct ItemView: View {
             .task {
                 if item.ingredients.isEmpty {
                     do {
-                        item.ingredients = try await fetchIngredients(itemID: item.id)
-                        restricted = ingredientsContainRestriction(ingredients: item.ingredients)
+                        item.ingredients = try await item.fetchIngredients()
+                        item.restricted = ingredientsContainRestriction(ingredients: item.ingredients)
                     } catch {
                         // do nothing
                     }
@@ -83,35 +82,12 @@ struct ItemView: View {
         }
     }
     
-    func favorite(item: Item) {
-        item.isFavorite = !item.isFavorite
-        if item.isFavorite {
-            settings.favoriteItemsIDs.append(item.id)
-        }
-        else if !item.isFavorite {
-            settings.favoriteItemsIDs.removeAll(where: { $0 == item.id })
-        }
-    }
-    
     func ingredientsContainRestriction(ingredients: String) -> Bool {
         for restriction in settings.restrictions {
-            if ingredients.lowercased().contains(restriction.lowercased()) && item.name.lowercased().contains(restriction.lowercased()) {
+            if ingredients.lowercased().contains(restriction.lowercased()) || item.name.lowercased().contains(restriction.lowercased()) {
                 return true
             }
         }
         return false
-    }
-
-    func fetchIngredients(itemID: String) async throws -> String {
-        let doc = try await fetchDoc(url: URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/label.aspx?&RecNumAndPort=" + itemID + "*1")!)
-        if !hasNutritionalReport(doc: doc) {
-            return ""
-        }
-        let elements = try! doc.select("div.col-md-12 > p").array()
-        
-        let text = try! elements[0].text()
-        let textArray = text.split(separator: "\u{00A0}")
-        
-        return String(textArray[textArray.count - 1]).capitalized;
     }
 }
