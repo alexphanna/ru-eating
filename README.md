@@ -1,5 +1,5 @@
-# <img src="MenRU/Assets.xcassets/AppIcon.appiconset/MenRU.png" width="22" /> MenRU
-An unofficial Rutgers University dining hall menu app for iOS written in Swift using SwiftUI, SwiftData and [SwiftSoup](https://github.com/scinfu/SwiftSoup). Name pronounced *men-rooh* or *men-are-you*.
+# <img src="RU-Eating/Assets.xcassets/AppIcon.appiconset/MenRU.png" width="22" /> RU Eating
+An unofficial Rutgers University dining hall menu app for iOS written in Swift using SwiftUI, SwiftData and [SwiftSoup](https://github.com/scinfu/SwiftSoup).
 
 ## Features
 - View menus scraped directly from [food.rutgers.edu](https://food.rutgers.edu)
