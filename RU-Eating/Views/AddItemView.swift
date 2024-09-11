@@ -38,15 +38,15 @@ struct AddItemsView : View {
                     }
                 }
             }
-            .task {
+            /*.task {
                 do {
-                    try await fetchItems()
+                    //try await fetchItems()
                 } catch is CancellationError {
                     print("task cancelled")
                 } catch {
                     print("\(error)")
                 }
-            }
+            }*/
             .navigationTitle("Add Item")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -58,7 +58,7 @@ struct AddItemsView : View {
         .searchable(text: $searchText)
     }
     
-    func fetchItems() async throws {
+    /*func fetchItems() async throws {
         for place in places {
             for meal in meals {
                 let url = place.getURL(meal: meal)
@@ -81,5 +81,5 @@ struct AddItemsView : View {
                 }
             }
         }
-    }
+    }*/
 }

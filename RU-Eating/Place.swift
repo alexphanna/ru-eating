@@ -45,28 +45,27 @@ class Place: Identifiable, Hashable {
         self.id = id
     }
     
-    func getURL(meal: String) -> URL {
+    func getURL(meal: String, date: Date) -> URL {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy"
         
-        return URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/pickmenu.aspx?locationNum=" + String(format: "%02d", id) + "&locationName=" + name.replacingOccurrences(of: " ", with: "+") + "&dtdate=" + "09/14/2024"/*dateFormatter.string(from: Date.now)*/ + "&activeMeal=" + meal + "&sName=Rutgers+University+Dining")!
+        return URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/pickmenu.aspx?locationNum=" + String(format: "%02d", id) + "&locationName=" + name.replacingOccurrences(of: " ", with: "+") + "&dtdate=" + dateFormatter.string(from: date) + "&activeMeal=" + meal + "&sName=Rutgers+University+Dining")!
     }
     
-    func fetchMenu(meal: String, settings: Settings) async throws -> [Category] {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
-        var doc = try await fetchDoc(url: getURL(meal: meal))
+    func fetchMenu(meal: String, date: Date, settings: Settings) async throws -> [Category] {
+        var doc = try await fetchDoc(url: getURL(meal: meal, date: date))
         var elements = try! doc.select("div.menuBox h3, div.menuBox fieldset div.col-1 label, div.menuBox fieldset div.col-2 label").array()
         let breakfastCount = elements.count
         
         if meal == "Breakfast" {
-            doc = try await fetchDoc(url: getURL(meal: "Lunch"))
+            doc = try await fetchDoc(url: getURL(meal: "Lunch", date: date))
             elements.append(contentsOf: try! doc.select("div.menuBox h3, div.menuBox fieldset div.col-1 label, div.menuBox fieldset div.col-2 label").array())
         }
         
         var menu = [Category]();
         var isBreakfast = false
-        for i in 0..<elements.count {
+        var i = 0
+        while i < elements.count {
             let element = elements[i]
             
             if (element.tagName() == "h3") {
@@ -80,6 +79,7 @@ class Place: Identifiable, Hashable {
                     }
                     else {
                         isBreakfast = false
+                        i += 1
                         continue
                     }
                 }
@@ -87,6 +87,7 @@ class Place: Identifiable, Hashable {
             }
             if (element.tagName() == "label") {
                 if i >= breakfastCount && !isBreakfast {
+                    i += 2
                     continue
                 }
                 // check if item is already on the menu
@@ -103,15 +104,21 @@ class Place: Identifiable, Hashable {
                     }
                 }
                 if (duplicate) {
+                    i += 2
                     continue
                 }
                 
-                let servingsNumber = try? Int(elements[i + 1].attr("aria-label").first!.description) ?? 1
-                let servingsUnit = try? elements[i + 1].attr("aria-label").replacingOccurrences(of: String(servingsNumber!), with: "").lowercased()
+                let servings = try! elements[i + 1].text().split(separator: "\u{00A0}")
+                let servingsNumber: Float = servings[0].contains("/") ? Float(String(servings[0]).split(separator: "/")[0])! / Float(String(servings[0]).split(separator: "/")[1])! : Float(Int(servings[0])!)
+                let servingsUnit: String = String(servings[1])
+                
                 
                 // capitalize items
-                menu[menu.count - 1].items.append(Item(name: try! element.attr("name").capitalized.replacingOccurrences(of: "  ", with: " "), id: try! element.attr("for"), servingsNumber: servingsNumber!, servingsUnit: servingsUnit!, isFavorite: settings.favoriteItemsIDs.contains(try! element.attr("for"))))
+                menu[menu.count - 1].items.append(Item(name: try! element.attr("name").capitalized.replacingOccurrences(of: "  ", with: " "), id: try! element.attr("for"), servingsNumber: servingsNumber, servingsUnit: servingsUnit, isFavorite: settings.favoriteItemsIDs.contains(try! element.attr("for"))))
+                
+                i += 1
             }
+            i += 1
         }
         
         return menu

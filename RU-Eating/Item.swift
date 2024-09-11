@@ -9,7 +9,7 @@ import Foundation
 
 @Observable class Item : Hashable, Identifiable {
     static func == (lhs: Item, rhs: Item) -> Bool {
-        return lhs.name == rhs.name && lhs.id == rhs.id
+        return lhs.name == rhs.name
     }
     
     func hash(into hasher: inout Hasher) {
@@ -22,7 +22,7 @@ import Foundation
     var id : String
     var ingredients: String
     var restricted: Bool
-    var servingsNumber: Int
+    var servingsNumber: Float
     private var servingsUnit: String
     var servingSize: String {
         get {
@@ -41,7 +41,7 @@ import Foundation
         if portion < 0 { portion = 0 }
     }
     
-    init(name: String, id: String, servingsNumber: Int, servingsUnit: String, portion: Int = 1, isFavorite: Bool = false) {
+    init(name: String, id: String, servingsNumber: Float, servingsUnit: String, portion: Int = 1, isFavorite: Bool = false) {
         self.name = name
         self.id = id
         self.servingsNumber = servingsNumber

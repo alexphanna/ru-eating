@@ -9,10 +9,11 @@ import SwiftUI
 
 struct SettingsView : View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.openURL) var openURL
     @Bindable var settings: Settings
     
     var body : some View {
-        NavigationStack {
+        NavigationView { // using NavigationView instead of NavigationStack because the navigation title wouldn't be large using stack
             Form {
                 Section {
                     Toggle(isOn: $settings.filterIngredients) {
@@ -31,6 +32,22 @@ struct SettingsView : View {
                 } footer: {
                     Text("Filter through item ingredients and display \(Image(systemName: "exclamationmark.triangle.fill")) next to items or hide items with potential dietary restrictions.")
                 }
+                Section("Credits") { // Inspired by delta
+                    Button {
+                        openURL(URL(string: "https://www.github.com/alexphanna")!)
+                    } label: {
+                        HStack {
+                            Text("Alex Hanna")
+                                .foregroundStyle(Color(uiColor: .label))
+                            Spacer()
+                            Text("Developer")
+                                .foregroundStyle(.gray)
+                            NavigationLink(destination: EmptyView(), label: { EmptyView() })
+                                .fixedSize()
+                                .foregroundStyle(Color(uiColor: .label))
+                        }
+                    }
+                }
                 Section("Support") {
                     Link(destination: URL(string: "https://www.github.com/alexphanna/menru")!, label: {
                         Label("Star on GitHub", systemImage: "star")
@@ -38,6 +55,7 @@ struct SettingsView : View {
                 }
             }
             .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done", action: { dismiss() })

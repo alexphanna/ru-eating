@@ -20,7 +20,7 @@ import Foundation
     
     let name : String
     var items : [Item]
-    let id = UUID()
+    let id: UUID
     var portions: Int {
         get {
             var totalPortions = 0
@@ -34,5 +34,6 @@ import Foundation
     init(name: String, items: [Item] = [Item]()) {
         self.name = name
         self.items = items
+        self.id = UUID()
     }
 }
