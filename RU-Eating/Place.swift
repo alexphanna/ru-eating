@@ -109,7 +109,19 @@ class Place: Identifiable, Hashable {
                 }
                 
                 let servings = try! elements[i + 1].text().split(separator: "\u{00A0}")
-                let servingsNumber: Float = servings[0].contains("/") ? Float(String(servings[0]).split(separator: "/")[0])! / Float(String(servings[0]).split(separator: "/")[1])! : Float(Int(servings[0])!)
+                var servingsNumber: Float = 0
+                if !servings[0].contains("/") { // example: 1
+                    servingsNumber = Float(Int(servings[0])!)
+                }
+                else if servings[0].contains("/") && servings[0].contains(" ") { // example: 1 1/2
+                    let mixedFraction = String(servings[0]).split(separator: " ")
+                    let fraction = String(mixedFraction[1]).split(separator: "/")
+                    servingsNumber = (Float(fraction[0])! + Float(mixedFraction[0])! * Float(fraction[1])!) / Float(fraction[1])!
+                }
+                else if servings[0].contains("/") { // example: 1/2
+                    let fraction = String(servings[0]).split(separator: "/")
+                    servingsNumber = Float(fraction[0])! / Float(fraction[1])!
+                }
                 let servingsUnit: String = String(servings[1])
                 
                 

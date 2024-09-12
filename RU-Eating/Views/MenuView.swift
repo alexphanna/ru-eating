@@ -15,6 +15,7 @@ struct MenuView: View {
     @State private var selectedDate = Date.now
     @State private var group = true
     @State private var menu: [Category] = [Category]()
+    
     @State private var searchText = ""
     @Environment(Settings.self) private var settings
     
@@ -53,24 +54,32 @@ struct MenuView: View {
                             .onChange(of: selectedDate) {
                                 showDatePicker = false
                                 Task {
-                                    menu = try! await place.fetchMenu(meal: selectedMeal, date: selectedDate, settings: settings)
+                                    await updateMenu()
                                 }
                             }
                     }
-                    ForEach(searchResults) { category in
-                        if group {
+                    if group {
+                        ForEach(searchResults) { category in
                             CategoryView(category: category)
                         }
-                        else {
-                            ForEach(category.items.sorted(by: { $0.name < $1.name })) { item in
-                                if (settings.hideUnfavorited && item.isFavorite) || !settings.hideUnfavorited {
-                                    ItemView(item: item)
-                                }
+                    }
+                    else {
+                        ForEach(getItems(menu: searchResults)) { item in
+                            if (settings.hideUnfavorited && item.isFavorite) || !settings.hideUnfavorited {
+                                ItemView(item: item)
                             }
                         }
                     }
                 }
-                //.searchable(text: $searchText)
+                .searchable(text: $searchText)
+                .overlay {
+                    if !menu.isEmpty && searchResults.isEmpty {
+                        ContentUnavailableView.search(text: searchText)
+                    }
+                    else if menu.isEmpty {
+                        ProgressView()
+                    }
+                }
                 .listStyle(.sidebar)
                 .navigationTitle("")
                 .navigationBarTitleDisplayMode(.inline)
@@ -83,7 +92,7 @@ struct MenuView: View {
                         }
                         .onChange(of: selectedMeal) {
                             Task {
-                                menu = try! await place.fetchMenu(meal: selectedMeal, date: selectedDate, settings: settings)
+                                await updateMenu()
                             }
                         }
                         .pickerStyle(.segmented)
@@ -133,7 +142,7 @@ struct MenuView: View {
                 }
                 .task {
                     if menu.isEmpty {
-                        menu = try! await place.fetchMenu(meal: selectedMeal, date: selectedDate, settings: settings)
+                        await updateMenu()
                     }
                 }
             }
@@ -143,5 +152,26 @@ struct MenuView: View {
                 Text(place.campus).font(.footnote).italic().foregroundStyle(.gray)
             }
         }
+    }
+    
+    func updateMenu() async {
+        do {
+            menu = [Category]()
+            menu = try await place.fetchMenu(meal: selectedMeal, date: selectedDate, settings: settings)
+        } catch is URLError {
+            
+        } catch {
+            print(error)
+        }
+    }
+    
+    func getItems(menu: [Category]) -> [Item] {
+        var items: [Item] = [Item]()
+        
+        for category in menu {
+            items.append(contentsOf: category.items)
+        }
+        
+        return items.sorted(by: { $0.name < $1.name })
     }
 }
