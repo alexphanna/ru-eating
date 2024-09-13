@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftSoup
 
 class Place: Identifiable, Hashable {
     static func == (lhs: Place, rhs: Place) -> Bool {

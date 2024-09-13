@@ -13,35 +13,37 @@ struct MealView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                if meal.items.count == 0 {
-                    Text("No Items")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                    Text("Items you've added will appear here.")
-                        .font(.callout)
-                        .foregroundStyle(.gray)
-                    Button("Add Items", action: { isSheetShowing = true })
-                        .padding()
-                }
-                else if meal.items.count > 0 {
-                    List {
-                        Section("Items") {
-                            ForEach(meal.items) { item in
-                                Stepper {
-                                    Text(String(item.portion) + " " + item.name)
-                                } onIncrement: {
-                                    item.incrementPortion()
-                                } onDecrement: {
-                                    item.decrementPoriton()
-                                    if item.portion == 0 {
-                                        meal.items.removeAll(where: { $0.id == item.id } )
-                                    }
+            List {
+                if !meal.items.isEmpty {
+                    Section("Items") {
+                        ForEach(meal.items) { item in
+                            Stepper {
+                                Text(String(item.portion) + " " + item.name)
+                            } onIncrement: {
+                                item.incrementPortion()
+                            } onDecrement: {
+                                item.decrementPoriton()
+                                if item.portion == 0 {
+                                    meal.items.removeAll(where: { $0.id == item.id } )
                                 }
                             }
-                            .onDelete(perform: { meal.items.remove(atOffsets: $0) })
                         }
-                        NutritionView(category: meal)
+                        .onDelete(perform: { meal.items.remove(atOffsets: $0) })
+                    }
+                    NutritionView(category: meal)
+                }
+            }
+            .overlay {
+                if meal.items.isEmpty {
+                    ContentUnavailableView {
+                        Text("No Items")
+                            .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                    } description: {
+                        Text("Add an item to get started.")
+                    } actions: {
+                        Button(action: { isSheetShowing = true }) {
+                            Text("Add Item")
+                        }
                     }
                 }
             }

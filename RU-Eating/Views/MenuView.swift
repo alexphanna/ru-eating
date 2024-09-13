@@ -15,33 +15,57 @@ struct MenuView: View {
     @State private var selectedDate = Date.now
     @State private var group = true
     @State private var menu: [Category] = [Category]()
-    
-    @State private var searchText = ""
     @Environment(Settings.self) private var settings
     
-    private var searchResults: [Category] {
-        if (searchText.isEmpty) {
-            return menu
-        }
-        else {
-            var filteredMenu = [Category]()
+    @State private var searchText = ""
+    @State private var selectedFilter: String = "All Items"
+    
+    private var filteredMenu: [Category] {
+        var filteredMenu: [Category] = [Category]()
+        
+        for category in menu {
+            let filteredCategory: Category = Category(name: category.name)
             
-            for category in menu {
-                let filteredCategory: Category = Category(name: category.name)
+            switch selectedFilter {
+            case "Favorites":
+                filteredCategory.items.append(contentsOf: category.items.filter { $0.isFavorite })
+                break
+            default:
+                filteredCategory.items.append(contentsOf: category.items)
+                break
+            }
+            
+            if !searchText.isEmpty {
+                let searchedCategory: Category = Category(name: category.name)
                 
-                for item in category.items {
+                for item in filteredCategory.items {
                     if item.name.lowercased().contains(searchText.lowercased()) {
-                        filteredCategory.items.append(item)
+                        searchedCategory.items.append(item)
                     }
                 }
                 
-                if !filteredCategory.items.isEmpty {
-                    filteredMenu.append(filteredCategory)
+                if !searchedCategory.items.isEmpty {
+                    filteredMenu.append(searchedCategory)
                 }
             }
-            
-            return filteredMenu
+            else if !filteredCategory.items.isEmpty {
+                filteredMenu.append(filteredCategory)
+            }
         }
+        
+        return filteredMenu
+    }
+    
+    private var items: Category {
+        var category: Category = Category(name: "All")
+        
+        for _category in filteredMenu {
+            category.items.append(contentsOf: _category.items)
+        }
+        
+        category.items = category.items.sorted(by: { $0.name < $1.name })
+        
+        return category
     }
     
     var body: some View {
@@ -59,25 +83,24 @@ struct MenuView: View {
                             }
                     }
                     if group {
-                        ForEach(searchResults) { category in
+                        ForEach(filteredMenu) { category in
                             CategoryView(category: category)
                         }
                     }
                     else {
-                        ForEach(getItems(menu: searchResults)) { item in
-                            if (settings.hideUnfavorited && item.isFavorite) || !settings.hideUnfavorited {
-                                ItemView(item: item)
-                            }
-                        }
+                        CategoryView(category: items)
                     }
                 }
                 .searchable(text: $searchText)
                 .overlay {
-                    if !menu.isEmpty && searchResults.isEmpty {
+                    if !searchText.isEmpty && filteredMenu.isEmpty {
                         ContentUnavailableView.search(text: searchText)
                     }
                     else if menu.isEmpty {
                         ProgressView()
+                    }
+                    else if filteredMenu.isEmpty {
+                        ContentUnavailableView("No Results", systemImage: "")
                     }
                 }
                 .listStyle(.sidebar)
@@ -106,13 +129,23 @@ struct MenuView: View {
                     ToolbarItem(placement: .topBarTrailing) {
                         Menu {
                             Section {
-                                Button(action: { settings.hideUnfavorited = !settings.hideUnfavorited }) {
-                                    HStack {
-                                        Text(settings.hideUnfavorited ? "Show Unfavorited" : "Hide Unfavorited")
-                                        Spacer()
-                                        Image(systemName: settings.hideUnfavorited ? "eye" : "eye.slash")
+                                Picker(selection: $selectedFilter ) {
+                                    Section {
+                                        Label("All Items", systemImage: "fork.knife").tag("All Items")
+                                    }
+                                    Section {
+                                        Label("Favorites", systemImage: "star").tag("Favorites")
+                                    }
+                                } label: {
+                                    Button(action: {}) {
+                                        HStack {
+                                            Text("Filter")
+                                            Spacer()
+                                            Image(systemName: selectedFilter == "All Items" ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
+                                        }
                                     }
                                 }
+                                .pickerStyle(.menu)
                             }
                             Section {
                                 Picker(selection: $group) {
@@ -163,15 +196,5 @@ struct MenuView: View {
         } catch {
             print(error)
         }
-    }
-    
-    func getItems(menu: [Category]) -> [Item] {
-        var items: [Item] = [Item]()
-        
-        for category in menu {
-            items.append(contentsOf: category.items)
-        }
-        
-        return items.sorted(by: { $0.name < $1.name })
     }
 }

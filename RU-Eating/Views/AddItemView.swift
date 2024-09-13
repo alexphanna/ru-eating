@@ -38,15 +38,9 @@ struct AddItemsView : View {
                     }
                 }
             }
-            /*.task {
-                do {
-                    //try await fetchItems()
-                } catch is CancellationError {
-                    print("task cancelled")
-                } catch {
-                    print("\(error)")
-                }
-            }*/
+            .task {
+                await updateItems()
+            }
             .navigationTitle("Add Item")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -58,28 +52,15 @@ struct AddItemsView : View {
         .searchable(text: $searchText)
     }
     
-    /*func fetchItems() async throws {
+    func updateItems() async {
         for place in places {
             for meal in meals {
-                let url = place.getURL(meal: meal)
+                let menu = try! await place.fetchMenu(meal: meal, date: Date.now, settings: settings)
                 
-                let (data, _) = try await URLSession.shared.data(from: url)
-                
-                let doc = try! SwiftSoup.parse(String(data: data, encoding: .utf8)!)
-                
-                let labels = try! doc.select("div.menuBox fieldset div.col-1 label").array()
-                let servings = try! doc.select("div.menuBox fieldset div.col-2 label").array()
-                
-                for i in 0..<labels.count {
-                    let label = labels[i]
-                    let serving = servings[i]
-                    
-                    let servingsNumber = try? Int(serving.attr("aria-label").first!.description) ?? 1
-                    let servingsUnit = try? serving.attr("aria-label").replacingOccurrences(of: String(servingsNumber!), with: "").lowercased()
-                    // capitalize items
-                    items.append(Item(name: try! label.attr("name").capitalized.replacingOccurrences(of: "  ", with: " "), id: try! label.attr("for"), servingsNumber: servingsNumber!, servingsUnit: servingsUnit!, isFavorite: settings.favoriteItemsIDs.contains(try! label.attr("for"))))
+                for category in menu {
+                    items.append(contentsOf: category.items)
                 }
             }
         }
-    }*/
+    }
 }
