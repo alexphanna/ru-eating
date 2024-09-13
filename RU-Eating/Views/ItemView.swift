@@ -11,6 +11,7 @@ import SwiftData
 
 struct ItemView: View {
     @State var item: Item
+    @Binding var searchText: String
     @Environment(Settings.self) private var settings
     
     var body : some View {

@@ -2,7 +2,7 @@
 An unofficial Rutgers University dining hall menu app for iOS written in Swift using SwiftUI, SwiftData and [SwiftSoup](https://github.com/scinfu/SwiftSoup).
 
 ## Features
-- View menus scraped directly from [food.rutgers.edu](https://food.rutgers.edu)
+- View menus from any date pulled directly from [food.rutgers.edu](https://food.rutgers.edu)
 - Favorite items, which adds a star next to the item every time it appears on current and future menus
 - View nutrition facts (amount and daily value) and ingredients for items
 - Filter ingredients and warn users about foods containing their dietary restrictions
@@ -16,5 +16,5 @@ An unofficial Rutgers University dining hall menu app for iOS written in Swift u
   <img src="./screenshots/item.png" width="32%">
   <img src="./screenshots/meal.png" width="32%">
   <img src="./screenshots/settings.png" width="32%">
-  <img src="./screenshots/add-restriction.png" width="32%">
+  <img src="./screenshots/dark-mode.png" width="32%">
 </div>

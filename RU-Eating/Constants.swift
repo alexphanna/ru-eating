@@ -19,3 +19,16 @@ let meals = [
     "Lunch",
     "Dinner"
 ]
+
+let nutrientUnits = [
+    "Calories" : "",
+    "Fat" : "g",
+    "Carbohydrates" : "g",
+    "Saturated Fat" : "g",
+    "Dietary Fiber" : "g",
+    "Trans Fat" : "g",
+    "Sugars" : "g",
+    "Cholesterol" : "mg",
+    "Protein" : "g",
+    "Sodium" : "mg"
+]

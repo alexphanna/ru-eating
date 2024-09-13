@@ -55,10 +55,14 @@ struct AddItemsView : View {
     func updateItems() async {
         for place in places {
             for meal in meals {
-                let menu = try! await place.fetchMenu(meal: meal, date: Date.now, settings: settings)
-                
-                for category in menu {
-                    items.append(contentsOf: category.items)
+                do {
+                    let menu = try await place.fetchMenu(meal: meal, date: Date.now, settings: settings)
+                    
+                    for category in menu {
+                        items.append(contentsOf: category.items)
+                    }
+                } catch {
+                    // do nothing
                 }
             }
         }

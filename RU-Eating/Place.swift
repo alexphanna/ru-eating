@@ -123,7 +123,7 @@ class Place: Identifiable, Hashable {
                     let fraction = String(servings[0]).split(separator: "/")
                     servingsNumber = Float(fraction[0])! / Float(fraction[1])!
                 }
-                let servingsUnit: String = String(servings[1])
+                let servingsUnit: String = String(servings[1]).lowercased()
                 
                 
                 // capitalize items

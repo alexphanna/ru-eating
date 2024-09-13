@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftSoup
+import StoreKit
 
 struct MenusView : View {
     @State private var isShowingSheet = false

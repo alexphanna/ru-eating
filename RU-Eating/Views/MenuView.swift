@@ -57,7 +57,7 @@ struct MenuView: View {
     }
     
     private var items: Category {
-        var category: Category = Category(name: "All")
+        let category: Category = Category(name: "All")
         
         for _category in filteredMenu {
             category.items.append(contentsOf: _category.items)
@@ -84,11 +84,11 @@ struct MenuView: View {
                     }
                     if group {
                         ForEach(filteredMenu) { category in
-                            CategoryView(category: category)
+                            CategoryView(category: category, searchText: $searchText)
                         }
                     }
                     else {
-                        CategoryView(category: items)
+                        CategoryView(category: items, searchText: $searchText)
                     }
                 }
                 .searchable(text: $searchText)
@@ -189,10 +189,9 @@ struct MenuView: View {
     
     func updateMenu() async {
         do {
+            // clear menu first, to show progress view
             menu = [Category]()
             menu = try await place.fetchMenu(meal: selectedMeal, date: selectedDate, settings: settings)
-        } catch is URLError {
-            
         } catch {
             print(error)
         }

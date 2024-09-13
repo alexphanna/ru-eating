@@ -23,41 +23,41 @@ struct RestrictionsView : View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                if settings.restrictions.count == 0 && !isTextFieldShowing {
-                    Text("No Ingredients")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                    Text("Ingredients you've added will appear here.")
-                        .font(.callout)
-                        .foregroundStyle(.gray)
-                    Button("Add Ingredient", action: showTextField)
-                        .padding()
+            List {
+                Section {
+                    ForEach(settings.restrictions, id: \.self) { restriction in
+                        Text(restriction)
+                    }
+                    .onDelete(perform: { settings.restrictions.remove(atOffsets: $0) })
+                    if isTextFieldShowing {
+                        TextField("Ingredient Name", text: $ingredient)
+                            .submitLabel(.done)
+                            .focused($isTextFieldFocused)
+                            .onSubmit {
+                                isTextFieldShowing = false
+                                if !ingredient.isEmpty {
+                                    settings.restrictions.append(ingredient.trimmingCharacters(in: .whitespaces))
+                                    ingredient = ""
+                                }
+                            }
+                            .onTapGesture { }
+                    }
+                } footer: {
+                    if isTextFieldShowing {
+                        Text("Enter dietary restrictions singularly for increased filtering accuracy, for example enter \"Peanut\", not \"Peanuts\". Dietary restrictions are not case-sensitive.")
+                    }
                 }
-                else {
-                    List {
-                        Section {
-                            ForEach(settings.restrictions, id: \.self) { restriction in
-                                Text(restriction)
-                            }
-                            .onDelete(perform: { settings.restrictions.remove(atOffsets: $0) })
-                            if isTextFieldShowing {
-                                TextField("Ingredient Name", text: $ingredient)
-                                    .submitLabel(.done)
-                                    .focused($isTextFieldFocused)
-                                    .onSubmit {
-                                        isTextFieldShowing = false
-                                        if !ingredient.isEmpty {
-                                            settings.restrictions.append(ingredient.trimmingCharacters(in: .whitespaces))
-                                            ingredient = ""
-                                        }
-                                    }
-                                    .onTapGesture { }
-                            }
-                        } footer: {
-                            if isTextFieldShowing {
-                                Text("Enter dietary restrictions singularly for increased filtering accuracy, for example enter \"Peanut\", not \"Peanuts\". Dietary restrictions are not case-sensitive.")
-                            }
+            }
+            .overlay {
+                if settings.restrictions.count == 0 && !isTextFieldShowing {
+                    ContentUnavailableView {
+                        Text("No Ingredients")
+                            .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                    } description: {
+                        Text("Ingredients you've added will appear here.")
+                    } actions: {
+                        Button(action: showTextField) {
+                            Text("Add Ingredient")
                         }
                     }
                 }

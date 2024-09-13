@@ -13,7 +13,7 @@ struct SettingsView : View {
     @Bindable var settings: Settings
     
     var body : some View {
-        NavigationView { // using NavigationView instead of NavigationStack because the navigation title wouldn't be large using stack
+        NavigationStack {
             Form {
                 Section {
                     Toggle(isOn: $settings.filterIngredients) {
@@ -49,13 +49,12 @@ struct SettingsView : View {
                     }
                 }
                 Section("Support") {
-                    Link(destination: URL(string: "https://www.github.com/alexphanna/menru")!, label: {
+                    Link(destination: URL(string: "https://www.github.com/alexphanna/RU-Eating")!, label: {
                         Label("Star on GitHub", systemImage: "star")
                     })
                 }
             }
             .navigationTitle("Settings")
-            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done", action: { dismiss() })

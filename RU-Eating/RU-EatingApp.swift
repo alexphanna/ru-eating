@@ -21,6 +21,7 @@ struct MenRUApp: App {
 
 struct RootView: View {
     @Environment(\.modelContext) private var context
+    @Environment(\.requestReview) private var requestReview
     @Query private var settings: [Settings]
     
     var body: some View {
@@ -28,6 +29,10 @@ struct RootView: View {
             .onAppear {
                 if settings.isEmpty {
                     context.insert(Settings())
+                }
+                (settings.first ?? Settings()).numberOfUses += 1
+                if (settings.first ?? Settings()).numberOfUses % 10 == 0 {
+                    requestReview()
                 }
             }.environment(settings.first ?? Settings())
     }

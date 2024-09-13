@@ -26,7 +26,8 @@ import Foundation
     private var servingsUnit: String
     var servingSize: String {
         get {
-            return "\(servingsNumber) \(servingsUnit)"
+            let number = servingsNumber.remainder(dividingBy: 1.0) == 0 ? String(servingsNumber.formatted(.number.precision(.fractionLength(0)))) : String(servingsNumber)
+            return "\(number) \(servingsUnit)"
         }
     }
     var portion: Int // number of servings
