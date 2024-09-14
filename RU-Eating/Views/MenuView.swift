@@ -30,6 +30,9 @@ struct MenuView: View {
             case "Favorites":
                 filteredCategory.items.append(contentsOf: category.items.filter { $0.isFavorite })
                 break
+            case "Low Carbon Footprint":
+                filteredCategory.items.append(contentsOf: category.items.filter { $0.carbonFootprint == 1 })
+                break
             default:
                 filteredCategory.items.append(contentsOf: category.items)
                 break
@@ -135,6 +138,7 @@ struct MenuView: View {
                                     }
                                     Section {
                                         Label("Favorites", systemImage: "star").tag("Favorites")
+                                        Label("Low Carbon Footprint", systemImage: "leaf").tag("Low Carbon Footprint")
                                     }
                                 } label: {
                                     Button(action: {}) {
@@ -146,8 +150,6 @@ struct MenuView: View {
                                     }
                                 }
                                 .pickerStyle(.menu)
-                            }
-                            Section {
                                 Picker(selection: $group) {
                                     Text("On").tag(true)
                                     Text("Off").tag(false)
@@ -168,6 +170,9 @@ struct MenuView: View {
                                 }
                                 .pickerStyle(.menu)
                             }
+                            Link(destination: place.getURL(meal: selectedMeal, date: selectedDate), label: {
+                                Label("View Source", systemImage: "link")
+                            })
                         } label: {
                             Image(systemName: "ellipsis.circle")
                         }

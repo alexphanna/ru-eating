@@ -52,16 +52,38 @@ struct ItemView: View {
                 if item.isFavorite {
                     Label {
                         Text(item.name)
+                        if settings.carbonFootprints && item.carbonFootprint > 0 {
+                            Spacer()
+                            Image(systemName: "leaf")
+                                .foregroundStyle(item.carbonFootprint == 1 ? .green : item.carbonFootprint == 2 ? .orange : .red)
+                        }
                     } icon: {
                         Image(systemName: "star.fill")
                             .foregroundStyle(.yellow)
                     }
                 }
                 else if settings.filterIngredients && item.restricted {
-                    Label(item.name, systemImage: "exclamationmark.triangle.fill")
+                    Label {
+                        Text(item.name)
+                        if settings.carbonFootprints && item.carbonFootprint > 0 {
+                            Spacer()
+                            Image(systemName: "leaf")
+                                .foregroundStyle(item.carbonFootprint == 1 ? .green : item.carbonFootprint == 2 ? .orange : .red)
+                        }
+                    } icon: {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundStyle(.red)
+                    }
                 }
                 else {
-                    Text(item.name)
+                    HStack {
+                        Text(item.name)
+                        if settings.carbonFootprints && item.carbonFootprint > 0 {
+                            Spacer()
+                            Image(systemName: "leaf")
+                                .foregroundStyle(item.carbonFootprint == 1 ? .green : item.carbonFootprint == 2 ? .orange : .red)
+                        }
+                    }
                 }
             }
             .swipeActions {

@@ -14,11 +14,13 @@ class Settings {
     var hideRestricted: Bool
     var favoriteItemsIDs: [String]
     var numberOfUses: Int
+    var carbonFootprints: Bool
     
-    init(filterIngredients: Bool = false, restrictions: [String] = [], hideRestricted: Bool = false) {
+    init(filterIngredients: Bool = false, restrictions: [String] = [], hideRestricted: Bool = false, carbonFootprints: Bool = true) {
         self.filterIngredients = filterIngredients
         self.hideRestricted = hideRestricted
         self.restrictions = restrictions
+        self.carbonFootprints = carbonFootprints
         self.favoriteItemsIDs = [String]()
         self.numberOfUses = 1
     }

@@ -55,12 +55,12 @@ class Place: Identifiable, Hashable {
     
     func fetchMenu(meal: String, date: Date, settings: Settings) async throws -> [Category] {
         var doc = try await fetchDoc(url: getURL(meal: meal, date: date))
-        var elements = try! doc.select("div.menuBox h3, div.menuBox fieldset div.col-1 label, div.menuBox fieldset div.col-2 label").array()
+        var elements = try! doc.select("div.menuBox h3, div.menuBox fieldset div.col-1 label, div.menuBox fieldset div.col-2 label, div.menuBox fieldset div.col-1 img").array()
         let breakfastCount = elements.count
         
         if meal == "Breakfast" {
             doc = try await fetchDoc(url: getURL(meal: "Lunch", date: date))
-            elements.append(contentsOf: try! doc.select("div.menuBox h3, div.menuBox fieldset div.col-1 label, div.menuBox fieldset div.col-2 label").array())
+            elements.append(contentsOf: try! doc.select("div.menuBox h3, div.menuBox fieldset div.col-1 label, div.menuBox fieldset div.col-2 label, div.menuBox fieldset div.col-1 img").array())
         }
         
         var menu = [Category]();
@@ -88,7 +88,7 @@ class Place: Identifiable, Hashable {
             }
             if (element.tagName() == "label") {
                 if i >= breakfastCount && !isBreakfast {
-                    i += 2
+                    i += 2 + (elements[i + 1].tagName() == "img" ? 1 : 0)
                     continue
                 }
                 // check if item is already on the menu
@@ -105,10 +105,30 @@ class Place: Identifiable, Hashable {
                     }
                 }
                 if (duplicate) {
-                    i += 2
+                    i += 2 + (elements[i + 1].tagName() == "img" ? 1 : 0)
                     continue
                 }
                 
+                // carbon footprint
+                var carbonFootprint = 0
+                if i + 2 < elements.count && elements[i + 1].tagName() == "img" {
+                    switch try! elements[i + 1].attr("title") {
+                    case "Low carbon foot print":
+                        carbonFootprint = 1
+                        break
+                    case "Medium carbon foot print":
+                        carbonFootprint = 2
+                        break
+                    case "High carbon foot print":
+                        carbonFootprint = 3
+                        break
+                    default:
+                        carbonFootprint = 0
+                    }
+                    i += 1
+                }
+                
+                // servings
                 let servings = try! elements[i + 1].text().split(separator: "\u{00A0}")
                 var servingsNumber: Float = 0
                 if !servings[0].contains("/") { // example: 1
@@ -125,9 +145,8 @@ class Place: Identifiable, Hashable {
                 }
                 let servingsUnit: String = String(servings[1]).lowercased()
                 
-                
                 // capitalize items
-                menu[menu.count - 1].items.append(Item(name: try! element.attr("name").capitalized.replacingOccurrences(of: "  ", with: " "), id: try! element.attr("for"), servingsNumber: servingsNumber, servingsUnit: servingsUnit, isFavorite: settings.favoriteItemsIDs.contains(try! element.attr("for"))))
+                menu[menu.count - 1].items.append(Item(name: try! element.attr("name").capitalized.replacingOccurrences(of: "  ", with: " "), id: try! element.attr("for"), servingsNumber: servingsNumber, servingsUnit: servingsUnit, carbonFootprint: carbonFootprint, isFavorite: settings.favoriteItemsIDs.contains(try! element.attr("for"))))
                 
                 i += 1
             }

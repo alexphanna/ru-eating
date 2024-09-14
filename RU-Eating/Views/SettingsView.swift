@@ -30,7 +30,14 @@ struct SettingsView : View {
                 } header: {
                     Text("Dietary Restrictions")
                 } footer: {
-                    Text("Filter through item ingredients and display \(Image(systemName: "exclamationmark.triangle.fill")) next to items or hide items with potential dietary restrictions.")
+                    Text("Filter through item's ingredients and display \(Image(systemName: "exclamationmark.triangle.fill")) next to items or hide items with potential dietary restrictions.")
+                }
+                Section {
+                    Toggle(isOn: $settings.carbonFootprints) {
+                        Text("Carbon Footprints")
+                    }
+                } footer: {
+                    Text("Display \(Image(systemName: "leaf.fill")) next to items with the color corresponding to the carbon footprint: green = low, orange = medium, red = high. Not all items have carbon footprint data.")
                 }
                 Section("Credits") { // Inspired by delta
                     Button {
