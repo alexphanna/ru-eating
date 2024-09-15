@@ -22,9 +22,9 @@ import OrderedCollections
     let name : String
     var items : [Item]
     let id: UUID
-    var portions: Int {
+    var portions: Float {
         get {
-            var totalPortions = 0
+            var totalPortions: Float = 0.0
             for item in items {
                 totalPortions += item.portion
             }

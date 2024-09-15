@@ -60,7 +60,6 @@ struct ItemView: View {
                     }
                 }
             } label: {
-                
                 if item.isFavorite {
                     Label {
                         Text(highlightedName)

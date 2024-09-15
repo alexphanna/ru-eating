@@ -13,15 +13,20 @@ struct AddItemsView : View {
     @Environment(Settings.self) private var settings
     @State var meal: Category
     
-    @State private var items = OrderedSet<Item>()
+    @State private var items: [Item] = [Item]()
     @State private var searchText = ""
+    @State private var searchScope = "Busch"
+    
+    private var placeNames: [String] {
+        return ["Busch", "Livingston", "Neilson", "The Atrium"]
+    }
     
     var searchResults: [Item] {
         if (searchText.isEmpty) {
-            return Array(items)
+            return items
         }
         else {
-            return Array(items).filter { $0.name.lowercased().contains(searchText.lowercased()) }
+            return items.filter { $0.name.lowercased().contains(searchText.lowercased()) }
         }
     }
     
@@ -50,21 +55,38 @@ struct AddItemsView : View {
             }
         }
         .searchable(text: $searchText)
+        .searchScopes($searchScope, activation: .onSearchPresentation) {
+            ForEach(placeNames, id: \.self) { name in
+                Text(name)
+            }
+        }
+        .onChange(of: searchScope) {
+            Task {
+                await updateItems()
+            }
+        }
     }
     
     func updateItems() async {
+        items = [Item]()
         for place in places {
+            if !place.name.contains(searchScope) { continue }
             for meal in meals {
                 do {
                     let menu = try await place.fetchMenu(meal: meal, date: Date.now, settings: settings)
                     
                     for category in menu {
-                        items.append(contentsOf: category.items)
+                        for item in category.items {
+                            if !items.contains(item) {
+                                items.append(item)
+                            }
+                        }
                     }
                 } catch {
                     // do nothing
                 }
             }
+            break
         }
     }
 }

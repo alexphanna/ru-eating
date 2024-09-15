@@ -23,31 +23,31 @@ import Foundation
     var ingredients: String
     var restricted: Bool
     var servingsNumber: Float
-    private var servingsUnit: String
+    var servingsUnit: String
     var servingSize: String {
         get {
             let number = servingsNumber.remainder(dividingBy: 1.0) == 0 ? String(servingsNumber.formatted(.number.precision(.fractionLength(0)))) : String(servingsNumber)
             return "\(number) \(servingsUnit)"
         }
     }
-    var portion: Int // number of servings
+    var portion: Float // number of servings
     var isFavorite: Bool
     var carbonFootprint: Int
     
     func incrementPortion() {
-        portion += 1
+        portion += 0.5
     }
     
     func decrementPoriton() {
-        portion -= 1
+        portion -= 0.5
         if portion < 0 { portion = 0 }
     }
     
-    init(name: String, id: String, servingsNumber: Float, servingsUnit: String, portion: Int = 1, carbonFootprint: Int = 0, isFavorite: Bool = false) {
+    init(name: String, id: String, servingsNumber: Float, servingsUnit: String, portion: Float = 1, carbonFootprint: Int = 0, isFavorite: Bool = false) {
         self.name = name
         self.id = id
         self.servingsNumber = servingsNumber
-        self.servingsUnit = servingsUnit
+        self.servingsUnit = servingsUnit == "oz" ? servingsUnit : servingsUnit.capitalized + "(s)"
         self.portion = portion
         self.carbonFootprint = carbonFootprint
         self.isFavorite = isFavorite
