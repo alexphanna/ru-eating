@@ -14,6 +14,17 @@ struct ItemView: View {
     @Binding var searchText: String
     @Environment(Settings.self) private var settings
     
+    var highlightedName: AttributedString {
+        var name = AttributedString(item.name)
+        let lowercasedName = AttributedString(item.name.lowercased())
+        
+        for range in lowercasedName.characters.ranges(of: searchText.lowercased()) {
+            name[range].foregroundColor = .accent
+        }
+        
+        return name
+    }
+    
     var body : some View {
         if (settings.hideRestricted && !item.restricted) || !settings.hideRestricted {
             NavigationLink {
@@ -49,9 +60,10 @@ struct ItemView: View {
                     }
                 }
             } label: {
+                
                 if item.isFavorite {
                     Label {
-                        Text(item.name)
+                        Text(highlightedName)
                         if settings.carbonFootprints && item.carbonFootprint > 0 {
                             Spacer()
                             Image(systemName: "leaf")
@@ -64,7 +76,7 @@ struct ItemView: View {
                 }
                 else if settings.filterIngredients && item.restricted {
                     Label {
-                        Text(item.name)
+                        Text(highlightedName)
                         if settings.carbonFootprints && item.carbonFootprint > 0 {
                             Spacer()
                             Image(systemName: "leaf")
@@ -77,7 +89,7 @@ struct ItemView: View {
                 }
                 else {
                     HStack {
-                        Text(item.name)
+                        Text(highlightedName)
                         if settings.carbonFootprints && item.carbonFootprint > 0 {
                             Spacer()
                             Image(systemName: "leaf")

@@ -75,7 +75,6 @@ class Place: Identifiable, Hashable {
                 heading = String(heading[heading.index(after: heading.firstIndex(of: " ")!)..<heading.lastIndex(of: " ")!]).capitalized
                 if i >= breakfastCount {
                     if heading.contains("Breakfast") && !menu.contains(where: { $0.name == heading } ){
-                        print(heading)
                         isBreakfast = true
                     }
                     else {
