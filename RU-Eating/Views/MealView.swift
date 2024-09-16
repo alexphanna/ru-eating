@@ -18,7 +18,7 @@ struct MealView: View {
                     Section("Items") {
                         ForEach(meal.items) { item in
                             Stepper {
-                                Text(String((item.portion * item.servingsNumber).formatted(.number.precision(.fractionLength((item.portion * item.servingsNumber).remainder(dividingBy: 1) == 0 ? 0 : 1)))) + " " + (item.servingsUnit == "Each(s)" ? "" : "\(item.servingsUnit) ") + item.name)
+                                Text(String((item.portion * item.servingsNumber).formatted(.number.precision(.fractionLength((item.portion * item.servingsNumber).remainder(dividingBy: 1) == 0 ? 0 : 1)))) + ((item.portion * item.servingsNumber) == 1 ? " \(item.servingsUnit) " : " \(item.servingsUnitPlural) ") + item.name)
                             } onIncrement: {
                                 item.incrementPortion()
                             } onDecrement: {

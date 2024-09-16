@@ -24,10 +24,11 @@ import Foundation
     var restricted: Bool
     var servingsNumber: Float
     var servingsUnit: String
+    var servingsUnitPlural: String
     var servingSize: String {
         get {
             let number = servingsNumber.remainder(dividingBy: 1.0) == 0 ? String(servingsNumber.formatted(.number.precision(.fractionLength(0)))) : String(servingsNumber)
-            return "\(number) \(servingsUnit)"
+            return "\(number) \(servingsNumber == 1 ? servingsUnit : servingsUnitPlural)"
         }
     }
     var portion: Float // number of servings
@@ -47,7 +48,9 @@ import Foundation
         self.name = name
         self.id = id
         self.servingsNumber = servingsNumber
-        self.servingsUnit = servingsUnit == "oz" ? servingsUnit : servingsUnit.capitalized + "(s)"
+        let unit = servingsUnit == "oz" ? servingsUnit : servingsUnit.capitalized
+        self.servingsUnit = unit
+        self.servingsUnitPlural = unit + (unit == "Each" || unit == "oz" ? "" : "s")
         self.portion = portion
         self.carbonFootprint = carbonFootprint
         self.isFavorite = isFavorite
