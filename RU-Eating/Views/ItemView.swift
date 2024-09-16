@@ -47,9 +47,19 @@ struct ItemView: View {
                             }
                         }
                     }
-                    .navigationTitle(item.name)
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
+                        ToolbarItem(placement: .principal) {
+                            HStack {
+                                Text(item.name)
+                                    .font(.headline)
+                                if settings.carbonFootprints && item.carbonFootprint > 0 {
+                                    Image(systemName: "leaf")
+                                        .imageScale(.medium)
+                                        .foregroundStyle(item.carbonFootprint == 1 ? .green : item.carbonFootprint == 2 ? .orange : .red)
+                                }
+                            }
+                        }
                         ToolbarItem(placement: .topBarTrailing) {
                             // toggle was changing background color, so I use button
                             Button(action: { settings.favorite(item: item) }) {
@@ -83,7 +93,7 @@ struct ItemView: View {
                         }
                     } icon: {
                         Image(systemName: "exclamationmark.triangle.fill")
-                            .foregroundStyle(.red)
+                            .foregroundStyle(.accent)
                     }
                 }
                 else {

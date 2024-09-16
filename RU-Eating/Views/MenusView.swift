@@ -10,7 +10,7 @@ import SwiftSoup
 import StoreKit
 
 struct MenusView : View {
-    @State private var isShowingSheet = false
+    @State private var isSheetShowing = false
     @Environment(Settings.self) private var settings
     
     var body : some View {
@@ -36,12 +36,12 @@ struct MenusView : View {
             .navigationTitle("Menus")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: { isShowingSheet = true }, label: {
+                    Button(action: { isSheetShowing = true }, label: {
                         Image(systemName: "gear")
                     })
                 }
             }
-            .sheet(isPresented: $isShowingSheet, content: {
+            .sheet(isPresented: $isSheetShowing, content: {
                 SettingsView(settings: settings)
             })
         }

@@ -72,7 +72,7 @@ class Place: Identifiable, Hashable {
             if (element.tagName() == "h3") {
                 var heading = String(try! element.text())
                 // remove "-- " and " --" from headings and capitalize headings
-                heading = String(heading[heading.index(after: heading.firstIndex(of: " ")!)..<heading.lastIndex(of: " ")!]).capitalized
+                heading = String(heading[heading.index(after: heading.firstIndex(of: " ")!)..<heading.lastIndex(of: " ")!]).capitalized.replacingOccurrences(of: "/ ", with: " / ")
                 if i >= breakfastCount {
                     if heading.contains("Breakfast") && !menu.contains(where: { $0.name == heading } ){
                         isBreakfast = true
