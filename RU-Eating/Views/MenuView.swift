@@ -11,7 +11,6 @@ struct MenuView: View {
     @State var place: Place
     // automatically sets selectedMeal according to time of day
     @State private var selectedMeal = Calendar.current.component(.hour, from: Date()) < 17 ? (Calendar.current.component(.hour, from: Date()) < 11 ? "Breakfast" : "Lunch") : "Dinner"
-    @State private var showDatePicker = false
     @State private var selectedDate = Date.now
     @State private var group = true
     @State private var menu: [Category] = [Category]()
@@ -71,20 +70,16 @@ struct MenuView: View {
         return category
     }
     
+    private let days = [
+        Calendar.current.dateComponents([.year, .month, .day], from: Calendar.current.date(byAdding: .day, value: -1, to: Date.now)!) : "Yesterday",
+        Calendar.current.dateComponents([.year, .month, .day], from: Date.now) : "Today",
+        Calendar.current.dateComponents([.year, .month, .day], from: Calendar.current.date(byAdding: .day, value: 1, to: Date.now)!) : "Tomorrow"
+    ]
+    
     var body: some View {
         NavigationLink {
             NavigationStack {
                 List {
-                    if showDatePicker {
-                        DatePicker("", selection: $selectedDate, displayedComponents: [.date])
-                            .datePickerStyle(.graphical)
-                            .onChange(of: selectedDate) {
-                                showDatePicker = false
-                                Task {
-                                    await updateMenu()
-                                }
-                            }
-                    }
                     if group {
                         ForEach(filteredMenu) { category in
                             CategoryView(category: category, searchText: $searchText)
@@ -94,7 +89,41 @@ struct MenuView: View {
                         CategoryView(category: items, searchText: $searchText)
                     }
                 }
-                .searchable(text: $searchText)
+                .safeAreaInset(edge: .top) {
+                    Rectangle()
+                        .fill(.ultraThinMaterial)
+                        .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+                        .frame(height: 66)
+                        .overlay {
+                            HStack {
+                                Button(action: {
+                                    selectedDate = Calendar.current.date(byAdding: .day, value: -1, to: selectedDate)!;
+                                    Task {
+                                        await updateMenu()
+                                    }
+                                }) {
+                                    Image(systemName: "chevron.left.circle.fill")
+                                        .imageScale(.large)
+                                        .foregroundStyle(.accent)
+                                }
+                                Spacer()
+                                Text("\(days[Calendar.current.dateComponents([.year, .month, .day], from: selectedDate)] ?? selectedDate.formatted(Date.FormatStyle().weekday(.wide))), \(selectedDate.formatted(Date.FormatStyle().month(.wide))) \(selectedDate.formatted(Date.FormatStyle().day()))")
+                                Spacer()
+                                Button(action: {
+                                    selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate)!
+                                    Task {
+                                        await updateMenu()
+                                    }
+                                }) {
+                                    Image(systemName: "chevron.right.circle.fill")
+                                        .imageScale(.large)
+                                        .foregroundStyle(.accent)
+                                }
+                            }
+                            .padding(30)
+                        }
+                }
+                //.searchable(text: $searchText)
                 .overlay {
                     if !searchText.isEmpty && filteredMenu.isEmpty {
                         ContentUnavailableView.search(text: searchText)
@@ -123,11 +152,6 @@ struct MenuView: View {
                         }
                         .pickerStyle(.segmented)
                         .fixedSize()
-                    }
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button(action: { showDatePicker.toggle() }) {
-                            Image(systemName: "calendar")
-                        }
                     }
                     ToolbarItem(placement: .topBarTrailing) {
                         Menu {

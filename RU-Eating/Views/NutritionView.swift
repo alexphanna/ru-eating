@@ -39,15 +39,15 @@ struct NutritionView: View {
             ForEach(Array(dict[selectedUnit]!.keys), id: \.self) { key in
                 if selectedUnit == "Amount" {
                     if key == "Calories" {
-                        LabeledContent(key, value: String(dict[selectedUnit]![key]!.formatted(.number.precision(.fractionLength(0)))) + nutrientUnits[key]!)
+                        LabeledContent(key, value: String(formatFloat(n: dict[selectedUnit]![key]!)) + nutrientUnits[key]!)
                             .fontWeight(key == "Calories" ? .bold : .regular)
                     }
                     else {
-                        LabeledContent(key, value: String(dict[selectedUnit]![key]!.formatted(.number.precision(.fractionLength(1)))) + nutrientUnits[key]!)
+                        LabeledContent(key, value: String(formatFloat(n: dict[selectedUnit]![key]!)) + nutrientUnits[key]!)
                     }
                 }
                 else if selectedUnit == "Daily Value" {
-                    LabeledContent(key, value: String(dict[selectedUnit]![key]!.formatted(.number.precision(.fractionLength(0)))) + "%")
+                    LabeledContent(key, value: String(formatFloat(n: dict[selectedUnit]![key]!)) + "%")
                 }
             }
         } header: {

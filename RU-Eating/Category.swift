@@ -56,7 +56,7 @@ import OrderedCollections
         for item in items {
             let doc = try await fetchDoc(url: URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/label.aspx?&RecNumAndPort=" + item.id + "*1")!)
             if !hasNutritionalReport(doc: doc) {
-                return OrderedDictionary<String, Float>()
+                continue
             }
             let elements = try! doc.select("div#nutritional-info table td, div#nutritional-info p:contains(Calories)").array()
             // , div#nutritional-info p:contains(Serving Size)
@@ -106,7 +106,7 @@ import OrderedCollections
         for item in items {
             let doc = try await fetchDoc(url: URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/label.aspx?&RecNumAndPort=" + item.id + "*1")!)
             if !hasNutritionalReport(doc: doc) {
-                return OrderedDictionary<String, Float>()
+                continue
             }
             let elements = try! doc.select("div#nutritional-info ul li").array()
             
