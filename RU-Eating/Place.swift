@@ -23,6 +23,7 @@ class Place: Identifiable, Hashable {
     var campus: String
     var hours: [(String, String)]
     var id: Int
+    var hasTakeout: Bool
     
     var isOpen: Bool {
         get {
@@ -39,9 +40,10 @@ class Place: Identifiable, Hashable {
     
     static let defaultHours = [("09:30", "20:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("09:30", "20:00")]
     
-    init(name: String, campus: String, id: Int, hours: [(String, String)] = defaultHours) {
+    init(name: String, campus: String, id: Int, hasTakeout: Bool, hours: [(String, String)] = defaultHours) {
         self.name = name
         self.campus = campus
+        self.hasTakeout = hasTakeout
         self.hours = hours
         self.id = id
     }

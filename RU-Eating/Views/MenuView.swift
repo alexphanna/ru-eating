@@ -13,7 +13,7 @@ struct MenuView: View {
     @State private var selectedMeal = Calendar.current.component(.hour, from: Date()) < 17 ? (Calendar.current.component(.hour, from: Date()) < 11 ? "Breakfast" : "Lunch") : "Dinner"
     @State private var selectedDate = Date.now
     @State private var group = true
-    @State private var menu: [Category] = [Category]()
+    @State var menu: [Category] = [Category]()
     @Environment(Settings.self) private var settings
     
     @State private var searchText = ""
@@ -90,38 +90,41 @@ struct MenuView: View {
                     }
                 }
                 .safeAreaInset(edge: .top) {
-                    Rectangle()
-                        .fill(.ultraThinMaterial)
-                        .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
-                        .frame(height: 66)
-                        .overlay {
-                            HStack {
-                                Button(action: {
-                                    selectedDate = Calendar.current.date(byAdding: .day, value: -1, to: selectedDate)!;
-                                    Task {
-                                        await updateMenu()
+                    VStack(spacing: -1) {
+                        Rectangle()
+                            .fill(.ultraThinMaterial)
+                            .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+                            .frame(height: 66)
+                            .overlay {
+                                HStack {
+                                    Button(action: {
+                                        selectedDate = Calendar.current.date(byAdding: .day, value: -1, to: selectedDate)!;
+                                        Task {
+                                            await updateMenu()
+                                        }
+                                    }) {
+                                        Image(systemName: "chevron.left.circle.fill")
+                                            .imageScale(.large)
+                                            .foregroundStyle(.accent)
                                     }
-                                }) {
-                                    Image(systemName: "chevron.left.circle.fill")
-                                        .imageScale(.large)
-                                        .foregroundStyle(.accent)
-                                }
-                                Spacer()
-                                Text("\(days[Calendar.current.dateComponents([.year, .month, .day], from: selectedDate)] ?? selectedDate.formatted(Date.FormatStyle().weekday(.wide))), \(selectedDate.formatted(Date.FormatStyle().month(.wide))) \(selectedDate.formatted(Date.FormatStyle().day()))")
-                                Spacer()
-                                Button(action: {
-                                    selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate)!
-                                    Task {
-                                        await updateMenu()
+                                    Spacer()
+                                    Text("\(days[Calendar.current.dateComponents([.year, .month, .day], from: selectedDate)] ?? selectedDate.formatted(Date.FormatStyle().weekday(.wide))), \(selectedDate.formatted(Date.FormatStyle().month(.wide))) \(selectedDate.formatted(Date.FormatStyle().day()))")
+                                    Spacer()
+                                    Button(action: {
+                                        selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate)!
+                                        Task {
+                                            await updateMenu()
+                                        }
+                                    }) {
+                                        Image(systemName: "chevron.right.circle.fill")
+                                            .imageScale(.large)
+                                            .foregroundStyle(.accent)
                                     }
-                                }) {
-                                    Image(systemName: "chevron.right.circle.fill")
-                                        .imageScale(.large)
-                                        .foregroundStyle(.accent)
                                 }
+                                .padding(30)
                             }
-                            .padding(30)
-                        }
+                        Divider()
+                    }
                 }
                 //.searchable(text: $searchText)
                 .overlay {
@@ -141,7 +144,7 @@ struct MenuView: View {
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         Picker("Meal", selection: $selectedMeal) {
-                            ForEach(meals, id: \.self) { meal in
+                            ForEach(place.hasTakeout ? meals + ["Takeout"] : meals, id: \.self) { meal in
                                 Text(meal)
                             }
                         }
@@ -220,7 +223,7 @@ struct MenuView: View {
         do {
             // clear menu first, to show progress view
             menu = [Category]()
-            menu = try await place.fetchMenu(meal: selectedMeal, date: selectedDate, settings: settings)
+            menu = try await place.fetchMenu(meal: selectedMeal == "Takeout" ? "Knight+Room" : selectedMeal, date: selectedDate, settings: settings)
         } catch {
             print(error)
         }
