@@ -11,10 +11,10 @@ An unofficial Rutgers University dining hall menu app for iOS written in Swift u
 
 ## Screenshots
 <div display="flex">
-  <img src="./screenshots/menus.png" width="32%">
-  <img src="./screenshots/menu.png" width="32%">
-  <img src="./screenshots/item.png" width="32%">
-  <img src="./screenshots/meal.png" width="32%">
-  <img src="./screenshots/settings.png" width="32%">
-  <img src="./screenshots/dark-mode.png" width="32%">
+  <img src="./screenshots/iPhone\ 16\ Pro\ Max/menus.png" width="32%">
+  <img src="./screenshots/iPhone\ 16\ Pro\ Max/menu.png" width="32%">
+  <img src="./screenshots/iPhone\ 16\ Pro\ Max/item.png" width="32%">
+  <img src="./screenshots/iPhone\ 16\ Pro\ Max/meal.png" width="32%">
+  <img src="./screenshots/iPhone\ 16\ Pro\ Max/settings.png" width="32%">
+  <img src="./screenshots/iPhone\ 16\ Pro\ Max/dark-mode.png" width="32%">
 </div>
