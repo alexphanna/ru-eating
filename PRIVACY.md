@@ -1,0 +1,1 @@
+RU Eating does not collect, transmit, distribute or sell your data.
