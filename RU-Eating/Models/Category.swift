@@ -8,7 +8,7 @@
 import Foundation
 import OrderedCollections
 
-class Category : Hashable, Identifiable {
+@Observable class Category : Hashable, Identifiable {
     static func == (lhs: Category, rhs: Category) -> Bool {
         return lhs.name == rhs.name && lhs.items == rhs.items
     }

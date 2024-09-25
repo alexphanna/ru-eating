@@ -72,13 +72,23 @@ struct SettingsView : View {
                             }
                         }
                     }
-                    Section("Support") {
-                        Link(destination: URL(string: "https://www.github.com/alexphanna/RU-Eating")!, label: {
-                            Label("Star on GitHub", systemImage: "star")
+                    Section {
+                        Link(destination: URL(string: "mailto:alex.hanna@rutgers.edu")!, label: {
+                            Label("Email Developer", systemImage: "envelope")
+                                .foregroundStyle(.foreground)
                         })
-                        /*Link(destination: URL(string: "https://www.github.com/alexphanna/RU-Eating")!, label: { // fix link
-                         Label("Leave a Review", systemImage: "message")
-                         })*/
+                        Link(destination: URL(string: "https://www.github.com/alexphanna/RU-Eating/issues/new")!, label: {
+                            Label("Create an Issue", systemImage: "smallcircle.fill.circle")
+                                .foregroundStyle(.foreground)
+                        })
+                        Link(destination: URL(string: "https://apps.apple.com/us/app/ru-eating/id6692608792?action=write-review")!, label: {
+                            Label("Write a Review", systemImage: "message")
+                                .foregroundStyle(.foreground)
+                        })
+                    } header: {
+                        Text("Feedback")
+                    } footer: {
+                        Text("Version: 1.0.0")
                     }
                 }
                 .navigationTitle("Settings")
