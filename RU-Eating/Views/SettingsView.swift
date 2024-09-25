@@ -88,7 +88,7 @@ struct SettingsView : View {
                     } header: {
                         Text("Feedback")
                     } footer: {
-                        Text("Version: 1.0.0")
+                        Text("Version: 1.0.1")
                     }
                 }
                 .navigationTitle("Settings")

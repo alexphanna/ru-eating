@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NutritionView: View {
-    @Bindable var viewModel: NutritionViewModel
+    @State var viewModel: NutritionViewModel
     
     var body: some View {
         Section {
