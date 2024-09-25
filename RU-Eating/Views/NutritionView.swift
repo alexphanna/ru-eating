@@ -6,24 +6,13 @@
 //
 
 import SwiftUI
-import OrderedCollections
 
 struct NutritionView: View {
-    @Bindable var category: Category
-    @State var showServingSize: Bool = false
-    @State private var amounts = OrderedDictionary<String, Float>()
-    @State private var dailyValues = OrderedDictionary<String, Float>()
-    @State private var selectedUnit : String = "Amount"
-    @State private var servings : Int = 0
+    @Bindable var viewModel: NutritionViewModel
     
     var body: some View {
-        let dict = [
-            "Amount" : amounts,
-            "Daily Value" : dailyValues
-        ]
-        
         Section {
-            Picker("Unit", selection: $selectedUnit) {
+            Picker("Unit", selection: $viewModel.unit) {
                 ForEach(["Amount", "Daily Value"], id: \.self) { unit in
                     Text(unit)
                 }
@@ -32,22 +21,22 @@ struct NutritionView: View {
             .listRowSeparator(.hidden)
             .padding()
             .listRowInsets(EdgeInsets())
-            if showServingSize {
-                LabeledContent("Serving Size", value: category.items[0].servingSize)
+            if viewModel.showServingSize {
+                LabeledContent("Serving Size", value: viewModel.category.items[0].servingSize)
                     .fontWeight(.bold)
             }
-            ForEach(Array(dict[selectedUnit]!.keys), id: \.self) { key in
-                if selectedUnit == "Amount" {
+            ForEach(Array(viewModel.values.keys), id: \.self) { key in
+                if viewModel.unit == "Amount" {
                     if key == "Calories" {
-                        LabeledContent(key, value: String(formatFloat(n: dict[selectedUnit]![key]!)) + nutrientUnits[key]!)
+                        LabeledContent(key, value: String(formatFloat(n: viewModel.values[key]!)) + nutrientUnits[key]!)
                             .fontWeight(key == "Calories" ? .bold : .regular)
                     }
                     else {
-                        LabeledContent(key, value: String(formatFloat(n: dict[selectedUnit]![key]!)) + nutrientUnits[key]!)
+                        LabeledContent(key, value: String(formatFloat(n: viewModel.values[key]!)) + nutrientUnits[key]!)
                     }
                 }
-                else if selectedUnit == "Daily Value" {
-                    LabeledContent(key, value: String(formatFloat(n: dict[selectedUnit]![key]!)) + "%")
+                else if viewModel.unit == "Daily Value" {
+                    LabeledContent(key, value: String(formatFloat(n: viewModel.values[key]!)) + "%")
                 }
             }
         } header: {
@@ -55,22 +44,13 @@ struct NutritionView: View {
         } footer: {
             Text("Percent Daily Values are based on a 2,000 calorie diet.")
         }
-        .onChange(of: category.portions) {
+        .onChange(of: viewModel.category.portions) {
             Task {
-                await updateValues()
+                await viewModel.updateValues()
             }
         }
         .task {
-            await updateValues()
-        }
-    }
-    
-    func updateValues() async {
-        do {
-            amounts = try await category.fetchAmounts()
-            dailyValues = try await category.fetchDailyValues()
-        } catch {
-            // do nothing
+            await viewModel.updateValues()
         }
     }
 }

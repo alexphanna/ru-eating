@@ -32,3 +32,11 @@ let nutrientUnits = [
     "Protein" : "g",
     "Sodium" : "mg"
 ]
+
+let constantCategories = [
+    "breakfast misc",
+    "salad bar",
+    "breads",
+    "fruits",
+    "deli bar entree"
+]

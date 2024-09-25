@@ -66,6 +66,8 @@ class Place: Identifiable, Hashable {
         }
         
         var menu = [Category]();
+        var lastCategory: Category? = nil
+        var nonConstantIndex = 0
         var isBreakfast = false
         var i = 0
         while i < elements.count {
@@ -85,7 +87,14 @@ class Place: Identifiable, Hashable {
                         continue
                     }
                 }
-                menu.append(Category(name: heading))
+                lastCategory = Category(name: heading)
+                if constantCategories.contains(heading.lowercased()) {
+                    menu.append(lastCategory!)
+                }
+                else {
+                    menu.insert(lastCategory!, at: nonConstantIndex)
+                    nonConstantIndex += 1
+                }
             }
             if (element.tagName() == "label") {
                 if i >= breakfastCount && !isBreakfast {
@@ -147,7 +156,7 @@ class Place: Identifiable, Hashable {
                 let servingsUnit: String = String(servings[1]).lowercased()
                 
                 // capitalize items
-                menu[menu.count - 1].items.append(Item(name: try! element.attr("name").capitalized.replacingOccurrences(of: "  ", with: " "), id: try! element.attr("for"), servingsNumber: servingsNumber, servingsUnit: servingsUnit, carbonFootprint: carbonFootprint, isFavorite: settings.favoriteItemsIDs.contains(try! element.attr("for"))))
+                lastCategory!.items.append(Item(name: try! element.attr("name").capitalized.replacingOccurrences(of: "  ", with: " "), id: try! element.attr("for"), servingsNumber: servingsNumber, servingsUnit: servingsUnit, carbonFootprint: carbonFootprint, isFavorite: settings.favoriteItemsIDs.contains(try! element.attr("for"))))
                 
                 i += 1
             }

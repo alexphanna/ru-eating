@@ -7,7 +7,7 @@
 
 import Foundation
 
-@Observable class Item : Hashable, Identifiable {
+class Item : Hashable, Identifiable {
     static func == (lhs: Item, rhs: Item) -> Bool {
         return lhs.name == rhs.name
     }
@@ -20,8 +20,6 @@ import Foundation
     
     var name : String
     var id : String
-    var ingredients: String
-    var restricted: Bool
     var servingsNumber: Float
     var servingsUnit: String
     var servingsUnitPlural: String
@@ -45,8 +43,6 @@ import Foundation
         self.portion = portion
         self.carbonFootprint = carbonFootprint
         self.isFavorite = isFavorite
-        self.ingredients = ""
-        self.restricted = false
     }
     
     func incrementPortion() {

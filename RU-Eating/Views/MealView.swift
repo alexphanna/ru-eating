@@ -31,7 +31,7 @@ struct MealView: View {
                         }
                         .onDelete(perform: { meal.items.remove(atOffsets: $0) })
                     }
-                    NutritionView(category: meal)
+                    NutritionView(viewModel: NutritionViewModel(category: meal))
                 }
             }
             .overlay {

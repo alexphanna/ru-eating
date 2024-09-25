@@ -14,23 +14,23 @@ struct ItemView: View {
     @Environment(Settings.self) private var settings
     
     var body : some View {
-        if (settings.hideRestricted && !viewModel.item.restricted) || !settings.hideRestricted {
+        if (settings.hideRestricted && !viewModel.restricted) || !settings.hideRestricted {
             NavigationLink {
                 NavigationStack {
                     VStack {
-                        if viewModel.item.ingredients.isEmpty {
+                        if viewModel.ingredients.isEmpty {
                             Text("Nutritional information is not available for this item")
                         }
                         else {
                             List {
-                                if viewModel.item.restricted {
+                                if viewModel.restricted {
                                     Section("Warning") {
                                         Label("Item may contain dietary restrictions.", systemImage: "exclamationmark.triangle.fill")
                                     }
                                 }
-                                NutritionView(category: Category(name: "", items: [viewModel.item]), showServingSize: true)
+                                NutritionView(viewModel: NutritionViewModel(category: Category(name: "", items: [viewModel.item]), showServingSize: true))
                                 Section("Ingredients") {
-                                    Text(viewModel.item.ingredients).font(.footnote).italic().foregroundStyle(.gray)
+                                    Text(viewModel.ingredients).font(.footnote).italic().foregroundStyle(.gray)
                                 }
                             }
                         }
@@ -71,7 +71,7 @@ struct ItemView: View {
                             .foregroundStyle(.yellow)
                     }
                 }
-                else if settings.filterIngredients && viewModel.item.restricted {
+                else if settings.filterIngredients && viewModel.restricted {
                     Label {
                         Text(viewModel.item.name)
                         if settings.carbonFootprints && viewModel.item.carbonFootprint > 0 {
