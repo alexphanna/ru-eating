@@ -91,7 +91,14 @@ import Foundation
     
     init(place: Place, settings: Settings) {
         self.place = place
-        self.meal = "Breakfast"
+        switch Calendar.current.component(.hour, from: Date.now) {
+        case ..<11:
+            self.meal = "Breakfast"
+        case ..<17:
+            self.meal = "Lunch"
+        default:
+            self.meal = "Dinner"
+        }
         self.date = Date.now
         
         self.settings = settings

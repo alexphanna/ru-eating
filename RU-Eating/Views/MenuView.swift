@@ -83,6 +83,9 @@ struct MenuView: View {
                     ToolbarItem(placement: .topBarTrailing) {
                         Menu {
                             Section {
+                                Button(action: {}) {
+                                    Label("Random Item", systemImage: "dice")
+                                }
                                 Picker(selection: $viewModel.filter ) {
                                     Section {
                                         Label("All Items", systemImage: "fork.knife").tag("All Items")
