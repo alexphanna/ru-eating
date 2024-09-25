@@ -8,24 +8,17 @@
 import SwiftUI
 
 struct CategoryView : View {
-    @Bindable var category: Category
-    @Bindable var menuSectionSettings: MenuSectionSettings = MenuSectionSettings()
-    @Binding var searchText: String
+    @Bindable var viewModel: CategoryViewModel
     @Environment(Settings.self) private var settings
     
     var body : some View {
         Section(
-            isExpanded: $menuSectionSettings.sectionExpanded,
+            isExpanded: $viewModel.isExpanded,
             content: {
-                ForEach(category.items.sorted(by: { $0.name < $1.name })) { item in
-                    ItemView(item: item, searchText: $searchText)
+                ForEach(viewModel.category.items.sorted(by: { $0.name < $1.name })) { item in
+                    ItemView(viewModel: ItemViewModel(item: item, settings: settings))
                 }
             },
-            header: { Text(category.name) })
+            header: { Text(viewModel.category.name) })
     }
-}
-
-// persists collapsed sections when going in and out of view
-@Observable class MenuSectionSettings {
-    var sectionExpanded: Bool = true
 }

@@ -35,15 +35,6 @@ import Foundation
     var isFavorite: Bool
     var carbonFootprint: Int
     
-    func incrementPortion() {
-        portion += 0.5
-    }
-    
-    func decrementPoriton() {
-        portion -= 0.5
-        if portion < 0 { portion = 0 }
-    }
-    
     init(name: String, id: String, servingsNumber: Float, servingsUnit: String, portion: Float = 1, carbonFootprint: Int = 0, isFavorite: Bool = false) {
         self.name = name
         self.id = id
@@ -56,6 +47,15 @@ import Foundation
         self.isFavorite = isFavorite
         self.ingredients = ""
         self.restricted = false
+    }
+    
+    func incrementPortion() {
+        portion += 0.5
+    }
+    
+    func decrementPoriton() {
+        portion -= 0.5
+        if portion < 0 { portion = 0 }
     }
     
     func fetchIngredients() async throws -> String {

@@ -8,85 +8,20 @@
 import SwiftUI
 
 struct MenuView: View {
-    @State var place: Place
-    // automatically sets selectedMeal according to time of day
-    @State private var selectedMeal = Calendar.current.component(.hour, from: Date()) < 17 ? (Calendar.current.component(.hour, from: Date()) < 11 ? "Breakfast" : "Lunch") : "Dinner"
-    @State private var selectedDate = Date.now
-    @State private var group = true
-    @State var menu: [Category] = [Category]()
+    @State var viewModel: MenuViewModel
     @Environment(Settings.self) private var settings
-    
-    @State private var searchText = ""
-    @State private var selectedFilter: String = "All Items"
-    
-    private var filteredMenu: [Category] {
-        var filteredMenu: [Category] = [Category]()
-        
-        for category in menu {
-            let filteredCategory: Category = Category(name: category.name)
-            
-            switch selectedFilter {
-            case "Favorites":
-                filteredCategory.items.append(contentsOf: category.items.filter { $0.isFavorite })
-                break
-            case "Low Carbon Footprint":
-                filteredCategory.items.append(contentsOf: category.items.filter { $0.carbonFootprint == 1 })
-                break
-            default:
-                filteredCategory.items.append(contentsOf: category.items)
-                break
-            }
-            
-            if !searchText.isEmpty {
-                let searchedCategory: Category = Category(name: category.name)
-                
-                for item in filteredCategory.items {
-                    if item.name.lowercased().contains(searchText.lowercased()) {
-                        searchedCategory.items.append(item)
-                    }
-                }
-                
-                if !searchedCategory.items.isEmpty {
-                    filteredMenu.append(searchedCategory)
-                }
-            }
-            else if !filteredCategory.items.isEmpty {
-                filteredMenu.append(filteredCategory)
-            }
-        }
-        
-        return filteredMenu
-    }
-    
-    private var items: Category {
-        let category: Category = Category(name: "All")
-        
-        for _category in filteredMenu {
-            category.items.append(contentsOf: _category.items)
-        }
-        
-        category.items = category.items.sorted(by: { $0.name < $1.name })
-        
-        return category
-    }
-    
-    private let days = [
-        Calendar.current.dateComponents([.year, .month, .day], from: Calendar.current.date(byAdding: .day, value: -1, to: Date.now)!) : "Yesterday",
-        Calendar.current.dateComponents([.year, .month, .day], from: Date.now) : "Today",
-        Calendar.current.dateComponents([.year, .month, .day], from: Calendar.current.date(byAdding: .day, value: 1, to: Date.now)!) : "Tomorrow"
-    ]
     
     var body: some View {
         NavigationLink {
             NavigationStack {
                 List {
-                    if group {
-                        ForEach(filteredMenu) { category in
-                            CategoryView(category: category, searchText: $searchText)
+                    if viewModel.isGrouped {
+                        ForEach(viewModel.menu) { category in
+                            CategoryView(viewModel: CategoryViewModel(category: category, searchText: viewModel.searchText))
                         }
                     }
                     else {
-                        CategoryView(category: items, searchText: $searchText)
+                        CategoryView(viewModel: CategoryViewModel(category: viewModel.items, searchText: viewModel.searchText))
                     }
                 }
                 .safeAreaInset(edge: .top) {
@@ -97,25 +32,15 @@ struct MenuView: View {
                             .frame(height: 66)
                             .overlay {
                                 HStack {
-                                    Button(action: {
-                                        selectedDate = Calendar.current.date(byAdding: .day, value: -1, to: selectedDate)!;
-                                        Task {
-                                            await updateMenu()
-                                        }
-                                    }) {
+                                    Button(action: viewModel.decrementDate) {
                                         Image(systemName: "chevron.left.circle.fill")
                                             .imageScale(.large)
                                             .foregroundStyle(.accent)
                                     }
                                     Spacer()
-                                    Text("\(days[Calendar.current.dateComponents([.year, .month, .day], from: selectedDate)] ?? selectedDate.formatted(Date.FormatStyle().weekday(.wide))), \(selectedDate.formatted(Date.FormatStyle().month(.wide))) \(selectedDate.formatted(Date.FormatStyle().day()))")
+                                    Text(viewModel.dateText)
                                     Spacer()
-                                    Button(action: {
-                                        selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate)!
-                                        Task {
-                                            await updateMenu()
-                                        }
-                                    }) {
+                                    Button(action: viewModel.incrementDate) {
                                         Image(systemName: "chevron.right.circle.fill")
                                             .imageScale(.large)
                                             .foregroundStyle(.accent)
@@ -126,15 +51,14 @@ struct MenuView: View {
                         Divider()
                     }
                 }
-                //.searchable(text: $searchText)
                 .overlay {
-                    if !searchText.isEmpty && filteredMenu.isEmpty {
-                        ContentUnavailableView.search(text: searchText)
+                    if !viewModel.searchText.isEmpty && viewModel.menu.isEmpty {
+                        ContentUnavailableView.search(text: viewModel.searchText)
                     }
-                    else if menu.isEmpty {
+                    else if viewModel.rawMenu.isEmpty {
                         ProgressView()
                     }
-                    else if filteredMenu.isEmpty {
+                    else if viewModel.menu.isEmpty {
                         ContentUnavailableView("No Results", systemImage: "")
                     }
                 }
@@ -143,14 +67,14 @@ struct MenuView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .principal) {
-                        Picker("Meal", selection: $selectedMeal) {
-                            ForEach(place.hasTakeout ? meals + ["Takeout"] : meals, id: \.self) { meal in
+                        Picker("Meal", selection: $viewModel.meal) {
+                            ForEach(viewModel.place.hasTakeout ? meals + ["Takeout"] : meals, id: \.self) { meal in
                                 Text(meal)
                             }
                         }
-                        .onChange(of: selectedMeal) {
+                        .onChange(of: viewModel.meal) {
                             Task {
-                                await updateMenu()
+                                await viewModel.updateMenu()
                             }
                         }
                         .pickerStyle(.segmented)
@@ -159,7 +83,7 @@ struct MenuView: View {
                     ToolbarItem(placement: .topBarTrailing) {
                         Menu {
                             Section {
-                                Picker(selection: $selectedFilter ) {
+                                Picker(selection: $viewModel.filter ) {
                                     Section {
                                         Label("All Items", systemImage: "fork.knife").tag("All Items")
                                     }
@@ -172,12 +96,12 @@ struct MenuView: View {
                                         HStack {
                                             Text("Filter")
                                             Spacer()
-                                            Image(systemName: selectedFilter == "All Items" ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
+                                            Image(systemName: viewModel.filter == "All Items" ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
                                         }
                                     }
                                 }
                                 .pickerStyle(.menu)
-                                Picker(selection: $group) {
+                                Picker(selection: $viewModel.isGrouped) {
                                     Text("On").tag(true)
                                     Text("Off").tag(false)
                                 } label: {
@@ -185,7 +109,7 @@ struct MenuView: View {
                                         HStack {
                                             VStack {
                                                 Text("Group By Category")
-                                                Text(group ? "On" : "Off")
+                                                Text(viewModel.isGrouped ? "On" : "Off")
                                                     .font(.callout)
                                                     .foregroundStyle(.gray)
                                                 
@@ -197,7 +121,7 @@ struct MenuView: View {
                                 }
                                 .pickerStyle(.menu)
                             }
-                            Link(destination: place.getURL(meal: selectedMeal, date: selectedDate), label: {
+                            Link(destination: viewModel.place.getURL(meal: viewModel.meal, date: viewModel.date), label: {
                                 Label("View Source", systemImage: "link")
                             })
                         } label: {
@@ -206,26 +130,16 @@ struct MenuView: View {
                     }
                 }
                 .task {
-                    if menu.isEmpty {
-                        await updateMenu()
+                    if viewModel.menu.isEmpty {
+                        await viewModel.updateMenu()
                     }
                 }
             }
         } label: {
             VStack (alignment: HorizontalAlignment.leading) {
-                Text(place.name)
-                Text(place.campus).font(.footnote).italic().foregroundStyle(.gray)
+                Text(viewModel.place.name)
+                Text(viewModel.place.campus).font(.footnote).italic().foregroundStyle(.gray)
             }
-        }
-    }
-    
-    func updateMenu() async {
-        do {
-            // clear menu first, to show progress view
-            menu = [Category]()
-            menu = try await place.fetchMenu(meal: selectedMeal == "Takeout" ? "Knight+Room" : selectedMeal, date: selectedDate, settings: settings)
-        } catch {
-            print(error)
         }
     }
 }

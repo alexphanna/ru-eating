@@ -9,42 +9,32 @@ import SwiftUI
 import SwiftSoup
 
 struct AddItemsView : View {
+    @State var viewModel: AddItemsViewModel
+    
     @Environment(\.dismiss) var dismiss
     @Environment(Settings.self) private var settings
-    @State var meal: Category
-    
-    @State private var items: [Item] = [Item]()
-    @State private var searchText = ""
-    @State private var searchScope = "Busch"
     
     private var placeNames: [String] {
         return ["Busch", "Livingston", "Neilson", "The Atrium"]
     }
     
-    var searchResults: [Item] {
-        if (searchText.isEmpty) {
-            return items
-        }
-        else {
-            return items.filter { $0.name.lowercased().contains(searchText.lowercased()) }
-        }
-    }
-    
     var body : some View {
         NavigationStack {
             List {
-                ForEach(searchResults, id: \.self) { item in
-                    if !meal.items.contains(item) {
-                        Button(item.name) {
-                            meal.items.append(item)
+                ForEach(viewModel.items, id: \.self) { item in
+                    if !viewModel.meal.items.contains(item) {
+                        Button {
+                            viewModel.meal.items.append(item)
                             dismiss()
+                        } label: {
+                            Text(viewModel.getHighlightedName(item: item))
                         }
                         .foregroundStyle(.primary)
                     }
                 }
             }
             .task {
-                await updateItems()
+                await viewModel.updateItems()
             }
             .navigationTitle("Add Item")
             .navigationBarTitleDisplayMode(.inline)
@@ -54,39 +44,16 @@ struct AddItemsView : View {
                 }
             }
         }
-        .searchable(text: $searchText)
-        .searchScopes($searchScope, activation: .onSearchPresentation) {
+        .searchable(text: $viewModel.searchText)
+        .searchScopes($viewModel.searchScope, activation: .onSearchPresentation) {
             ForEach(placeNames, id: \.self) { name in
                 Text(name)
             }
         }
-        .onChange(of: searchScope) {
+        .onChange(of: viewModel.searchScope) {
             Task {
-                await updateItems()
+                await viewModel.updateItems()
             }
-        }
-    }
-    
-    func updateItems() async {
-        items = [Item]()
-        for place in places {
-            if !place.name.contains(searchScope) { continue }
-            for meal in meals {
-                do {
-                    let menu = try await place.fetchMenu(meal: meal, date: Date.now, settings: settings)
-                    
-                    for category in menu {
-                        for item in category.items {
-                            if !items.contains(item) {
-                                items.append(item)
-                            }
-                        }
-                    }
-                } catch {
-                    // do nothing
-                }
-            }
-            break
         }
     }
 }

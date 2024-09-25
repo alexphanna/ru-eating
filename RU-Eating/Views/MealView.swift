@@ -10,6 +10,7 @@ import SwiftUI
 struct MealView: View {
     @State private var isSheetShowing: Bool = false
     @State private var meal: Category = Category(name: "Meal")
+    @Environment(Settings.self) private var settings
     
     var body: some View {
         NavigationStack {
@@ -59,7 +60,7 @@ struct MealView: View {
                 }
             }
             .sheet(isPresented: $isSheetShowing) {
-                AddItemsView(meal: meal)
+                AddItemsView(viewModel: AddItemsViewModel(meal: meal, settings: settings))
             }
          }
     }

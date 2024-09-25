@@ -20,7 +20,7 @@ struct MenusView : View {
                 if openPlaces.count > 0 {
                     Section("Open") {
                         ForEach(openPlaces, id: \.self) { place in
-                            MenuView(place: place)
+                            MenuView(viewModel: MenuViewModel(place: place, settings: settings))
                         }
                     }
                 }
@@ -28,7 +28,7 @@ struct MenusView : View {
                 if closedPlaces.count > 0 {
                     Section("Closed") {
                         ForEach(closedPlaces, id: \.self) { place in
-                            MenuView(place: place)
+                            MenuView(viewModel: MenuViewModel(place: place, settings: settings))
                         }
                     }
                 }
