@@ -15,91 +15,46 @@ struct ItemView: View {
     
     var body : some View {
         if (settings.hideRestricted && !viewModel.restricted) || !settings.hideRestricted {
-            NavigationLink {
-                NavigationStack {
-                    VStack {
-                        if viewModel.ingredients.isEmpty {
-                            Text("Nutritional information is not available for this item")
-                        }
-                        else {
-                            List {
-                                if viewModel.restricted {
-                                    Section("Warning") {
-                                        Label("Item may contain dietary restrictions.", systemImage: "exclamationmark.triangle.fill")
-                                    }
-                                }
-                                NutritionView(viewModel: NutritionViewModel(category: Category(name: "", items: [viewModel.item]), showServingSize: true))
-                                Section("Ingredients") {
-                                    Text(viewModel.ingredients).font(.footnote).italic().foregroundStyle(.gray)
-                                }
-                            }
-                        }
+            NavigationStack {
+                VStack {
+                    if viewModel.ingredients.isEmpty {
+                        Text("Nutritional information is not available for this item")
                     }
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .principal) {
-                            HStack {
-                                Text(viewModel.item.name)
-                                    .font(.headline)
-                                if settings.carbonFootprints && viewModel.item.carbonFootprint > 0 {
-                                    Image(systemName: "leaf")
-                                        .imageScale(.medium)
-                                        .foregroundStyle(viewModel.carbonFootprintColor)
+                    else {
+                        List {
+                            if viewModel.restricted {
+                                Section("Warning") {
+                                    Label("Item may contain dietary restrictions.", systemImage: "exclamationmark.triangle.fill")
                                 }
                             }
-                        }
-                        ToolbarItem(placement: .topBarTrailing) {
-                            // toggle was changing background color, so I use button
-                            Button(action: { settings.favorite(item: viewModel.item) }) {
-                                Image(systemName: viewModel.item.isFavorite ? "star.fill" : "star")
-                                    .foregroundStyle(.yellow)
+                            NutritionView(viewModel: NutritionViewModel(category: Category(name: "", items: [viewModel.item]), showServingSize: true))
+                            Section("Ingredients") {
+                                Text(viewModel.ingredients).font(.footnote).italic().foregroundStyle(.gray)
                             }
                         }
                     }
                 }
-            } label: {
-                if viewModel.item.isFavorite {
-                    Label {
-                        Text(viewModel.item.name)
-                        if settings.carbonFootprints && viewModel.item.carbonFootprint > 0 {
-                            Spacer()
-                            Image(systemName: "leaf")
-                                .foregroundStyle(viewModel.carbonFootprintColor)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        HStack {
+                            Text(viewModel.item.name)
+                                .font(.headline)
+                            if settings.carbonFootprints && viewModel.item.carbonFootprint > 0 {
+                                Image(systemName: "leaf")
+                                    .imageScale(.medium)
+                                    .foregroundStyle(viewModel.carbonFootprintColor)
+                            }
                         }
-                    } icon: {
-                        Image(systemName: "star.fill")
-                            .foregroundStyle(.yellow)
                     }
-                }
-                else if settings.filterIngredients && viewModel.restricted {
-                    Label {
-                        Text(viewModel.item.name)
-                        if settings.carbonFootprints && viewModel.item.carbonFootprint > 0 {
-                            Spacer()
-                            Image(systemName: "leaf")
-                                .foregroundStyle(viewModel.carbonFootprintColor)
-                        }
-                    } icon: {
-                        Image(systemName: "exclamationmark.triangle.fill")
-                            .foregroundStyle(.accent)
-                    }
-                }
-                else {
-                    HStack {
-                        Text(viewModel.item.name)
-                        if settings.carbonFootprints && viewModel.item.carbonFootprint > 0 {
-                            Spacer()
-                            Image(systemName: "leaf")
-                                .foregroundStyle(viewModel.carbonFootprintColor)
+                    ToolbarItem(placement: .topBarTrailing) {
+                        // toggle was changing background color, so I use button
+                        Button(action: { settings.favorite(item: viewModel.item) }) {
+                            Image(systemName: viewModel.item.isFavorite ? "star.fill" : "star")
+                                .foregroundStyle(.yellow)
                         }
                     }
                 }
-            }
-            .swipeActions {
-                Button(action: { settings.favorite(item: viewModel.item) }) {
-                    Image(systemName: viewModel.item.isFavorite ? "star.slash.fill" : "star.fill")
-                }
-                .tint(.yellow)
             }
             .task {
                 await viewModel.updateItem()

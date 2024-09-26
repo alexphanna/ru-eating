@@ -83,8 +83,15 @@ struct MenuView: View {
                     ToolbarItem(placement: .topBarTrailing) {
                         Menu {
                             Section {
-                                Button(action: {}) {
-                                    Label("Random Item", systemImage: "dice")
+                                if viewModel.randomItem != nil {
+                                    NavigationLink {
+                                        ItemView(viewModel: ItemViewModel(item: viewModel.randomItem!, settings: settings))
+                                            .onAppear {
+                                                viewModel.randomItem = viewModel.items.items.randomElement() // update random element
+                                            }
+                                    } label: {
+                                        Label("Random Item", systemImage: "dice")
+                                    }
                                 }
                                 Picker(selection: $viewModel.filter ) {
                                     Section {

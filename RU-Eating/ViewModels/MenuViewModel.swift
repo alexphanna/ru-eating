@@ -89,6 +89,8 @@ import Foundation
         return "\(dayName ?? date.formatted(Date.FormatStyle().weekday(.wide))), \(date.formatted(Date.FormatStyle().month(.wide))) \(date.formatted(Date.FormatStyle().day()))"
     }
     
+    var randomItem: Item?
+    
     init(place: Place, settings: Settings) {
         self.place = place
         switch Calendar.current.component(.hour, from: Date.now) {
@@ -113,6 +115,7 @@ import Foundation
         rawMenu = [Category]()
         do {
             rawMenu = try await place.fetchMenu(meal: meal == "Takeout" ? "Knight+Room" : meal, date: date, settings: settings)
+            randomItem = items.items.randomElement()!
         } catch {
             print(error)
         }

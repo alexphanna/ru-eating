@@ -16,7 +16,7 @@ struct CategoryView : View {
             isExpanded: $viewModel.isExpanded,
             content: {
                 ForEach(viewModel.category.items.sorted(by: { $0.name < $1.name })) { item in
-                    ItemView(viewModel: ItemViewModel(item: item, settings: settings))
+                    ItemNavigationLink(viewModel: ItemViewModel(item: item, settings: settings))
                 }
             },
             header: { Text(viewModel.category.name) })
