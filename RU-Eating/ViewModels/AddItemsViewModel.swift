@@ -13,8 +13,9 @@ import Foundation
     private var settings: Settings
     var searchText: String
     var searchScope: String
+    private(set) var fetched: Bool
     
-    private var rawItems: [Item]
+    private(set) var rawItems: [Item]
     var items: [Item] {
         if (searchText.isEmpty) {
             return rawItems
@@ -30,6 +31,7 @@ import Foundation
         self.searchText = ""
         self.searchScope = "Busch"
         self.settings = settings
+        self.fetched = false
         
         self.rawItems = [Item]()
     }
@@ -55,6 +57,7 @@ import Foundation
             }
             break
         }
+        fetched = true
     }
     
     func getHighlightedName(item: Item) -> AttributedString {

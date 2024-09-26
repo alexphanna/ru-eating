@@ -55,8 +55,11 @@ struct MenuView: View {
                     if !viewModel.searchText.isEmpty && viewModel.menu.isEmpty {
                         ContentUnavailableView.search(text: viewModel.searchText)
                     }
-                    else if viewModel.rawMenu.isEmpty {
+                    else if viewModel.rawMenu.isEmpty && !viewModel.fetched {
                         ProgressView()
+                    }
+                    else if viewModel.rawMenu.isEmpty && viewModel.fetched {
+                        ContentUnavailableView("No Internet Connection", systemImage: "wifi.slash")
                     }
                     else if viewModel.menu.isEmpty {
                         ContentUnavailableView("No Results", systemImage: "")
@@ -83,7 +86,7 @@ struct MenuView: View {
                     ToolbarItem(placement: .topBarTrailing) {
                         Menu {
                             Section {
-                                if viewModel.randomItem != nil {
+                                /*if viewModel.randomItem != nil {
                                     NavigationLink {
                                         ItemView(viewModel: ItemViewModel(item: viewModel.randomItem!, settings: settings))
                                             .onAppear {
@@ -92,7 +95,7 @@ struct MenuView: View {
                                     } label: {
                                         Label("Random Item", systemImage: "dice")
                                     }
-                                }
+                                }*/
                                 Picker(selection: $viewModel.filter ) {
                                     Section {
                                         Label("All Items", systemImage: "fork.knife").tag("All Items")

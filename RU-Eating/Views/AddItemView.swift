@@ -20,16 +20,28 @@ struct AddItemsView : View {
     
     var body : some View {
         NavigationStack {
-            List {
-                ForEach(viewModel.items, id: \.self) { item in
-                    if !viewModel.meal.items.contains(item) {
-                        Button {
-                            viewModel.meal.items.append(item)
-                            dismiss()
-                        } label: {
-                            Text(viewModel.getHighlightedName(item: item))
+            VStack {
+                if viewModel.rawItems.isEmpty {
+                    if viewModel.fetched {
+                        ContentUnavailableView("No Internet Connection", systemImage: "wifi.slash")
+                    }
+                    else {
+                        ProgressView()
+                    }
+                }
+                else {
+                    List {
+                        ForEach(viewModel.items, id: \.self) { item in
+                            if !viewModel.meal.items.contains(item) {
+                                Button {
+                                    viewModel.meal.items.append(item)
+                                    dismiss()
+                                } label: {
+                                    Text(viewModel.getHighlightedName(item: item))
+                                }
+                                .foregroundStyle(.primary)
+                            }
                         }
-                        .foregroundStyle(.primary)
                     }
                 }
             }

@@ -20,7 +20,9 @@ import Foundation
     var filter: String
     
     private(set) var rawMenu: [Category]
-    var menu: [Category] {
+    private(set) var fetched: Bool
+    
+     var menu: [Category] {
         var menu: [Category] = [Category]()
         
         for category in rawMenu {
@@ -109,6 +111,7 @@ import Foundation
         self.filter = "All Items"
         
         self.rawMenu = [Category]()
+        self.fetched = false
     }
     
     func updateMenu() async {
@@ -117,8 +120,9 @@ import Foundation
             rawMenu = try await place.fetchMenu(meal: meal == "Takeout" ? "Knight+Room" : meal, date: date, settings: settings)
             randomItem = items.items.randomElement()!
         } catch {
-            print(error)
+            // do nothing
         }
+        fetched = true
     }
     
     func decrementDate() {
