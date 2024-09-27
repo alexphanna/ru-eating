@@ -115,6 +115,7 @@ import Foundation
     }
     
     func updateMenu() async {
+        fetched = false
         rawMenu = [Category]()
         do {
             rawMenu = try await place.fetchMenu(meal: meal == "Takeout" ? "Knight+Room" : meal, date: date, settings: settings)

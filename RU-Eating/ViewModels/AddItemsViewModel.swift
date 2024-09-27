@@ -37,6 +37,7 @@ import Foundation
     }
     
     func updateItems() async {
+        fetched = false
         rawItems = [Item]()
         for place in places {
             if !place.name.contains(searchScope) { continue }
