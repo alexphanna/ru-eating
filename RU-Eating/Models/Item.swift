@@ -37,7 +37,7 @@ import Foundation
         self.name = name
         self.id = id
         self.servingsNumber = servingsNumber
-        let unit = servingsUnit == "oz" ? servingsUnit : servingsUnit.capitalized
+        let unit = servingsUnit == "oz" || servingsUnit == "ozl" ? "oz" : servingsUnit.capitalized
         self.servingsUnit = unit
         self.servingsUnitPlural = unit + (unit == "Each" || unit == "oz" ? "" : "s")
         self.portion = portion

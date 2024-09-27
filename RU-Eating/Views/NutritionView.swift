@@ -9,11 +9,12 @@ import SwiftUI
 
 struct NutritionView: View {
     @State var viewModel: NutritionViewModel
+    @Environment(Settings.self) private var settings
     
     var body: some View {
         Section {
             Picker("Unit", selection: $viewModel.unit) {
-                ForEach(["Amount", "Daily Value"], id: \.self) { unit in
+                ForEach(["Amounts", "% Daily Values"], id: \.self) { unit in
                     Text(unit)
                 }
             }
@@ -26,17 +27,17 @@ struct NutritionView: View {
                     .fontWeight(.bold)
             }
             ForEach(Array(viewModel.values.keys), id: \.self) { key in
-                if viewModel.unit == "Amount" {
-                    if key == "Calories" {
-                        LabeledContent(key, value: String(formatFloat(n: viewModel.values[key]!)) + nutrientUnits[key]!)
-                            .fontWeight(key == "Calories" ? .bold : .regular)
-                    }
-                    else {
-                        LabeledContent(key, value: String(formatFloat(n: viewModel.values[key]!)) + nutrientUnits[key]!)
-                    }
+                if key == "Calories" {
+                    LabeledContent(key, value: String(formatFloat(n: viewModel.values[key]!!)) + (viewModel.unit == "Amounts" ? nutrientUnits[key]! : "%"))
+                        .fontWeight(key == "Calories" ? .bold : .regular)
                 }
-                else if viewModel.unit == "Daily Value" {
-                    LabeledContent(key, value: String(formatFloat(n: viewModel.values[key]!)) + "%")
+                else {
+                    if viewModel.values[key]! == nil && !settings.hideNils {
+                        LabeledContent(key, value: "-")
+                    }
+                    else if viewModel.values[key]! != nil && (viewModel.values[key]!! != 0 || !settings.hideZeros) {
+                        LabeledContent(key, value: String(formatFloat(n: viewModel.values[key]!!)) + (viewModel.unit == "Amounts" ? nutrientUnits[key]! : "%"))
+                    }
                 }
             }
         } header: {

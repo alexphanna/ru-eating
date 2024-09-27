@@ -30,7 +30,9 @@ let nutrientUnits = [
     "Sugars" : "g",
     "Cholesterol" : "mg",
     "Protein" : "g",
-    "Sodium" : "mg"
+    "Sodium" : "mg",
+    "Iron" : "g",
+    "Calcium" : "g"
 ]
 
 let constantCategories = [
@@ -39,4 +41,34 @@ let constantCategories = [
     "breads",
     "fruits",
     "deli bar entree"
+]
+
+let amountNutrients = [
+    "Calories" : "Calories",
+    "Total Fat" : "Fat",
+    "Tot. Carb." : "Carbohydrates",
+    "Sat. Fat" : "Saturated Fat",
+    "Dietary Fiber" : "Dietary Fiber",
+    "Trans Fat" : "Trans Fat",
+    "Sugars" : "Sugars",
+    "Cholesterol" : "Cholesterol",
+    "Protein" : "Protein",
+    "Sodium" : "Sodium"
+]
+
+let dailyValueNutrients = [
+    "Calories" : "Calories",
+    "Protein" : "Protein",
+    "Fat" : "Fat",
+    "Carbohydrates" : "Carbohydrates",
+    "Cholesterol" : "Cholesterol",
+    "Total Sugars" : "Sugars",
+    "Dietary Fiber" : "Dietary Fiber",
+    "Sodium" : "Sodium",
+    "Saturated Fat" : "Saturated Fat",
+    "Calcium" : "Calcium",
+    "Trans Fatty Acid" : "Trans Fat",
+    "Mono Fat" : "Monounsaturated Fat",
+    "Poly Fat" : "Polyunsaturated Fat",
+    "Iron" : "Iron"
 ]

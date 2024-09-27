@@ -14,15 +14,20 @@ class Settings {
     var hideRestricted: Bool
     var favoriteItemsIDs: [String]
     var numberOfUses: Int
+    
+    var hideZeros: Bool
+    var hideNils: Bool
     var carbonFootprints: Bool
     
-    init(filterIngredients: Bool = false, restrictions: [String] = [], hideRestricted: Bool = false, carbonFootprints: Bool = true) {
+    init(filterIngredients: Bool = false, restrictions: [String] = [], hideRestricted: Bool = false, carbonFootprints: Bool = true, hideZeros: Bool = false, hideNils: Bool = false) {
         self.filterIngredients = filterIngredients
         self.hideRestricted = hideRestricted
         self.restrictions = restrictions
         self.carbonFootprints = carbonFootprints
         self.favoriteItemsIDs = [String]()
         self.numberOfUses = 1
+        self.hideZeros = hideZeros
+        self.hideNils = hideNils
     }
     
     func favorite(item: Item) {

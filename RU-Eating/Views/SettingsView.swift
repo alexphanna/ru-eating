@@ -17,6 +17,21 @@ struct SettingsView : View {
             VStack {
                 Form {
                     Section {
+                        Toggle(isOn: $settings.hideZeros) {
+                            Text("Hide Nutrients With Zero Value")
+                        }
+                        Toggle(isOn: $settings.hideNils) {
+                            Text("Hide Nutrients With No Value")
+                        }
+                        Toggle(isOn: $settings.carbonFootprints) {
+                            Text("Carbon Footprints")
+                        }
+                    } header: {
+                        Text("General")
+                    } footer: {
+                        Text("Display a \(Image(systemName: "leaf.fill")) next to items with the color corresponding to the carbon footprint: green = low, orange = medium, red = high. Not all items have carbon footprint information.")
+                    }
+                    Section {
                         Toggle(isOn: $settings.filterIngredients) {
                             Text("Filter Ingredients")
                         }
@@ -32,15 +47,6 @@ struct SettingsView : View {
                         Text("Dietary Restrictions")
                     } footer: {
                         Text("Filter through item's ingredients and display a \(Image(systemName: "exclamationmark.triangle.fill")) next to items or hide items that may contain dietary restrictions.")
-                    }
-                    Section {
-                        Toggle(isOn: $settings.carbonFootprints) {
-                            Text("Carbon Footprints")
-                        }
-                    } header: {
-                        Text("Extra Information")
-                    } footer: {
-                        Text("Display a \(Image(systemName: "leaf.fill")) next to items with the color corresponding to the carbon footprint: green = low, orange = medium, red = high. Not all items have carbon footprint information.")
                     }
                     Section("Credits") { // Inspired by delta
                         Button {

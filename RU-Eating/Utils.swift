@@ -32,6 +32,7 @@ func perfectName(name: String) -> String {
         "Ww" : "Whole Wheat",
         "W/" : "With",
         "Wit" : "With",
+        "&" : "and",
         
         // plural -> singular
         "burgers" : "burger",
