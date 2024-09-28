@@ -144,7 +144,8 @@ struct SettingsView : View {
                     } header: {
                         Text("Feedback")
                     } footer: {
-                        Text("Version: 1.0.2")
+                        Text("App Version: 1.1.0")
+                            .frame(maxWidth: .infinity, alignment: .center)
                     }
                 }
                 .navigationTitle("Settings")
