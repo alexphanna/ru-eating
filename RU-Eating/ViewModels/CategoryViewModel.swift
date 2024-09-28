@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OrderedCollections
 
 @Observable class CategoryViewModel {
     var category: Category

@@ -27,7 +27,7 @@ struct ItemView: View {
                                     Label("Item may contain dietary restrictions.", systemImage: "exclamationmark.triangle.fill")
                                 }
                             }
-                            NutritionView(viewModel: NutritionViewModel(category: Category(name: "", items: [viewModel.item]), showServingSize: true))
+                            NutritionView(viewModel: NutritionViewModel(category: Category(name: "", items: [viewModel.item]), showServingSize: true, settings: settings))
                             Section("Ingredients") {
                                 Text(viewModel.ingredients).font(.footnote).italic().foregroundStyle(.gray)
                             }

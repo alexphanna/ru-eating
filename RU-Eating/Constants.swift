@@ -32,7 +32,7 @@ let nutrientUnits = [
     "Protein" : "g",
     "Sodium" : "mg",
     "Iron" : "g",
-    "Calcium" : "g"
+    "Calcium" : "mg"
 ]
 
 let constantCategories = [

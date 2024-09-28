@@ -23,11 +23,18 @@ struct SettingsView : View {
                         Toggle(isOn: $settings.hideNils) {
                             Text("Hide Nutrients With No Value")
                         }
+                        Toggle(isOn: $settings.extraPercents) {
+                            Text("Extra Nutrient Values")
+                        }
+                    } header: {
+                        Text("Nutrition Facts")
+                    } footer: {
+                        Text("Calculate extra nutrient values not in the source menu (Cholesterol, Iron. and Calcium).")
+                    }
+                    Section {
                         Toggle(isOn: $settings.carbonFootprints) {
                             Text("Carbon Footprints")
                         }
-                    } header: {
-                        Text("General")
                     } footer: {
                         Text("Display a \(Image(systemName: "leaf.fill")) next to items with the color corresponding to the carbon footprint: green = low, orange = medium, red = high. Not all items have carbon footprint information.")
                     }
@@ -80,7 +87,7 @@ struct SettingsView : View {
                     }
                     Section {
                         Link(destination: URL(string: "mailto:alex.hanna@rutgers.edu")!, label: {
-                            Label("Email Developer", systemImage: "envelope")
+                            Label("Email the Developer", systemImage: "envelope")
                                 .foregroundStyle(.foreground)
                         })
                         Link(destination: URL(string: "https://www.github.com/alexphanna/RU-Eating/issues/new")!, label: {

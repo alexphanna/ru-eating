@@ -18,8 +18,9 @@ class Settings {
     var hideZeros: Bool
     var hideNils: Bool
     var carbonFootprints: Bool
+    var extraPercents: Bool
     
-    init(filterIngredients: Bool = false, restrictions: [String] = [], hideRestricted: Bool = false, carbonFootprints: Bool = true, hideZeros: Bool = false, hideNils: Bool = false) {
+    init(filterIngredients: Bool = false, restrictions: [String] = [], hideRestricted: Bool = false, carbonFootprints: Bool = true, hideZeros: Bool = false, hideNils: Bool = false, extraPercents: Bool = true) {
         self.filterIngredients = filterIngredients
         self.hideRestricted = hideRestricted
         self.restrictions = restrictions
@@ -28,6 +29,7 @@ class Settings {
         self.numberOfUses = 1
         self.hideZeros = hideZeros
         self.hideNils = hideNils
+        self.extraPercents = extraPercents
     }
     
     func favorite(item: Item) {

@@ -11,6 +11,7 @@ import OrderedCollections
 @Observable class NutritionViewModel {
     private(set) var category: Category
     
+    private var settings: Settings
     private(set) var showServingSize: Bool
     var unit: String
     var servings: Int
@@ -25,18 +26,19 @@ import OrderedCollections
         }
     }
     
-    init(category: Category, showServingSize: Bool = false) {
+    init(category: Category, showServingSize: Bool = false, settings: Settings) {
         self.category = category
         
         self.showServingSize = showServingSize
         self.rawValues = [OrderedDictionary<String, Float?>(), OrderedDictionary<String, Float?>()]
         self.unit = "Amounts"
         self.servings = 0
+        self.settings = settings
     }
     
     func updateValues() async {
         do {
-            rawValues = try await category.fetchValues()
+            rawValues = try await category.fetchValues(settings: settings)
         } catch {
             // do nothing
         }
