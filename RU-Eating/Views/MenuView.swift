@@ -59,7 +59,10 @@ struct MenuView: View {
                         ProgressView()
                     }
                     else if viewModel.rawMenu.isEmpty && viewModel.fetched {
-                        ContentUnavailableView("No Internet Connection", systemImage: "wifi.slash")
+                        ContentUnavailableView {
+                            Text("No Items")
+                                .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                        }
                     }
                     else if viewModel.menu.isEmpty {
                         ContentUnavailableView("No Results", systemImage: "")

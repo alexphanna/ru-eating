@@ -38,6 +38,19 @@ class Place: Identifiable, Hashable {
         }
     }
     
+    var shortenName : String {
+        switch name {
+        case "Busch Dining Hall":
+            return "Busch"
+        case "Livingston Dining Commons":
+            return "Livingston"
+        case "Neilson Dining Hall":
+            return "Neilson"
+        default:
+            return "The Atrium"
+        }
+    }
+    
     static let defaultHours = [("09:30", "20:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("09:30", "20:00")]
     
     init(name: String, campus: String, id: Int, hasTakeout: Bool, hours: [(String, String)] = defaultHours) {

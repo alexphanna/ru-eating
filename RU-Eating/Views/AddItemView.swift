@@ -14,10 +14,6 @@ struct AddItemsView : View {
     @Environment(\.dismiss) var dismiss
     @Environment(Settings.self) private var settings
     
-    private var placeNames: [String] {
-        return ["Busch", "Livingston", "Neilson", "The Atrium"]
-    }
-    
     var body : some View {
         NavigationStack {
             VStack {
@@ -58,7 +54,7 @@ struct AddItemsView : View {
         }
         .searchable(text: $viewModel.searchText)
         .searchScopes($viewModel.searchScope, activation: .onSearchPresentation) {
-            ForEach(placeNames, id: \.self) { name in
+            ForEach(places.map { $0.shortenName }, id: \.self) { name in
                 Text(name)
             }
         }

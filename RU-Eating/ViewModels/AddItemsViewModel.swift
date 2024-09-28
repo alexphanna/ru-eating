@@ -29,7 +29,7 @@ import Foundation
         self.meal = meal
         
         self.searchText = ""
-        self.searchScope = "Busch"
+        self.searchScope = settings.defaultDiningHall
         self.settings = settings
         self.fetched = false
         

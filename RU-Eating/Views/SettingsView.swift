@@ -35,6 +35,14 @@ struct SettingsView : View {
                         Text("Calculate extra nutrient values not in the source menu (Cholesterol, Iron, and Calcium).")
                     }
                     Section {
+                        Picker("Default Dining Hall", selection: $settings.defaultDiningHall) {
+                            ForEach(places.map { $0.shortenName }, id: \.self) { placeName in
+                                Text(placeName)
+                                    .tag(placeName)
+                            }
+                        }
+                    }
+                    Section {
                         Toggle(isOn: $settings.carbonFootprints) {
                             Text("Carbon Footprints")
                         }
@@ -57,6 +65,38 @@ struct SettingsView : View {
                         Text("Dietary Restrictions")
                     } footer: {
                         Text("Filter through item's ingredients and display a \(Image(systemName: "exclamationmark.triangle.fill")) next to items or hide items that may contain dietary restrictions.")
+                    }
+                    Section("Appearance") {
+                        Picker("Color Scheme", selection: $settings.colorScheme) {
+                            Text("System")
+                                .tag(nil as Bool?)
+                            Text("Light")
+                                .tag(true)
+                            Text("Dark")
+                                .tag(false)
+                        }
+                        if UIApplication.shared.supportsAlternateIcons {
+                            NavigationLink("App Icon") {
+                                List {
+                                    ForEach(["Scarlet", "White", "Blue"], id: \.self) { icon in
+                                        Button {
+                                            UIApplication.shared.setAlternateIconName(icon == "Scarlet" ? nil : icon)
+                                        } label: {
+                                            HStack {
+                                                Image(icon + "Image")
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(width: 64, height: 64)
+                                                    .clipShape(.rect(cornerRadius: 12))
+                                                Text(icon)
+                                                    .foregroundStyle(Color(uiColor: .label))
+                                            }
+                                        }
+                                    }
+                                }
+                                .navigationTitle("App Icon")
+                            }
+                        }
                     }
                     Section("Credits") { // Inspired by delta
                         Button {
@@ -115,5 +155,6 @@ struct SettingsView : View {
                 }
             }
         }
+        .preferredColorScheme(settings.colorScheme == nil ?  ColorScheme(.unspecified) : settings.colorScheme! ? .light : .dark)
     }
 }

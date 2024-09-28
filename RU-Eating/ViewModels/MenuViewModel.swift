@@ -119,7 +119,9 @@ import Foundation
         rawMenu = [Category]()
         do {
             rawMenu = try await place.fetchMenu(meal: meal == "Takeout" ? "Knight+Room" : meal, date: date, settings: settings)
-            randomItem = items.items.randomElement()!
+            if !items.items.isEmpty {
+                randomItem = items.items.randomElement()!
+            }
         } catch {
             // do nothing
         }
