@@ -23,13 +23,16 @@ struct SettingsView : View {
                         Toggle(isOn: $settings.hideNils) {
                             Text("Hide Nutrients With No Value")
                         }
+                        Toggle(isOn: $settings.fdaDailyValues) {
+                            Text("FDA Daily Values")
+                        }
                         Toggle(isOn: $settings.extraPercents) {
                             Text("Extra Nutrient Values")
                         }
                     } header: {
                         Text("Nutrition Facts")
                     } footer: {
-                        Text("Calculate extra nutrient values not in the source menu (Cholesterol, Iron. and Calcium).")
+                        Text("Calculate extra nutrient values not in the source menu (Cholesterol, Iron, and Calcium).")
                     }
                     Section {
                         Toggle(isOn: $settings.carbonFootprints) {

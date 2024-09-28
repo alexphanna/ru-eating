@@ -58,27 +58,33 @@ import OrderedCollections
                     let text = try! element.text()
                     let textArray = text.split(separator: isAmounts ? "\u{00A0}" : " \u{00A0}\u{00A0}")
                     
-                    if textArray.count == 0 || (isAmounts && amountNutrients[String(textArray[0])] == nil) || (!isAmounts && dailyValueNutrients[String(textArray[0])] == nil) {
+                    if textArray.count != 2 || perfectNutrients[String(textArray[0])] == nil {
                         continue
                     }
                     
-                    if textArray.count != 2 {
-                        continue
-                    }
-                    let nutrient = isAmounts ? amountNutrients[String(textArray[0])]! : dailyValueNutrients[String(textArray[0])]!
+                    let nutrient = perfectNutrients[String(textArray[0])]!
                     let value = Float(textArray[1].replacingOccurrences(of: isAmounts ? nutrientUnits[nutrient]! : "%", with: ""))! * Float(item.portion) * Float(item.servingsNumber)
                     if settings.extraPercents {
                         if isAmounts {
                             if nutrient == "Cholesterol" {
-                                values[1][nutrient]! = value / 3
+                                if values[1][nutrient]! == nil {
+                                    values[1][nutrient] = 0
+                                }
+                                values[1][nutrient]!! += value / 3
                             }
                         }
                         else if !isAmounts {
                             if nutrient == "Iron" {
-                                values[0][nutrient] = value / 100 * 18
+                                if values[0][nutrient]! == nil {
+                                    values[0][nutrient] = 0
+                                }
+                                values[0][nutrient]!! += value / 100 * 18
                             }
                             else if nutrient == "Calcium" {
-                                values[0][nutrient] = value / 100 * 1300
+                                if values[0][nutrient]! == nil {
+                                    values[0][nutrient] = 0
+                                }
+                                values[0][nutrient]!! += value / 100 * 1300
                             }
                         }
                     }

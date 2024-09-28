@@ -36,7 +36,8 @@ struct NutritionView: View {
                         LabeledContent(key, value: "-")
                     }
                     else if viewModel.values[key]! != nil && (viewModel.values[key]!! != 0 || !settings.hideZeros) {
-                        LabeledContent(key, value: String(formatFloat(n: viewModel.values[key]!!)) + (viewModel.unit == "Amounts" ? nutrientUnits[key]! : "%"))
+                        // let temp = Float(viewModel.values[key]!!) / Float(dailyValues[key]!)
+                        LabeledContent(key, value: formatFloat(n: viewModel.values[key]!!) + (viewModel.unit == "Amounts" ? nutrientUnits[key]! : "%"))
                     }
                 }
             }

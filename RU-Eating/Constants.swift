@@ -43,32 +43,37 @@ let constantCategories = [
     "deli bar entree"
 ]
 
-let amountNutrients = [
+let perfectNutrients = [
     "Calories" : "Calories",
     "Total Fat" : "Fat",
+    "Fat" : "Fat",
     "Tot. Carb." : "Carbohydrates",
+    "Carbohydrates" : "Carbohydrates",
     "Sat. Fat" : "Saturated Fat",
+    "Saturated Fat" : "Saturated Fat",
     "Dietary Fiber" : "Dietary Fiber",
     "Trans Fat" : "Trans Fat",
+    "Trans Fatty Acid" : "Trans Fat",
     "Sugars" : "Sugars",
+    "Total Sugars" : "Sugars",
     "Cholesterol" : "Cholesterol",
     "Protein" : "Protein",
-    "Sodium" : "Sodium"
+    "Sodium" : "Sodium",
+    "Calcium" : "Calcium",
+    "Iron" : "Iron"
 ]
 
-let dailyValueNutrients = [
-    "Calories" : "Calories",
-    "Protein" : "Protein",
-    "Fat" : "Fat",
-    "Carbohydrates" : "Carbohydrates",
-    "Cholesterol" : "Cholesterol",
-    "Total Sugars" : "Sugars",
-    "Dietary Fiber" : "Dietary Fiber",
-    "Sodium" : "Sodium",
-    "Saturated Fat" : "Saturated Fat",
-    "Calcium" : "Calcium",
-    "Trans Fatty Acid" : "Trans Fat",
-    "Mono Fat" : "Monounsaturated Fat",
-    "Poly Fat" : "Polyunsaturated Fat",
-    "Iron" : "Iron"
+let dailyValues = [
+    "Calories" : 2000,
+    "Fat" : 78,
+    "Carbohydrates" : 275,
+    "Saturated Fat" : 20,
+    "Dietary Fiber" : 28,
+    "Trans Fat" : 1,
+    // "Sugars" : 50, Added Sugar
+    "Cholesterol" : 300,
+    "Protein" : 50,
+    "Sodium" : 2300,
+    "Iron" : 18,
+    "Calcium" : 1300
 ]
