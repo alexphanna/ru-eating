@@ -31,11 +31,11 @@ struct RootView: View {
                     context.insert(Settings())
                 }
                 (settings.first ?? Settings()).numberOfUses += 1
-                if (settings.first!).numberOfUses % 10 == 0 {
+                if ((settings.first ?? Settings())).numberOfUses % 10 == 0 {
                     requestReview()
                 }
             }
-            .environment(settings.first!)
-            .preferredColorScheme((settings.first!).colorScheme == nil ? nil : ((settings.first!).colorScheme! ? .light : .dark))
+            .environment(settings.first ?? Settings())
+            .preferredColorScheme(((settings.first ?? Settings())).colorScheme == nil ? nil : (((settings.first ?? Settings())!).colorScheme! ? .light : .dark))
     }
 }
