@@ -16,17 +16,16 @@ import OrderedCollections
     var unit: String
     var servings: Int
     
-    private var rawValues: [OrderedDictionary<String, Float?>]
     var values: OrderedDictionary<String, Float?> {
         switch(unit) {
         case "Amounts":
-            return rawValues[0]
+            return category.amounts
         default:
             if settings.fdaDailyValues {
                 return getFDADailyValues()
             }
             else {
-                return rawValues[1]
+                return category.dailyValues
             }
         }
     }
@@ -35,7 +34,6 @@ import OrderedCollections
         self.category = category
         
         self.showServingSize = showServingSize
-        self.rawValues = [OrderedDictionary<String, Float?>(), OrderedDictionary<String, Float?>()]
         self.unit = "Amounts"
         self.servings = 0
         self.settings = settings
@@ -44,22 +42,14 @@ import OrderedCollections
     func getFDADailyValues() -> OrderedDictionary<String, Float?> {
         var fdaDailyValues: OrderedDictionary<String, Float?> = OrderedDictionary<String, Float?>()
         
-        for key in Array(rawValues[0].keys) {
-            if key == "Sugars" || rawValues[0][key]! == nil {
-                fdaDailyValues[key] = rawValues[1][key]!!
+        for key in Array(category.amounts.keys) {
+            if key == "Sugars" || category.amounts[key]! == nil {
+                fdaDailyValues[key] = category.dailyValues[key]!!
                 continue
             }
-            fdaDailyValues[key] = rawValues[0][key]!! / Float(dailyValues[key]!) * 100
+            fdaDailyValues[key] = category.amounts[key]!! / Float(dailyValues[key]!) * 100
         }
         
         return fdaDailyValues
-    }
-    
-    func updateValues() async {
-        do {
-            rawValues = try await category.fetchValues(settings: settings)
-        } catch {
-            // do nothing
-        }
     }
 }

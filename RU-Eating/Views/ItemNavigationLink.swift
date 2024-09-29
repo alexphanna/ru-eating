@@ -28,7 +28,7 @@ struct ItemNavigationLink : View {
                         .foregroundStyle(.yellow)
                 }
             }
-            else if settings.filterIngredients && viewModel.restricted {
+            else if settings.filterIngredients && viewModel.containsRestrictions {
                 Label {
                     Text(viewModel.item.name)
                     if settings.carbonFootprints && viewModel.item.carbonFootprint > 0 {
@@ -57,9 +57,6 @@ struct ItemNavigationLink : View {
                 Image(systemName: viewModel.item.isFavorite ? "star.slash.fill" : "star.fill")
             }
             .tint(.yellow)
-        }
-        .task {
-            await viewModel.updateItem()
         }
     }
 }

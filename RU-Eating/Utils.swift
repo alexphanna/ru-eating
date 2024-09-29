@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftSoup
+import OrderedCollections
 
 func fetchDoc(url: URL) async throws -> Document {
     let (data, _) = try await URLSession.shared.data(from: url)
@@ -72,4 +73,12 @@ func titleCase(title: String) -> String {
     }
     
     return newTitle
+}
+
+func multiplyDictionary(dict: OrderedDictionary<String, Float?>, multiplier: Float) -> OrderedDictionary<String, Float?> {
+    var newDict = OrderedDictionary<String, Float?>()
+    for key in Array(dict.keys) {
+        newDict[key] = dict[key]! == nil ? nil : dict[key]!! * multiplier
+    }
+    return newDict
 }

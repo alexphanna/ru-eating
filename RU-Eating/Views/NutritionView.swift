@@ -36,7 +36,6 @@ struct NutritionView: View {
                         LabeledContent(key, value: "-")
                     }
                     else if viewModel.values[key]! != nil && (viewModel.values[key]!! != 0 || !settings.hideZeros) {
-                        // let temp = Float(viewModel.values[key]!!) / Float(dailyValues[key]!)
                         LabeledContent(key, value: formatFloat(n: viewModel.values[key]!!) + (viewModel.unit == "Amounts" ? nutrientUnits[key]! : "%"))
                     }
                 }
@@ -45,14 +44,6 @@ struct NutritionView: View {
             Text("Nutrition Facts")
         } footer: {
             Text("Percent Daily Values are based on a 2,000 calorie diet.")
-        }
-        .onChange(of: viewModel.category.portions) {
-            Task {
-                await viewModel.updateValues()
-            }
-        }
-        .task {
-            await viewModel.updateValues()
         }
     }
 }

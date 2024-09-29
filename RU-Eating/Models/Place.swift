@@ -169,7 +169,7 @@ class Place: Identifiable, Hashable {
                 let servingsUnit: String = String(servings[1]).lowercased()
                 
                 // capitalize items
-                lastCategory!.items.append(Item(name: perfectName(name: try! element.attr("name")), id: try! element.attr("for"), servingsNumber: servingsNumber, servingsUnit: servingsUnit, carbonFootprint: carbonFootprint, isFavorite: settings.favoriteItemsIDs.contains(try! element.attr("for"))))
+                lastCategory!.items.append(Item(name: perfectName(name: try! element.attr("name")), id: try! element.attr("for"), servingsNumber: servingsNumber, servingsUnit: servingsUnit, carbonFootprint: carbonFootprint, isFavorite: settings.favoriteItemsIDs.contains(try! element.attr("for")), settings: settings))
                 
                 i += 1
             }

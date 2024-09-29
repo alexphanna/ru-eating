@@ -32,66 +32,39 @@ import OrderedCollections
         }
     }
     
+    var dailyValues: OrderedDictionary<String, Float?> {
+        var dailyValues: OrderedDictionary<String, Float?> = ["Calories" : nil, "Fat" : nil, "Carbohydrates" : nil, "Saturated Fat" : nil, "Dietary Fiber" : nil, "Trans Fat" : nil, "Sugars" : nil, "Cholesterol" : nil, "Protein" : nil, "Sodium" : nil, "Iron" : nil, "Calcium" : nil]
+        for item in items {
+            for key in Array(dailyValues.keys) {
+                if item.dailyValues[key]! != nil {
+                    if dailyValues[key]! == nil {
+                        dailyValues[key]! = 0
+                    }
+                    dailyValues[key]!! += item.dailyValues[key]!!
+                }
+            }
+        }
+        return dailyValues
+    }
+    
+    var amounts: OrderedDictionary<String, Float?> {
+        var amounts: OrderedDictionary<String, Float?> = ["Calories" : nil, "Fat" : nil, "Carbohydrates" : nil, "Saturated Fat" : nil, "Dietary Fiber" : nil, "Trans Fat" : nil, "Sugars" : nil, "Cholesterol" : nil, "Protein" : nil, "Sodium" : nil, "Iron" : nil, "Calcium" : nil]
+        for item in items {
+            for key in Array(amounts.keys) {
+                if item.amounts[key]! != nil {
+                    if amounts[key]! == nil {
+                        amounts[key]! = 0
+                    }
+                    amounts[key]!! += item.amounts[key]!!
+                }
+            }
+        }
+        return amounts
+    }
+    
     init(name: String, items: [Item] = [Item]()) {
         self.name = name
         self.items = items
         self.id = UUID()
-    }
-    
-    func fetchValues(settings: Settings) async throws -> [OrderedDictionary<String, Float?>] {
-        var values : [OrderedDictionary<String, Float?>] = [OrderedDictionary<String, Float?>]()
-        values.append(["Calories" : 0, "Fat" : 0, "Carbohydrates" : 0, "Saturated Fat" : 0, "Dietary Fiber" : 0, "Trans Fat" : 0, "Sugars" : 0, "Cholesterol" : 0, "Protein" : 0, "Sodium" : 0, "Iron" : nil, "Calcium" : nil])
-        values.append(["Calories" : 0, "Fat" : 0, "Carbohydrates" : 0, "Saturated Fat" : 0, "Dietary Fiber" : 0, "Trans Fat" : nil, "Sugars" : 0, "Cholesterol" : nil, "Protein" : 0, "Sodium" : 0, "Iron" : 0, "Calcium" : 0])
-        
-        // 0 - Amounts
-        // 1 - Daily Values
-        for i in 0...1 {
-            let isAmounts: Bool = i == 0
-            for item in items {
-                let doc = try await fetchDoc(url: URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/label.aspx?&RecNumAndPort=" + item.id + "*1")!)
-                if !hasNutritionalReport(doc: doc) {
-                    continue
-                }
-                let elements = try! doc.select(isAmounts ? "div#nutritional-info table td, div#nutritional-info p:contains(Calories)" : "div#nutritional-info ul li").array()
-                
-                for element in elements {
-                    let text = try! element.text()
-                    let textArray = text.split(separator: isAmounts ? "\u{00A0}" : " \u{00A0}\u{00A0}")
-                    
-                    if textArray.count != 2 || perfectNutrients[String(textArray[0])] == nil {
-                        continue
-                    }
-                    
-                    let nutrient = perfectNutrients[String(textArray[0])]!
-                    let value = Float(textArray[1].replacingOccurrences(of: isAmounts ? nutrientUnits[nutrient]! : "%", with: ""))! * Float(item.portion) * Float(item.servingsNumber)
-                    if settings.extraPercents {
-                        if isAmounts {
-                            if nutrient == "Cholesterol" {
-                                if values[1][nutrient]! == nil {
-                                    values[1][nutrient] = 0
-                                }
-                                values[1][nutrient]!! += value / 3
-                            }
-                        }
-                        else if !isAmounts {
-                            if nutrient == "Iron" {
-                                if values[0][nutrient]! == nil {
-                                    values[0][nutrient] = 0
-                                }
-                                values[0][nutrient]!! += value / 100 * 18
-                            }
-                            else if nutrient == "Calcium" {
-                                if values[0][nutrient]! == nil {
-                                    values[0][nutrient] = 0
-                                }
-                                values[0][nutrient]!! += value / 100 * 1300
-                            }
-                        }
-                    }
-                    values[i][nutrient]!! += value
-                }
-            }
-        }
-        return values
     }
 }

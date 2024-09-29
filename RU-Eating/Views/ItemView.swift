@@ -14,22 +14,22 @@ struct ItemView: View {
     @Environment(Settings.self) private var settings
     
     var body : some View {
-        if (settings.hideRestricted && !viewModel.restricted) || !settings.hideRestricted {
+        if (settings.hideRestricted /*&& !viewModel.contains*/) || !settings.hideRestricted {
             NavigationStack {
                 VStack {
-                    if viewModel.ingredients.isEmpty {
+                    if viewModel.item.ingredients.isEmpty {
                         Text("Nutritional information is not available for this item")
                     }
                     else {
                         List {
-                            if viewModel.restricted {
+                            if viewModel.containsRestrictions {
                                 Section("Warning") {
                                     Label("Item may contain dietary restrictions.", systemImage: "exclamationmark.triangle.fill")
                                 }
                             }
                             NutritionView(viewModel: NutritionViewModel(category: Category(name: "", items: [viewModel.item]), showServingSize: true, settings: settings))
                             Section("Ingredients") {
-                                Text(viewModel.ingredients).font(.footnote).italic().foregroundStyle(.gray)
+                                Text(viewModel.item.ingredients).font(.footnote).italic().foregroundStyle(.gray)
                             }
                         }
                     }
@@ -55,9 +55,6 @@ struct ItemView: View {
                         }
                     }
                 }
-            }
-            .task {
-                await viewModel.updateItem()
             }
         }
     }

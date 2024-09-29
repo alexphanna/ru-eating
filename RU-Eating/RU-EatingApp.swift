@@ -31,7 +31,7 @@ struct RootView: View {
                     context.insert(Settings())
                 }
                 (settings.first ?? Settings()).numberOfUses += 1
-                if ((settings.first ?? Settings())).numberOfUses % 10 == 0 {
+                if (settings.first ?? Settings()).numberOfUses % 10 == 0 {
                     requestReview()
                 }
             }
