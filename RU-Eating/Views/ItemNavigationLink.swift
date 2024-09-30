@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ItemNavigationLink : View {
-    @State var viewModel: ItemViewModel
+    @Bindable var viewModel: ItemViewModel
     @Environment(Settings.self) private var settings
     
     var body: some View {
@@ -42,13 +42,16 @@ struct ItemNavigationLink : View {
                 }
             }
             else {
-                HStack {
-                    Text(viewModel.item.name)
-                    if settings.carbonFootprints && viewModel.item.carbonFootprint > 0 {
-                        Spacer()
-                        Image(systemName: "leaf")
-                            .foregroundStyle(viewModel.carbonFootprintColor)
+                if viewModel.hasValue {
+                    if viewModel.item.amounts[viewModel.nutrient]! == nil {
+                        LabeledContent(viewModel.item.name, value: "-")
                     }
+                    else {
+                        LabeledContent(viewModel.item.name, value: String(viewModel.item.amounts[viewModel.nutrient]!!))
+                    }
+                }
+                else {
+                    Text(viewModel.item.name)
                 }
             }
         }

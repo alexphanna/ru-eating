@@ -7,11 +7,13 @@
 
 import Foundation
 import SwiftUI
+import Observation
 
 @Observable class ItemViewModel {
     var item: Item
     var settings: Settings
-    var searchText: String
+    var nutrient: String
+    var hasValue: Bool
     
     var carbonFootprintColor: Color {
         return item.carbonFootprint == 1 ? .green : item.carbonFootprint == 2 ? .orange : .red
@@ -26,9 +28,10 @@ import SwiftUI
         return false
     }
     
-    init(item: Item, settings: Settings) {
+    init(item: Item, nutrient: String, hasValue: Bool, settings: Settings) {
         self.item = item
+        self.nutrient = nutrient
+        self.hasValue = hasValue
         self.settings = settings
-        self.searchText = ""
     }
 }

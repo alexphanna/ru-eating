@@ -16,7 +16,9 @@ import Foundation
     // settings and filtering
     private var settings: Settings
     var isGrouped: Bool
-    var searchText: String
+    var sortBy: String
+    var sortOrder: String
+    var nutrient: String
     var filter: String
     
     private(set) var rawMenu: [Category]
@@ -40,20 +42,7 @@ import Foundation
                 break
             }
             
-            if !searchText.isEmpty {
-                let searchedCategory: Category = Category(name: category.name)
-                
-                for item in filteredCategory.items {
-                    if item.name.lowercased().contains(searchText.lowercased()) {
-                        searchedCategory.items.append(item)
-                    }
-                }
-                
-                if !searchedCategory.items.isEmpty {
-                    menu.append(searchedCategory)
-                }
-            }
-            else if !filteredCategory.items.isEmpty {
+            if !filteredCategory.items.isEmpty {
                 menu.append(filteredCategory)
             }
         }
@@ -67,8 +56,6 @@ import Foundation
         for _category in menu {
             category.items.append(contentsOf: _category.items)
         }
-        
-        category.items = category.items.sorted(by: { $0.name < $1.name })
         
         return category
     }
@@ -106,8 +93,10 @@ import Foundation
         self.date = Date.now
         
         self.settings = settings
-        self.isGrouped = true
-        self.searchText = ""
+        self.isGrouped = false
+        self.sortBy = "Name"
+        self.sortOrder = "Ascending"
+        self.nutrient = "Calories"
         self.filter = "All Items"
         
         self.rawMenu = [Category]()
