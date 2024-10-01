@@ -12,13 +12,31 @@ struct CategoryView : View {
     @Environment(Settings.self) private var settings
     
     var body : some View {
-        Section(
-            isExpanded: $viewModel.isExpanded,
-            content: {
-                ForEach(viewModel.category.items.sorted(by: { $0.name < $1.name })) { item in
-                    ItemNavigationLink(viewModel: ItemViewModel(item: item, settings: settings))
+        if viewModel.isExpandable {
+            Section(
+                isExpanded: $viewModel.isExpanded,
+                content: {
+                    ForEach(viewModel.sortedItems) { item in
+                        ItemNavigationLink(viewModel: ItemViewModel(item: item, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, settings: settings))
+                    }
+                },
+                header: { Text(viewModel.category.name) })
+        }
+        else {
+            Section(content: {
+                ForEach(viewModel.sortedItems) { item in
+                    ItemNavigationLink(viewModel: ItemViewModel(item: item, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, settings: settings))
                 }
-            },
-            header: { Text(viewModel.category.name) })
+            }, header: {
+                HStack {
+                    Text("Name")
+                    if viewModel.sortBy == "Nutrient" {
+                        Spacer()
+                        Button(viewModel.nutrient, action: viewModel.nextNutrient )
+                            .font(.caption)
+                    }
+                }
+            })
+        }
     }
 }

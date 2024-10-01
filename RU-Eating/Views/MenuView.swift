@@ -15,13 +15,13 @@ struct MenuView: View {
         NavigationLink {
             NavigationStack {
                 List {
-                    if viewModel.isGrouped {
+                    if viewModel.sortBy == "None" {
                         ForEach(viewModel.menu) { category in
-                            CategoryView(viewModel: CategoryViewModel(category: category, searchText: viewModel.searchText))
+                            CategoryView(viewModel: CategoryViewModel(category: category, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, sortOrder: viewModel.sortOrder))
                         }
                     }
                     else {
-                        CategoryView(viewModel: CategoryViewModel(category: viewModel.items, searchText: viewModel.searchText))
+                        CategoryView(viewModel: CategoryViewModel(category: viewModel.items, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, sortOrder: viewModel.sortOrder, isExpandable: false))
                     }
                 }
                 .safeAreaInset(edge: .top) {
@@ -52,10 +52,7 @@ struct MenuView: View {
                     }
                 }
                 .overlay {
-                    if !viewModel.searchText.isEmpty && viewModel.menu.isEmpty {
-                        ContentUnavailableView.search(text: viewModel.searchText)
-                    }
-                    else if viewModel.rawMenu.isEmpty && !viewModel.fetched {
+                    if viewModel.rawMenu.isEmpty && !viewModel.fetched {
                         ProgressView()
                     }
                     else if viewModel.rawMenu.isEmpty && viewModel.fetched {
@@ -91,7 +88,7 @@ struct MenuView: View {
                             Section {
                                 if viewModel.randomItem != nil {
                                     NavigationLink {
-                                        ItemView(viewModel: ItemViewModel(item: viewModel.randomItem!, settings: settings))
+                                        ItemView(viewModel: ItemViewModel(item: viewModel.randomItem!, nutrient: viewModel.sortBy, sortBy: viewModel.sortBy, settings: settings))
                                             .onAppear {
                                                 viewModel.randomItem = viewModel.items.items.randomElement() // update random element
                                             }
@@ -108,35 +105,44 @@ struct MenuView: View {
                                         Label("Low Carbon Footprint", systemImage: "leaf").tag("Low Carbon Footprint")
                                     }
                                 } label: {
-                                    Button(action: {}) {
-                                        HStack {
-                                            Text("Filter")
-                                            Spacer()
-                                            Image(systemName: viewModel.filter == "All Items" ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
-                                        }
+                                    HStack {
+                                        Text("Filter")
+                                        Spacer()
+                                        Image(systemName: viewModel.filter == "All Items" ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
                                     }
                                 }
-                                .pickerStyle(.menu)
-                                Picker(selection: $viewModel.isGrouped) {
-                                    Text("On").tag(true)
-                                    Text("Off").tag(false)
-                                } label: {
-                                    Button(action: {}) {
-                                        HStack {
-                                            VStack {
-                                                Text("Group By Category")
-                                                Text(viewModel.isGrouped ? "On" : "Off")
-                                                    .font(.callout)
-                                                    .foregroundStyle(.gray)
-                                                
+                                Menu {
+                                    Section {
+                                        Picker("", selection: $viewModel.sortBy) {
+                                            Section {
+                                                Text("None")
                                             }
-                                            Spacer()
-                                            Image(systemName: "rectangle.3.group")
+                                            Section {
+                                                Text("Name")
+                                                    .tag("Name")
+                                                Text("Nutrient")
+                                                    .tag("Nutrient")
+                                                Text("Carbon Footprint")
+                                                    .tag("Carbon Footprint")
+                                                Text("Ingredients")
+                                                    .tag("Ingredients")
+                                            }
                                         }
                                     }
+                                    Section {
+                                        Picker("", selection: $viewModel.sortOrder) {
+                                            Text("Ascending")
+                                                .tag("Ascending")
+                                            Text("Descending")
+                                                .tag("Descending")
+                                        }
+                                    }
+                                } label: {
+                                    Label("Sort By", systemImage: "arrow.up.arrow.down")
                                 }
-                                .pickerStyle(.menu)
+                                .pickerStyle(.inline)
                             }
+                            .pickerStyle(.menu)
                             Link(destination: viewModel.place.getURL(meal: viewModel.meal, date: viewModel.date), label: {
                                 Label("View Source", systemImage: "link")
                             })
