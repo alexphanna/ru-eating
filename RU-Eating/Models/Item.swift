@@ -36,14 +36,22 @@ import SwiftSoup
     var carbonFootprint: Int
     
     var ingredients: String
+    var ingredientsCount: Int? {
+        if ingredients.isEmpty {
+            return nil
+        }
+        return ingredients.filter { $0 == "," }.count + 1
+    }
+    
     private var rawDailyValues: OrderedDictionary<String, Float?>
     var dailyValues:  OrderedDictionary<String, Float?> {
         return multiplyDictionary(dict: rawDailyValues, multiplier: portion)
     }
-    private var rawAmounts: OrderedDictionary<String, Float?>
+    var rawAmounts: OrderedDictionary<String, Float?>
     var amounts:  OrderedDictionary<String, Float?> {
         return multiplyDictionary(dict: rawAmounts, multiplier: portion)
     }
+    var fetched: Bool
     
     init(name: String, id: String, servingsNumber: Float, servingsUnit: String, portion: Float = 1, carbonFootprint: Int = 0, isFavorite: Bool = false, settings: Settings) {
         self.name = name
@@ -59,8 +67,9 @@ import SwiftSoup
         self.ingredients = ""
         self.rawDailyValues = ["Calories" : 0, "Fat" : 0, "Carbohydrates" : 0, "Saturated Fat" : 0, "Dietary Fiber" : 0, "Trans Fat" : nil, "Sugars" : 0, "Cholesterol" : nil, "Protein" : 0, "Sodium" : 0, "Iron" : 0, "Calcium" : 0]
         self.rawAmounts = ["Calories" : 0, "Fat" : 0, "Carbohydrates" : 0, "Saturated Fat" : 0, "Dietary Fiber" : 0, "Trans Fat" : 0, "Sugars" : 0, "Cholesterol" : 0, "Protein" : 0, "Sodium" : 0, "Iron" : nil, "Calcium" : nil]
+        self.fetched = false
         Task {
-            await fetchData(settings: settings)
+            await self.fetchData(settings: settings)
         }
     }
     
@@ -74,6 +83,7 @@ import SwiftSoup
     }
     
     func fetchData(settings: Settings) async {
+        fetched = false
         if let doc = try? await fetchDoc(url: URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/label.aspx?&RecNumAndPort=" + id + "*1")!) {
             if hasNutritionalReport(doc: doc) {
                 parseIngredients(doc: doc)
@@ -81,6 +91,7 @@ import SwiftSoup
                 parseDailyValues(doc: doc, settings: settings)
             }
         }
+        fetched = true
     }
     
     func parseIngredients(doc: Document) {

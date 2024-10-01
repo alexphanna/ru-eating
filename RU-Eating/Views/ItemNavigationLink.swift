@@ -15,43 +15,53 @@ struct ItemNavigationLink : View {
         NavigationLink {
             ItemView(viewModel: viewModel)
         } label: {
-            if viewModel.item.isFavorite {
-                Label {
-                    Text(viewModel.item.name)
-                    if settings.carbonFootprints && viewModel.item.carbonFootprint > 0 {
-                        Spacer()
-                        Image(systemName: "leaf")
-                            .foregroundStyle(viewModel.carbonFootprintColor)
-                    }
-                } icon: {
-                    Image(systemName: "star.fill")
-                        .foregroundStyle(.yellow)
-                }
-            }
-            else if settings.filterIngredients && viewModel.containsRestrictions {
-                Label {
-                    Text(viewModel.item.name)
-                    if settings.carbonFootprints && viewModel.item.carbonFootprint > 0 {
-                        Spacer()
-                        Image(systemName: "leaf")
-                            .foregroundStyle(viewModel.carbonFootprintColor)
-                    }
-                } icon: {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.accent)
-                }
-            }
-            else {
-                if viewModel.hasValue {
-                    if viewModel.item.amounts[viewModel.nutrient]! == nil {
-                        LabeledContent(viewModel.item.name, value: "-")
-                    }
-                    else {
-                        LabeledContent(viewModel.item.name, value: String(viewModel.item.amounts[viewModel.nutrient]!!))
+            HStack {
+                if viewModel.item.isFavorite || (settings.filterIngredients && viewModel.containsRestrictions) {
+                    Label {
+                        Text(viewModel.item.name)
+                    } icon: {
+                        if viewModel.item.isFavorite {
+                            Image(systemName: "star.fill")
+                                .foregroundStyle(.yellow)
+                        }
+                        else if (settings.filterIngredients && viewModel.containsRestrictions) {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .foregroundStyle(.accent)
+                        }
                     }
                 }
                 else {
                     Text(viewModel.item.name)
+                }
+                if viewModel.sortBy == "Nutrient" {
+                    Spacer()
+                    if viewModel.item.amounts[viewModel.nutrient]! == nil {
+                        Text("-")
+                            .foregroundStyle(.gray)
+                    }
+                    else {
+                        Text(String(formatFloat(n: viewModel.item.amounts[viewModel.nutrient]!!)) + nutrientUnits[viewModel.nutrient]!)
+                            .foregroundStyle(.gray)
+                    }
+                }
+                else if viewModel.sortBy == "Carbon Footprint" {
+                    Spacer()
+                    if settings.carbonFootprints && viewModel.item.carbonFootprint > 0 {
+                        Image(systemName: "leaf")
+                            .imageScale(.medium)
+                            .foregroundStyle(viewModel.carbonFootprintColor)
+                    }
+                }
+                else if viewModel.sortBy == "Ingredients" {
+                    Spacer()
+                    if viewModel.item.ingredientsCount == nil {
+                        Text("-")
+                            .foregroundStyle(.gray)
+                    }
+                    else {
+                        Text(String(viewModel.item.ingredientsCount!))
+                            .foregroundStyle(.gray)
+                    }
                 }
             }
         }

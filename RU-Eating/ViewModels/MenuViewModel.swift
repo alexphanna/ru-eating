@@ -94,7 +94,7 @@ import Foundation
         
         self.settings = settings
         self.isGrouped = false
-        self.sortBy = "Name"
+        self.sortBy = "None"
         self.sortOrder = "Ascending"
         self.nutrient = "Calories"
         self.filter = "All Items"

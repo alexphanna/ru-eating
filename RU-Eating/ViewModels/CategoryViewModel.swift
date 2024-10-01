@@ -15,12 +15,12 @@ import OrderedCollections
     var isExpanded: Bool
     var sortBy: String
     var sortOrder: String
-    //var nutrientIndex: Int
+    var nutrientIndex: Int
     
     init(category: Category, nutrient: String, sortBy: String, sortOrder: String, isExpandable: Bool = true) {
         self.category = category
         self.nutrient = nutrient
-        //self.nutrientIndex = nutrientIndex
+        self.nutrientIndex = 0
         self.isExpandable = isExpandable
         self.isExpanded = true
         self.sortBy = sortBy
@@ -28,24 +28,48 @@ import OrderedCollections
     }
     
     var sortedItems: [Item] {
-        var items = [Item]()
+        var items = category.items
+        
         switch sortBy {
         case "Name":
-            items = category.items.sorted(by: { $0.name < $1.name })
+            items.sort { $0.name < $1.name }
+            break
         case "Nutrient":
-            items = category.items.sorted(by: { $0.amounts[nutrient]! ?? 0 < $1.amounts[nutrient]! ?? 0 })
+            items = category.items.filter( { $0.fetched } ).sorted { $0.amounts[nutrient]! ?? -1 < $1.amounts[nutrient]! ?? -1 }
+            break
+        case "Carbon Footprint":
+            items = category.items.filter( { $0.carbonFootprint > 0 } ).sorted { $0.carbonFootprint < $1.carbonFootprint }
+            break
+        case "Ingredients":
+            items = category.items.filter( { $0.ingredientsCount != nil } ).sorted { $0.ingredientsCount! < $1.ingredientsCount! }
+            break
         default:
-            items = [Item]()
+            break
         }
         
-        if sortOrder == "Descending" {
+        if self.sortOrder == "Descending" {
             items = items.reversed()
+        }
+        
+        switch sortBy {
+        case "Carbon Footprint":
+            items.append(contentsOf: category.items.filter( { $0.carbonFootprint == 0 } ))
+            break
+        case "Ingredients":
+            items.append(contentsOf: category.items.filter( { $0.ingredientsCount == nil } ))
+            break
+        default:
+            break
         }
         
         return items
     }
     
     func nextNutrient() {
-        nutrient = nutrients.randomElement()! 
+        nutrientIndex += 1
+        if nutrientIndex == nutrients.count {
+            nutrientIndex = 0
+        }
+        nutrient = nutrients[nutrientIndex]
     }
 }

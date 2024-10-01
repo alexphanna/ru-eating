@@ -13,7 +13,7 @@ import Observation
     var item: Item
     var settings: Settings
     var nutrient: String
-    var hasValue: Bool
+    var sortBy: String
     
     var carbonFootprintColor: Color {
         return item.carbonFootprint == 1 ? .green : item.carbonFootprint == 2 ? .orange : .red
@@ -28,10 +28,10 @@ import Observation
         return false
     }
     
-    init(item: Item, nutrient: String, hasValue: Bool, settings: Settings) {
+    init(item: Item, nutrient: String, sortBy: String, settings: Settings) {
         self.item = item
         self.nutrient = nutrient
-        self.hasValue = hasValue
+        self.sortBy = sortBy
         self.settings = settings
     }
 }

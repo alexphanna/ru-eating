@@ -15,7 +15,7 @@ struct MenuView: View {
         NavigationLink {
             NavigationStack {
                 List {
-                    if viewModel.isGrouped {
+                    if viewModel.sortBy == "None" {
                         ForEach(viewModel.menu) { category in
                             CategoryView(viewModel: CategoryViewModel(category: category, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, sortOrder: viewModel.sortOrder))
                         }
@@ -88,7 +88,7 @@ struct MenuView: View {
                             Section {
                                 if viewModel.randomItem != nil {
                                     NavigationLink {
-                                        ItemView(viewModel: ItemViewModel(item: viewModel.randomItem!, nutrient: viewModel.sortBy, hasValue: viewModel.sortBy == "Nutrient", settings: settings))
+                                        ItemView(viewModel: ItemViewModel(item: viewModel.randomItem!, nutrient: viewModel.sortBy, sortBy: viewModel.sortBy, settings: settings))
                                             .onAppear {
                                                 viewModel.randomItem = viewModel.items.items.randomElement() // update random element
                                             }
@@ -114,8 +114,18 @@ struct MenuView: View {
                                 Menu {
                                     Section {
                                         Picker("", selection: $viewModel.sortBy) {
-                                            ForEach(["Name", "Nutrient"], id: \.self) { sortBy in
-                                                Text(sortBy)
+                                            Section {
+                                                Text("None")
+                                            }
+                                            Section {
+                                                Text("Name")
+                                                    .tag("Name")
+                                                Text("Nutrient")
+                                                    .tag("Nutrient")
+                                                Text("Carbon Footprint")
+                                                    .tag("Carbon Footprint")
+                                                Text("Ingredients")
+                                                    .tag("Ingredients")
                                             }
                                         }
                                     }
