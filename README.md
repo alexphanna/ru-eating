@@ -1,5 +1,5 @@
 # <img src="RU-Eating/Assets.xcassets/Scarlet.appiconset/MenRU.png" width="22" /> RU Eating
-[![Download on the App Store](Images/download-on-app-store.svg)](https://apps.apple.com/us/app/ru-eating/id6692608792)
+[![Download on the App Store](Images/download-on-app-store.svg)](https://apps.apple.com/us/app/ru-eating/id6692608792?platform=iphone)
 
 An unofficial Rutgers University-New Brunswick dining hall menu app for iOS written in Swift using **SwiftUI**, **SwiftData**, and **[SwiftSoup](https://github.com/scinfu/SwiftSoup)**.
 
@@ -8,6 +8,7 @@ An unofficial Rutgers University-New Brunswick dining hall menu app for iOS writ
 - Filters through item's ingredients and warns the user if an item contains their dietary restrictions
 - View detailed nutrition facts (amounts and percent daily values) and ingredients for items
 - Favorite items, adding a star next to the item every time it appears on current and future menus
+- Sort menu items by name, any nutrient, number of ingredients and carbon footprints
 - Calculate nutrition facts of an entire meal
 - Display weekend breakfast options under breakfast and lunch
 - Display which dining halls are currently open and closed based on their normal hours
