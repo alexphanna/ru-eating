@@ -17,13 +17,7 @@ struct SettingsView : View {
             VStack {
                 Form {
                     Section {
-                        Picker("Default Dining Hall", selection: $viewModel.settings.defaultDiningHall) {
-                            ForEach(places.map { $0.shortenName }, id: \.self) { placeName in
-                                Text(placeName)
-                                    .tag(placeName)
-                            }
-                        }
-                        NavigationLink("All Favorites") {
+                        NavigationLink("Favorites") {
                             List {
                                 ForEach(viewModel.favoriteItems, id: \.self) { item in
                                     Text(item)

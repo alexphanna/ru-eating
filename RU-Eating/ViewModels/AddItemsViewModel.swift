@@ -29,11 +29,18 @@ import Foundation
         self.meal = meal
         
         self.searchText = ""
-        self.searchScope = settings.defaultDiningHall
+        self.searchScope = settings.lastDiningHall
         self.settings = settings
         self.fetched = false
         
         self.rawItems = [Item]()
+    }
+    
+    func addItem(item: Item) {
+        meal.items.append(item)
+        Task {
+            await item.fetchData(settings: settings)
+        }
     }
     
     func updateItems() async {
@@ -43,7 +50,7 @@ import Foundation
             if !place.name.contains(searchScope) { continue }
             for meal in meals {
                 do {
-                    let menu = try await place.fetchMenu(meal: meal, date: Date.now, settings: settings)
+                    let menu = try await place.fetchMenu(meal: meal, date: Date.now, settings: settings, fetchItems: false)
                     
                     for category in menu {
                         for item in category.items {

@@ -30,7 +30,7 @@ struct AddItemsView : View {
                         ForEach(viewModel.items, id: \.self) { item in
                             if !viewModel.meal.items.contains(item) {
                                 Button {
-                                    viewModel.meal.items.append(item)
+                                    viewModel.addItem(item: item)
                                     dismiss()
                                 } label: {
                                     Text(viewModel.getHighlightedName(item: item))
@@ -59,6 +59,7 @@ struct AddItemsView : View {
             }
         }
         .onChange(of: viewModel.searchScope) {
+            settings.lastDiningHall = viewModel.searchScope
             Task {
                 await viewModel.updateItems()
             }
