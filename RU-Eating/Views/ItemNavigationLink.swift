@@ -16,22 +16,17 @@ struct ItemNavigationLink : View {
             ItemView(viewModel: viewModel)
         } label: {
             HStack {
-                if viewModel.item.isFavorite || (settings.filterIngredients && viewModel.containsRestrictions) {
-                    Label {
-                        Text(viewModel.item.name)
-                    } icon: {
-                        if viewModel.item.isFavorite {
-                            Image(systemName: "star.fill")
-                                .foregroundStyle(.yellow)
-                        }
-                        else if (settings.filterIngredients && viewModel.containsRestrictions) {
-                            Image(systemName: "exclamationmark.triangle.fill")
-                                .foregroundStyle(.accent)
-                        }
-                    }
-                }
-                else {
+                Label {
                     Text(viewModel.item.name)
+                } icon: {
+                    if viewModel.item.isFavorite {
+                        Image(systemName: "star.fill")
+                            .foregroundStyle(.yellow)
+                    }
+                    else if (settings.filterIngredients && viewModel.containsRestrictions) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundStyle(.accent)
+                    }
                 }
                 if viewModel.sortBy == "Nutrient" {
                     Spacer()
@@ -44,9 +39,9 @@ struct ItemNavigationLink : View {
                             .foregroundStyle(.gray)
                     }
                 }
-                else if viewModel.sortBy == "Carbon Footprint" {
+                else if viewModel.sortBy == "Carbon Footprint" || viewModel.sortBy == "None" {
                     Spacer()
-                    if settings.carbonFootprints && viewModel.item.carbonFootprint > 0 {
+                    if (viewModel.sortBy != "None" || settings.carbonFootprints) && viewModel.item.carbonFootprint > 0 {
                         Image(systemName: "leaf")
                             .imageScale(.medium)
                             .foregroundStyle(viewModel.carbonFootprintColor)

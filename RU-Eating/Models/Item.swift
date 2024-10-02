@@ -53,7 +53,7 @@ import SwiftSoup
     }
     var fetched: Bool
     
-    init(name: String, id: String, servingsNumber: Float, servingsUnit: String, portion: Float = 1, carbonFootprint: Int = 0, isFavorite: Bool = false, settings: Settings) {
+    init(name: String = "", id: String, servingsNumber: Float = 0, servingsUnit: String = "", portion: Float = 1, carbonFootprint: Int = 0, isFavorite: Bool = false, settings: Settings) {
         self.name = name
         self.id = id
         self.servingsNumber = servingsNumber

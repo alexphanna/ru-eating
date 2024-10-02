@@ -42,7 +42,7 @@ struct MenusView : View {
                 }
             }
             .sheet(isPresented: $isSheetShowing, content: {
-                SettingsView(settings: settings)
+                SettingsView(viewModel: SettingsViewModel(settings: settings))
             })
         }
     }

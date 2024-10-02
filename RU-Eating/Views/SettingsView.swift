@@ -10,23 +10,52 @@ import SwiftUI
 struct SettingsView : View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.openURL) var openURL
-    @Bindable var settings: Settings
+    @Bindable var viewModel: SettingsViewModel
     
     var body : some View {
         NavigationStack {
             VStack {
                 Form {
                     Section {
-                        Toggle(isOn: $settings.hideZeros) {
+                        Picker("Default Dining Hall", selection: $viewModel.settings.defaultDiningHall) {
+                            ForEach(places.map { $0.shortenName }, id: \.self) { placeName in
+                                Text(placeName)
+                                    .tag(placeName)
+                            }
+                        }
+                        NavigationLink("All Favorites") {
+                            List {
+                                ForEach(viewModel.favoriteItems, id: \.self) { item in
+                                    Text(item)
+                                }
+                                .onDelete(perform: { viewModel.settings.favoriteItemsIDs.remove(atOffsets: $0) })
+                            }
+                            .navigationTitle("All Favorites")
+                            .toolbar {
+                                ToolbarItem(placement: .topBarTrailing) {
+                                    EditButton()
+                                }
+                            }
+                        }
+                        Toggle(isOn: $viewModel.settings.carbonFootprints) {
+                            Text("Carbon Footprints")
+                        }
+                    } header: {
+                        Text("General")
+                    } footer: {
+                        Text("Display a \(Image(systemName: "leaf.fill")) next to items with the color corresponding to the carbon footprint: green = low, orange = medium, red = high. Not all items have carbon footprint information.")
+                    }
+                    Section {
+                        Toggle(isOn: $viewModel.settings.hideZeros) {
                             Text("Hide Nutrients With Zero Value")
                         }
-                        Toggle(isOn: $settings.hideNils) {
+                        Toggle(isOn: $viewModel.settings.hideNils) {
                             Text("Hide Nutrients With No Value")
                         }
-                        Toggle(isOn: $settings.fdaDailyValues) {
+                        Toggle(isOn: $viewModel.settings.fdaDailyValues) {
                             Text("FDA Daily Values")
                         }
-                        Toggle(isOn: $settings.extraPercents) {
+                        Toggle(isOn: $viewModel.settings.extraPercents) {
                             Text("Extra Nutrient Values")
                         }
                     } header: {
@@ -35,30 +64,15 @@ struct SettingsView : View {
                         Text("Calculate extra nutrient values not in the source menu (Cholesterol, Iron, and Calcium).")
                     }
                     Section {
-                        Picker("Default Dining Hall", selection: $settings.defaultDiningHall) {
-                            ForEach(places.map { $0.shortenName }, id: \.self) { placeName in
-                                Text(placeName)
-                                    .tag(placeName)
-                            }
-                        }
-                    }
-                    Section {
-                        Toggle(isOn: $settings.carbonFootprints) {
-                            Text("Carbon Footprints")
-                        }
-                    } footer: {
-                        Text("Display a \(Image(systemName: "leaf.fill")) next to items with the color corresponding to the carbon footprint: green = low, orange = medium, red = high. Not all items have carbon footprint information.")
-                    }
-                    Section {
-                        Toggle(isOn: $settings.filterIngredients) {
+                        Toggle(isOn: $viewModel.settings.filterIngredients) {
                             Text("Filter Ingredients")
                         }
-                        if (settings.filterIngredients) {
-                            Toggle(isOn: $settings.hideRestricted) {
+                        if (viewModel.settings.filterIngredients) {
+                            Toggle(isOn: $viewModel.settings.hideRestricted) {
                                 Text("Hide Restricted Items")
                             }
                             NavigationLink("Dietary Restrictions") {
-                                RestrictionsView(settings: settings)
+                                RestrictionsView(settings: viewModel.settings)
                             }
                         }
                     } header: {
@@ -67,7 +81,7 @@ struct SettingsView : View {
                         Text("Filter through item's ingredients and display a \(Image(systemName: "exclamationmark.triangle.fill")) next to items or hide items that may contain dietary restrictions.")
                     }
                     Section("Appearance") {
-                        Picker("Color Scheme", selection: $settings.colorScheme) {
+                        Picker("Color Scheme", selection: $viewModel.settings.colorScheme) {
                             Text("System")
                                 .tag(nil as Bool?)
                             Text("Light")
@@ -156,6 +170,6 @@ struct SettingsView : View {
                 }
             }
         }
-        .preferredColorScheme(settings.colorScheme == nil ?  ColorScheme(.unspecified) : settings.colorScheme! ? .light : .dark)
+        .preferredColorScheme(viewModel.settings.colorScheme == nil ?  ColorScheme(.unspecified) : viewModel.settings.colorScheme! ? .light : .dark)
     }
 }

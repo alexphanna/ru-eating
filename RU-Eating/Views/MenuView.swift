@@ -111,30 +111,20 @@ struct MenuView: View {
                                         Image(systemName: viewModel.filter == "All Items" ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
                                     }
                                 }
+                                .pickerStyle(.menu)
                                 Menu {
                                     Section {
                                         Picker("", selection: $viewModel.sortBy) {
-                                            Section {
-                                                Text("None")
-                                            }
-                                            Section {
-                                                Text("Name")
-                                                    .tag("Name")
-                                                Text("Nutrient")
-                                                    .tag("Nutrient")
-                                                Text("Carbon Footprint")
-                                                    .tag("Carbon Footprint")
-                                                Text("Ingredients")
-                                                    .tag("Ingredients")
+                                            ForEach(["None", "Name", "Nutrient", "Carbon Footprint", "Ingredients"], id: \.self) {
+                                                Text($0)
                                             }
                                         }
                                     }
                                     Section {
                                         Picker("", selection: $viewModel.sortOrder) {
-                                            Text("Ascending")
-                                                .tag("Ascending")
-                                            Text("Descending")
-                                                .tag("Descending")
+                                            ForEach(["Ascending", "Descending"], id: \.self) {
+                                                Text($0)
+                                            }
                                         }
                                     }
                                 } label: {
@@ -142,7 +132,6 @@ struct MenuView: View {
                                 }
                                 .pickerStyle(.inline)
                             }
-                            .pickerStyle(.menu)
                             Link(destination: viewModel.place.getURL(meal: viewModel.meal, date: viewModel.date), label: {
                                 Label("View Source", systemImage: "link")
                             })
