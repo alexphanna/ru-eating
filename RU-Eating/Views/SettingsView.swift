@@ -31,6 +31,9 @@ struct SettingsView : View {
                                 }
                             }
                         }
+                        Toggle(isOn: $viewModel.settings.useHearts) {
+                            Text("Use Hearts for Favorites")
+                        }
                         Toggle(isOn: $viewModel.settings.carbonFootprints) {
                             Text("Carbon Footprints")
                         }

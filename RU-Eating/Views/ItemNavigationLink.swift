@@ -20,8 +20,14 @@ struct ItemNavigationLink : View {
                     Text(viewModel.item.name)
                 } icon: {
                     if viewModel.item.isFavorite {
-                        Image(systemName: "star.fill")
-                            .foregroundStyle(.yellow)
+                        if settings.useHearts {
+                            Image(systemName: "heart.fill")
+                                .foregroundStyle(.pink)
+                        }
+                        else {
+                            Image(systemName: "star.fill")
+                                .foregroundStyle(.yellow)
+                        }
                     }
                     else if (settings.filterIngredients && viewModel.containsRestrictions) {
                         Image(systemName: "exclamationmark.triangle.fill")
@@ -62,9 +68,15 @@ struct ItemNavigationLink : View {
         }
         .swipeActions {
             Button(action: { settings.favorite(item: viewModel.item) }) {
-                Image(systemName: viewModel.item.isFavorite ? "star.slash.fill" : "star.fill")
+                if settings.useHearts {
+                    Image(systemName: viewModel.item.isFavorite ? "heart.slash.fill" : "heart.fill")
+                        .tint(.pink)
+                }
+                else {
+                    Image(systemName: viewModel.item.isFavorite ? "star.slash.fill" : "star.fill")
+                        .tint(.yellow)
+                }
             }
-            .tint(.yellow)
         }
     }
 }
