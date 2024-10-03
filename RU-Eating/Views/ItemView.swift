@@ -17,7 +17,10 @@ struct ItemView: View {
         if (settings.hideRestricted /*&& !viewModel.contains*/) || !settings.hideRestricted {
             NavigationStack {
                 VStack {
-                    if viewModel.item.ingredients.isEmpty {
+                    if !viewModel.item.fetched {
+                        ProgressView()
+                    }
+                    else if viewModel.item.ingredients.isEmpty {
                         Text("Nutritional information is not available for this item")
                     }
                     else {

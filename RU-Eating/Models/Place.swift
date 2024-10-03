@@ -174,9 +174,6 @@ class Place: Identifiable, Hashable {
                 let id = try! element.attr("for")
                 let isFavorite = settings.favoriteItemsIDs.contains(id)
                 let item = Item(name: name, id: id, servingsNumber: servingsNumber, servingsUnit: servingsUnit, carbonFootprint: carbonFootprint, isFavorite: isFavorite, settings: settings)
-                if fetchItems {
-                    await item.fetchData(settings: settings)
-                }
                 
                 lastCategory!.items.append(item)
                 

@@ -106,10 +106,17 @@ import Foundation
     func updateMenu() async {
         fetched = false
         rawMenu = [Category]()
+        sortBy = "None"
+        filter = "All Items"
         do {
             rawMenu = try await place.fetchMenu(meal: meal == "Takeout" ? "Knight+Room" : meal, date: date, settings: settings)
             if !items.items.isEmpty {
                 randomItem = items.items.randomElement()!
+            }
+            for category in rawMenu {
+                for item in category.items {
+                    await item.fetchData(settings: settings)
+                }
             }
         } catch {
             // do nothing

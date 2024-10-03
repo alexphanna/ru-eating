@@ -114,11 +114,13 @@ struct MenuView: View {
                                 .pickerStyle(.menu)
                                 Menu {
                                     Section {
-                                        Picker("", selection: $viewModel.sortBy) {
-                                            ForEach(["None", "Name", "Nutrient", "Carbon Footprint", "Ingredients"], id: \.self) {
-                                                Text($0)
-                                            }
-                                        }
+                                        Button("None", action: { viewModel.sortBy = "None" })
+                                        Button("Name", action: { viewModel.sortBy = "Name" })
+                                        Button("Carbon Footprint", action: { viewModel.sortBy = "Carbon Footprint" })
+                                        Button("Nutrient", action: { viewModel.sortBy = "Nutrient" })
+                                            .disabled(!viewModel.fetched)
+                                        Button("Ingredients", action: { viewModel.sortBy = "Ingredients" })
+                                            .disabled(!viewModel.fetched)
                                     }
                                     Section {
                                         Picker("", selection: $viewModel.sortOrder) {
