@@ -152,7 +152,7 @@ struct SettingsView : View {
                     } header: {
                         Text("Feedback")
                     } footer: {
-                        Text("App Version: 1.1.1")
+                        Text("App Version: 1.2")
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
                 }
