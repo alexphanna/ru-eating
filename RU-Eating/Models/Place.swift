@@ -114,20 +114,7 @@ class Place: Identifiable, Hashable {
                     i += 2 + (elements[i + 1].tagName() == "img" ? 1 : 0)
                     continue
                 }
-                // check if item is already on the menu
-                var duplicate = false
-                for category in menu {
-                    for item in category.items {
-                        if try! item.id == element.attr("for") {
-                            duplicate = true;
-                            break
-                        }
-                    }
-                    if duplicate {
-                        break
-                    }
-                }
-                if (duplicate) {
+                if (menuContains(menu: menu, id: try! element.attr("for"))) {
                     i += 2 + (elements[i + 1].tagName() == "img" ? 1 : 0)
                     continue
                 }
@@ -135,38 +122,14 @@ class Place: Identifiable, Hashable {
                 // carbon footprint
                 var carbonFootprint = 0
                 if i + 2 < elements.count && elements[i + 1].tagName() == "img" {
-                    switch try! elements[i + 1].attr("title") {
-                    case "Low carbon foot print":
-                        carbonFootprint = 1
-                        break
-                    case "Medium carbon foot print":
-                        carbonFootprint = 2
-                        break
-                    case "High carbon foot print":
-                        carbonFootprint = 3
-                        break
-                    default:
-                        carbonFootprint = 0
-                    }
+                    carbonFootprint = parseCarbonFootprint(image: elements[i + 1])
                     i += 1
                 }
                 
                 // servings
                 let servings = try! elements[i + 1].text().split(separator: "\u{00A0}")
-                var servingsNumber: Float = 0
-                if !servings[0].contains("/") { // example: 1
-                    servingsNumber = Float(Int(servings[0])!)
-                }
-                else if servings[0].contains("/") && servings[0].contains(" ") { // example: 1 1/2
-                    let mixedFraction = String(servings[0]).split(separator: " ")
-                    let fraction = String(mixedFraction[1]).split(separator: "/")
-                    servingsNumber = (Float(fraction[0])! + Float(mixedFraction[0])! * Float(fraction[1])!) / Float(fraction[1])!
-                }
-                else if servings[0].contains("/") { // example: 1/2
-                    let fraction = String(servings[0]).split(separator: "/")
-                    servingsNumber = Float(fraction[0])! / Float(fraction[1])!
-                }
-                let servingsUnit: String = String(servings[1]).lowercased()
+                let servingsNumber = parseServingsNumber(servings: servings)
+                let servingsUnit = parseServingsUnit(servings: servings)
                 
                 // capitalize items
                 
@@ -183,5 +146,62 @@ class Place: Identifiable, Hashable {
         }
         
         return menu
+    }
+    
+    // check if item is already on the menu
+    func menuContains(menu: [Category], id: String) -> Bool {
+        for category in menu {
+            for item in category.items {
+                if item.id == id {
+                    return true
+                }
+            }
+        }
+        
+        return false
+    }
+    
+    // Converts carbon footprint image to number
+    func parseCarbonFootprint(image: Element) -> Int {
+        var carbonFootprint = 0
+        
+        switch try! image.attr("title") {
+        case "Low carbon foot print":
+            carbonFootprint = 1
+            break
+        case "Medium carbon foot print":
+            carbonFootprint = 2
+            break
+        case "High carbon foot print":
+            carbonFootprint = 3
+            break
+        default:
+            carbonFootprint = 0
+        }
+        
+        return carbonFootprint
+    }
+    
+    func parseServingsNumber(servings: [String.SubSequence]) -> Float {
+        var servingsNumber: Float = 0
+        
+        if !servings[0].contains("/") { // example: 1
+            servingsNumber = Float(Int(servings[0])!)
+        }
+        else if servings[0].contains("/") && servings[0].contains(" ") { // example: 1 1/2
+            let mixedFraction = String(servings[0]).split(separator: " ")
+            let fraction = String(mixedFraction[1]).split(separator: "/")
+            servingsNumber = (Float(fraction[0])! + Float(mixedFraction[0])! * Float(fraction[1])!) / Float(fraction[1])!
+        }
+        else if servings[0].contains("/") { // example: 1/2
+            let fraction = String(servings[0]).split(separator: "/")
+            servingsNumber = Float(fraction[0])! / Float(fraction[1])!
+        }
+        
+        return servingsNumber
+    }
+    
+    func parseServingsUnit(servings: [String.SubSequence]) -> String {
+        return String(servings[1]).lowercased()
     }
 }

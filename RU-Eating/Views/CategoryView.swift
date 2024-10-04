@@ -20,7 +20,16 @@ struct CategoryView : View {
                         ItemNavigationLink(viewModel: ItemViewModel(item: item, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, settings: settings))
                     }
                 },
-                header: { Text(viewModel.category.name) })
+                header: {
+                    HStack {
+                        Text(viewModel.category.name)
+                        if viewModel.sortBy == "Nutrient" {
+                            Spacer()
+                            Button(viewModel.nutrient, action: viewModel.nextNutrient )
+                                .font(.caption)
+                        }
+                    }
+                })
         }
         else {
             Section(content: {

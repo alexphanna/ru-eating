@@ -17,6 +17,7 @@ import Foundation
     private var settings: Settings
     var isGrouped: Bool
     var sortBy: String
+    var groupByCategory: Bool
     var sortOrder: String
     var nutrient: String
     var filter: String
@@ -96,6 +97,7 @@ import Foundation
         self.isGrouped = false
         self.sortBy = "None"
         self.sortOrder = "Ascending"
+        self.groupByCategory = true
         self.nutrient = "Calories"
         self.filter = "All Items"
         

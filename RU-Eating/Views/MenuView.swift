@@ -15,7 +15,7 @@ struct MenuView: View {
         NavigationLink {
             NavigationStack {
                 List {
-                    if viewModel.sortBy == "None" {
+                    if viewModel.groupByCategory {
                         ForEach(viewModel.menu) { category in
                             CategoryView(viewModel: CategoryViewModel(category: category, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, sortOrder: viewModel.sortOrder))
                         }
@@ -105,22 +105,21 @@ struct MenuView: View {
                                         Label("Low Carbon Footprint", systemImage: "leaf").tag("Low Carbon Footprint")
                                     }
                                 } label: {
-                                    HStack {
-                                        Text("Filter")
-                                        Spacer()
-                                        Image(systemName: viewModel.filter == "All Items" ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
-                                    }
+                                    Label("Filter", systemImage: viewModel.filter == "All Items" ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
+                                    Text(viewModel.filter)
                                 }
                                 .pickerStyle(.menu)
                                 Menu {
                                     Section {
-                                        Button("None", action: { viewModel.sortBy = "None" })
-                                        Button("Name", action: { viewModel.sortBy = "Name" })
-                                        Button("Carbon Footprint", action: { viewModel.sortBy = "Carbon Footprint" })
-                                        Button("Nutrient", action: { viewModel.sortBy = "Nutrient" })
-                                            .disabled(!viewModel.fetched)
-                                        Button("Ingredients", action: { viewModel.sortBy = "Ingredients" })
-                                            .disabled(!viewModel.fetched)
+                                        Picker("", selection: $viewModel.sortBy) {
+                                            Text("None").tag("None")
+                                            Text("Name").tag("Name")
+                                            Text("Carbon Footprint").tag("Carbon Footprint")
+                                            if viewModel.fetched {
+                                                Text("Nutrient").tag("Nutrient")
+                                                Text("Ingredients").tag("Ingredients")
+                                            }
+                                        }
                                     }
                                     Section {
                                         Picker("", selection: $viewModel.sortOrder) {
@@ -130,9 +129,20 @@ struct MenuView: View {
                                         }
                                     }
                                 } label: {
-                                    Label("Sort By", systemImage: "arrow.up.arrow.down")
+                                    Label("Sort By" , systemImage: "arrow.up.arrow.down")
+                                    Text(viewModel.sortBy)
                                 }
                                 .pickerStyle(.inline)
+                                Picker(selection: $viewModel.groupByCategory ) {
+                                    Text("On")
+                                        .tag(true)
+                                    Text("Off")
+                                        .tag(false)
+                                } label: {
+                                    Label("Group By Category", systemImage: "list.bullet.below.rectangle")
+                                    Text(viewModel.groupByCategory ? "On" : "Off")
+                                }
+                                .pickerStyle(.menu)
                             }
                             Link(destination: viewModel.place.getURL(meal: viewModel.meal, date: viewModel.date), label: {
                                 Label("View Source", systemImage: "link")
