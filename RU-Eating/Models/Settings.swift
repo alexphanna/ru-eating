@@ -25,8 +25,9 @@ class Settings {
     var colorScheme: Bool?
     var lastDiningHall: String
     var useHearts: Bool
+    var itemDescriptions: Bool
     
-    init(filterIngredients: Bool = false, restrictions: [String] = [], hideRestricted: Bool = false, carbonFootprints: Bool = true, hideZeros: Bool = false, hideNils: Bool = false, extraPercents: Bool = true, fdaDailyValues: Bool = false, systemColorScheme: Bool? = nil, colorScheme: Bool? = nil, lastDiningHall: String = "Busch", useHearts: Bool = false) {
+    init(filterIngredients: Bool = false, restrictions: [String] = [], hideRestricted: Bool = false, carbonFootprints: Bool = true, hideZeros: Bool = false, hideNils: Bool = false, extraPercents: Bool = true, fdaDailyValues: Bool = false, systemColorScheme: Bool? = nil, colorScheme: Bool? = nil, lastDiningHall: String = "Busch", useHearts: Bool = false, itemDescriptions: Bool = true) {
         self.filterIngredients = filterIngredients
         self.hideRestricted = hideRestricted
         self.restrictions = restrictions
@@ -41,6 +42,7 @@ class Settings {
         self.colorScheme = colorScheme
         self.lastDiningHall = lastDiningHall
         self.useHearts = useHearts
+        self.itemDescriptions = itemDescriptions
     }
     
     func favorite(item: Item) {

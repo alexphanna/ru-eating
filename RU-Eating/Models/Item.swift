@@ -20,20 +20,20 @@ import SwiftSoup
         hasher.combine(portion)
     }
     
-    var name : String
-    var id : String
-    var servingsNumber: Float
-    var servingsUnit: String
-    var servingsUnitPlural: String
+    private(set) var name : String
+    private(set) var id : String
+    private(set) var servingsNumber: Float
+    private(set) var servingsUnit: String
+    private(set) var servingsUnitPlural: String
     var servingSize: String {
         get {
             let number = servingsNumber.remainder(dividingBy: 1.0) == 0 ? String(servingsNumber.formatted(.number.precision(.fractionLength(0)))) : String(servingsNumber)
             return "\(number) \(servingsNumber == 1 ? servingsUnit : servingsUnitPlural)"
         }
     }
-    var portion: Float // number of servings
+    private(set) var portion: Float // number of servings
     var isFavorite: Bool
-    var carbonFootprint: Int
+    private(set) var carbonFootprint: Int
     
     var ingredients: String
     var ingredientsCount: Int? {
@@ -47,13 +47,39 @@ import SwiftSoup
     var dailyValues:  OrderedDictionary<String, Float?> {
         return multiplyDictionary(dict: rawDailyValues, multiplier: portion)
     }
-    var rawAmounts: OrderedDictionary<String, Float?>
+    private var rawAmounts: OrderedDictionary<String, Float?>
     var amounts:  OrderedDictionary<String, Float?> {
         return multiplyDictionary(dict: rawAmounts, multiplier: portion)
     }
-    var fetched: Bool
+    private(set) var fetched: Bool
     
-    var excerpt: AttributedString
+    private(set) var address: URL?
+    private(set) var excerpt: AttributedString
+    
+    var nameCombinations: [String] {
+        var titles: [String] = []
+        let titleArray = name.lowercased().split(separator: " ")
+        
+        for i in (0...titleArray.count - 1).reversed() {
+            for j in 0...titleArray.count - 1 - i {
+                var title = ""
+                for k in 0...i {
+                    title += "\(titleArray[j + k]) "
+                }
+                title.removeLast()
+                titles.append(String(title))
+                
+                if title.hasSuffix("ies") { // patties -> patty
+                    titles.append(String(title.dropLast("ies".count)) + "y")
+                }
+                else if title.last == "s" { 
+                    titles.append(String(title.dropLast()))
+                }
+            }
+        }
+        
+        return titles
+    }
     
     init(name: String = "", id: String, servingsNumber: Float = 0, servingsUnit: String = "", portion: Float = 1, carbonFootprint: Int = 0, isFavorite: Bool = false, settings: Settings) {
         self.name = name
@@ -95,29 +121,10 @@ import SwiftSoup
     }
     
     func fetchExcerpt() async {
-        var titles: [String] = []
-        
-        let titleArray = name.lowercased().split(separator: " ")
-        for i in (0...titleArray.count - 1).reversed() {
-            for j in 0...titleArray.count - 1 - i {
-                var title = ""
-                for k in 0...i {
-                    title += "\(titleArray[j + k]) "
-                }
-                title.removeLast()
-                titles.append(String(title))
-                
-                if title.last == "s" {
-                    titles.append(String(title.dropLast()))
-                }
-            }
-        }
-        
-        let foodCategories = ["food", "dish", "cuisine", /*"cooking",*/ "fruit", "berries", "berry", "vegetable"]
+        let titles: [String] = nameCombinations
         
         for title in titles {
             let encodedTitle = title.replacingOccurrences(of: " ", with: "_")
-            print(encodedTitle)
             let urlString = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts|categories&exintro=true&explaintext=true&titles=\(encodedTitle)&redirects=true&cllimit=max"
             let request = URLRequest(url: URL(string: urlString)!)
             
@@ -130,26 +137,30 @@ import SwiftSoup
                    let page = pages.values.first as? [String : Any],
                    let extract = page["extract"] as? String,
                    let categories = page["categories"] as? [[String: Any]] {
-                    if !extract.isEmpty {
-                        print("passed")
-                        let foodRelated = categories.contains { category in
-                            if let _title = category["title"] as? String {
-                                return foodCategories.contains { foodCategory in
-                                    _title.lowercased().contains(foodCategory)
-                                }
-                            }
-                            return false
-                        }
-                        if !foodRelated {
-                            continue
-                        }
+                    if !extract.isEmpty && isFoodRelated(categories: categories) {
+                        address = URL(string: "https://en.wikipedia.org/wiki/\(encodedTitle)")
                         excerpt = boldTerms(text: extractFirstSentence(text: extract), terms: titles.filter { !$0.contains(" ") } )
                         break
                     }
                 }
             } catch {
-                
+                // do nothing
             }
+        }
+    }
+    
+    func isFoodRelated(categories: [[String : Any]]) -> Bool {
+        let foodCategories = ["food", "dish", "cuisine", /*"cooking",*/ "fruit", "berries", "berry", "vegetable"]
+        
+        return categories.contains { category in
+            for _title in (category["title"] as? String)!.split(separator: " ") {
+                for foodCategory in foodCategories {
+                    if _title.lowercased().hasSuffix(foodCategory) || _title.lowercased().hasPrefix(foodCategory) {
+                        return true
+                    }
+                }
+            }
+            return false
         }
     }
     

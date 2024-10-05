@@ -61,7 +61,6 @@ import Foundation
         return category
     }
     
-    // improve this
     private var dayName: String? {
         switch Calendar.current.dateComponents([.year, .month, .day], from: date) {
         case Calendar.current.dateComponents([.year, .month, .day], from: Calendar.current.date(byAdding: .day, value: -1, to: Date.now)!):

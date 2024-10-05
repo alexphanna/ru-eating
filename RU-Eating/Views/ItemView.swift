@@ -14,7 +14,7 @@ struct ItemView: View {
     @Environment(Settings.self) private var settings
     
     var body : some View {
-        if (settings.hideRestricted /*&& !viewModel.contains*/) || !settings.hideRestricted {
+        if (settings.hideRestricted && !viewModel.containsRestrictions) || !settings.hideRestricted {
             NavigationStack {
                 VStack {
                     if !viewModel.item.fetched {
@@ -30,9 +30,16 @@ struct ItemView: View {
                                     Label("Item may contain dietary restrictions.", systemImage: "exclamationmark.triangle.fill")
                                 }
                             }
-                            if !viewModel.item.excerpt.characters.isEmpty {
-                                Section("Description") {
+                            if settings.itemDescriptions && !viewModel.item.excerpt.characters.isEmpty {
+                                Section {
                                     Text(viewModel.item.excerpt)
+                                } header: {
+                                    Text("Description")
+                                } footer: {
+                                    if viewModel.item.address != nil {
+                                        Link("Wikipedia", destination: viewModel.item.address!)
+                                            .font(.footnote)
+                                    }
                                 }
                             }
                             NutritionView(viewModel: NutritionViewModel(category: Category(name: "", items: [viewModel.item]), showServingSize: true, settings: settings))
@@ -46,8 +53,10 @@ struct ItemView: View {
                     }
                 }
                 .onAppear {
-                    Task {
-                        await viewModel.item.fetchExcerpt()
+                    if settings.itemDescriptions {
+                        Task {
+                            await viewModel.item.fetchExcerpt()
+                        }
                     }
                 }
                 .navigationBarTitleDisplayMode(.inline)

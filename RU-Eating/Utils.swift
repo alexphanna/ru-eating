@@ -87,7 +87,6 @@ func extractFirstSentence(text: String) -> String {
     var ignore: Bool = false
     for char in textArray {
         if char == "(" {
-            newText.removeLast()
             ignore = true
         }
         else if char == ")" {
@@ -96,7 +95,7 @@ func extractFirstSentence(text: String) -> String {
         else if !ignore {
             newText.append(char)
             if char == "." {
-                return newText
+                return newText.replacingOccurrences(of: "  ", with: " ").replacingOccurrences(of: " ,", with: ",")
             }
         }
     }

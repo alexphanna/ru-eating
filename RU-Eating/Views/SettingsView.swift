@@ -31,6 +31,9 @@ struct SettingsView : View {
                                 }
                             }
                         }
+                        Toggle(isOn: $viewModel.settings.itemDescriptions) {
+                            Text("Show Item Descriptions")
+                        }
                         Toggle(isOn: $viewModel.settings.useHearts) {
                             Text("Use Hearts for Favorites")
                         }
@@ -155,7 +158,7 @@ struct SettingsView : View {
                     } header: {
                         Text("Feedback")
                     } footer: {
-                        Text("App Version: 1.2.1")
+                        Text("App Version: 1.2.2")
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
                 }
