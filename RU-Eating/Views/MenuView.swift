@@ -152,9 +152,11 @@ struct MenuView: View {
                         }
                     }
                 }
-                .task {
-                    if viewModel.menu.isEmpty {
-                        await viewModel.updateMenu()
+                .onAppear {
+                    Task {
+                        if viewModel.menu.isEmpty {
+                            await viewModel.updateMenu()
+                        }
                     }
                 }
             }

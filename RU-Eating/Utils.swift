@@ -82,3 +82,37 @@ func multiplyDictionary(dict: OrderedDictionary<String, Float?>, multiplier: Flo
     }
     return newDict
 }
+
+func extractFirstSentence(text: String) -> String {
+    let textArray = Array(text)
+    var newText = ""
+    var ignore: Bool = false
+    for char in textArray {
+        if char == "(" {
+            newText.removeLast()
+            ignore = true
+        }
+        else if char == ")" {
+            ignore = false
+        }
+        else if !ignore {
+            newText.append(char)
+            if char == "." {
+                return newText
+            }
+        }
+    }
+    
+    // shouldn't ever get here but,
+    return newText
+}
+
+func boldTerms(text: String, terms: [String.SubSequence]) -> AttributedString {
+    var markdown = text
+    
+    for term in terms {
+        markdown = markdown.replacingOccurrences(of: term.lowercased(), with: "**\(term.lowercased())**").replacingOccurrences(of: term.capitalized, with: "**\(term.capitalized)**")
+    }
+    
+    return try! AttributedString(markdown: markdown)
+}

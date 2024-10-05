@@ -30,11 +30,24 @@ struct ItemView: View {
                                     Label("Item may contain dietary restrictions.", systemImage: "exclamationmark.triangle.fill")
                                 }
                             }
+                            if !viewModel.item.excerpt.characters.isEmpty {
+                                Section("Description") {
+                                    Text(viewModel.item.excerpt)
+                                }
+                            }
                             NutritionView(viewModel: NutritionViewModel(category: Category(name: "", items: [viewModel.item]), showServingSize: true, settings: settings))
                             Section("Ingredients") {
-                                Text(viewModel.item.ingredients).font(.footnote).italic().foregroundStyle(.gray)
+                                Text(viewModel.item.ingredients)
+                                    .font(.footnote)
+                                    .italic()
+                                    .foregroundStyle(.gray)
                             }
                         }
+                    }
+                }
+                .onAppear {
+                    Task {
+                        await viewModel.item.fetchExcerpt()
                     }
                 }
                 .navigationBarTitleDisplayMode(.inline)

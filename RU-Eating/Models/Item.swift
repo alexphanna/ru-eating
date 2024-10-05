@@ -53,6 +53,8 @@ import SwiftSoup
     }
     var fetched: Bool
     
+    var excerpt: AttributedString
+    
     init(name: String = "", id: String, servingsNumber: Float = 0, servingsUnit: String = "", portion: Float = 1, carbonFootprint: Int = 0, isFavorite: Bool = false, settings: Settings) {
         self.name = name
         self.id = id
@@ -68,6 +70,7 @@ import SwiftSoup
         self.rawDailyValues = ["Calories" : 0, "Fat" : 0, "Carbohydrates" : 0, "Saturated Fat" : 0, "Dietary Fiber" : 0, "Trans Fat" : nil, "Sugars" : 0, "Cholesterol" : nil, "Protein" : 0, "Sodium" : 0, "Iron" : 0, "Calcium" : 0]
         self.rawAmounts = ["Calories" : 0, "Fat" : 0, "Carbohydrates" : 0, "Saturated Fat" : 0, "Dietary Fiber" : 0, "Trans Fat" : 0, "Sugars" : 0, "Cholesterol" : 0, "Protein" : 0, "Sodium" : 0, "Iron" : nil, "Calcium" : nil]
         self.fetched = false
+        self.excerpt = ""
     }
     
     func incrementPortion() {
@@ -89,6 +92,37 @@ import SwiftSoup
             }
         }
         fetched = true
+    }
+    
+    func fetchExcerpt() async {
+        var titles: [String] = [name.lowercased()]
+        
+        if name.last == "s" {
+            titles.append(String(name.lowercased().dropLast()))
+        }
+        
+        for title in titles {
+            let encodedTitle = title.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? title
+            let urlString = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro=true&explaintext=true&titles=\(encodedTitle)&redirects=true"
+            let request = URLRequest(url: URL(string: urlString)!)
+            
+            do {
+                let data = try await URLSession.shared.data(for: request).0
+                
+                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any],
+                   let query = json["query"] as? [String : Any],
+                   let pages = query["pages"] as? [String : Any],
+                   let page = pages.values.first as? [String : Any],
+                   let extract = page["extract"] as? String {
+                    if !extract.isEmpty {
+                        excerpt = boldTerms(text: extractFirstSentence(text: extract), terms: titles.flatMap { $0.split(separator: " ") })
+                        break
+                    }
+                }
+            } catch {
+                
+            }
+        }
     }
     
     func parseIngredients(doc: Document) {
