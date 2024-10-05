@@ -95,15 +95,30 @@ import SwiftSoup
     }
     
     func fetchExcerpt() async {
-        var titles: [String] = [name.lowercased()]
+        var titles: [String] = []
         
-        if name.last == "s" {
-            titles.append(String(name.lowercased().dropLast()))
+        let titleArray = name.lowercased().split(separator: " ")
+        for i in (0...titleArray.count - 1).reversed() {
+            for j in 0...titleArray.count - 1 - i {
+                var title = ""
+                for k in 0...i {
+                    title += "\(titleArray[j + k]) "
+                }
+                title.removeLast()
+                titles.append(String(title))
+                
+                if title.last == "s" {
+                    titles.append(String(title.dropLast()))
+                }
+            }
         }
         
+        let foodCategories = ["food", "dish", "cuisine", /*"cooking",*/ "fruit", "berries", "berry", "vegetable"]
+        
         for title in titles {
-            let encodedTitle = title.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? title
-            let urlString = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro=true&explaintext=true&titles=\(encodedTitle)&redirects=true"
+            let encodedTitle = title.replacingOccurrences(of: " ", with: "_")
+            print(encodedTitle)
+            let urlString = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts|categories&exintro=true&explaintext=true&titles=\(encodedTitle)&redirects=true&cllimit=max"
             let request = URLRequest(url: URL(string: urlString)!)
             
             do {
@@ -113,9 +128,22 @@ import SwiftSoup
                    let query = json["query"] as? [String : Any],
                    let pages = query["pages"] as? [String : Any],
                    let page = pages.values.first as? [String : Any],
-                   let extract = page["extract"] as? String {
+                   let extract = page["extract"] as? String,
+                   let categories = page["categories"] as? [[String: Any]] {
                     if !extract.isEmpty {
-                        excerpt = boldTerms(text: extractFirstSentence(text: extract), terms: titles.flatMap { $0.split(separator: " ") })
+                        print("passed")
+                        let foodRelated = categories.contains { category in
+                            if let _title = category["title"] as? String {
+                                return foodCategories.contains { foodCategory in
+                                    _title.lowercased().contains(foodCategory)
+                                }
+                            }
+                            return false
+                        }
+                        if !foodRelated {
+                            continue
+                        }
+                        excerpt = boldTerms(text: extractFirstSentence(text: extract), terms: titles.filter { !$0.contains(" ") } )
                         break
                     }
                 }

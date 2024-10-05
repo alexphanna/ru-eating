@@ -92,3 +92,5 @@ let dailyValues = [
     "Iron" : 18,
     "Calcium" : 1300
 ]
+
+let unimportantWords = ["and", "for", "on", "to", "oz", "of", "the"]

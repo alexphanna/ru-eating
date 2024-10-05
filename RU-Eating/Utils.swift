@@ -55,16 +55,14 @@ func perfectName(name: String) -> String {
 }
 
 func titleCase(title: String) -> String {
-    let blacklist = ["and", "for", "on", "to", "oz", "of", "the"]
-    
     var newTitle = ""
     let titleArray = title.split(separator: " ")
     
     for i in 0..<titleArray.count {
-        if i == titleArray.count - 1 && !blacklist.contains(String(titleArray[i]).lowercased()) {
+        if i == titleArray.count - 1 && !unimportantWords.contains(String(titleArray[i]).lowercased()) {
             newTitle += "\(titleArray[i].capitalized)"
         }
-        else if i == 0 || !blacklist.contains(String(titleArray[i]).lowercased()) {
+        else if i == 0 || !unimportantWords.contains(String(titleArray[i]).lowercased()) {
             newTitle += "\(String(titleArray[i]).capitalized) "
         }
         else {
@@ -107,12 +105,16 @@ func extractFirstSentence(text: String) -> String {
     return newText
 }
 
-func boldTerms(text: String, terms: [String.SubSequence]) -> AttributedString {
-    var markdown = text
+func boldTerms(text: String, terms: [String]) -> AttributedString {
+    var textArray = text.split(separator: " ")
     
-    for term in terms {
-        markdown = markdown.replacingOccurrences(of: term.lowercased(), with: "**\(term.lowercased())**").replacingOccurrences(of: term.capitalized, with: "**\(term.capitalized)**")
+    for i in 0..<textArray.count {
+        for term in terms {
+            if !unimportantWords.contains(term.lowercased()) && textArray[i].lowercased().contains(term.lowercased()) && !textArray[i].contains("*") {
+                textArray[i] = "**\(textArray[i])**"
+            }
+        }
     }
     
-    return try! AttributedString(markdown: markdown)
+    return try! AttributedString(markdown: textArray.joined(separator: " "))
 }
