@@ -82,8 +82,14 @@ import Foundation
     
     var randomItem: Item?
     
-    var selectedItemsNames: [String] {
+    var selection: [String] {
         return items.items.filter { $0.isSelected }.map { $0.name }
+    }
+    
+    func resetSelection() {
+        for item in items.items {
+            item.isSelected = false
+        }
     }
     
     init(place: Place, settings: Settings) {

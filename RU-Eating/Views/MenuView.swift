@@ -79,15 +79,17 @@ struct MenuView: View {
                                 withAnimation(.easeInOut) {
                                     viewModel.isEditing = false
                                 }
+                                viewModel.resetSelection()
                             }
                         }
                         ToolbarItemGroup(placement: .bottomBar) {
                             Spacer()
                             Button("Copy") {
-                                UIPasteboard.general.string = viewModel.selectedItemsNames.joined(separator: "\n")
+                                UIPasteboard.general.string = viewModel.selection.joined(separator: "\n")
                                 withAnimation(.easeInOut) {
                                     viewModel.isEditing = false
                                 }
+                                viewModel.resetSelection()
                             }
                         }
                     }
