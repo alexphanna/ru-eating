@@ -15,6 +15,8 @@ import Observation
     var nutrient: String
     var sortBy: String
     
+    var isEditing : Bool
+    
     var carbonFootprintColor: Color {
         return item.carbonFootprint == 1 ? .green : item.carbonFootprint == 2 ? .orange : .red
     }
@@ -28,10 +30,11 @@ import Observation
         return false
     }
     
-    init(item: Item, nutrient: String, sortBy: String, settings: Settings) {
+    init(item: Item, nutrient: String, sortBy: String, settings: Settings, isEditing: Bool) {
         self.item = item
         self.nutrient = nutrient
         self.sortBy = sortBy
         self.settings = settings
+        self.isEditing = isEditing
     }
 }

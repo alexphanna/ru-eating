@@ -78,7 +78,7 @@ class Place: Identifiable, Hashable {
             elements.append(contentsOf: try! doc.select("div.menuBox h3, div.menuBox fieldset div.col-1 label, div.menuBox fieldset div.col-2 label, div.menuBox fieldset div.col-1 img").array())
         }
         
-        var menu = [Category]();
+        var menu = [Category]()
         var lastCategory: Category? = nil
         var nonConstantIndex = 0
         var isBreakfast = false

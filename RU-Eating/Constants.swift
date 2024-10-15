@@ -55,7 +55,8 @@ let constantCategories = [
     "salad bar",
     "breads",
     "fruits",
-    "deli bar entree"
+    "deli bar entree",
+    "yogurt bar"
 ]
 
 let perfectNutrients = [

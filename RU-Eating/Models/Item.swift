@@ -43,6 +43,8 @@ import SwiftSoup
         return ingredients.filter { $0 == "," }.count + 1
     }
     
+    var isSelected : Bool
+    
     private var rawDailyValues: OrderedDictionary<String, Float?>
     var dailyValues:  OrderedDictionary<String, Float?> {
         return multiplyDictionary(dict: rawDailyValues, multiplier: portion)
@@ -97,6 +99,7 @@ import SwiftSoup
         self.rawAmounts = ["Calories" : 0, "Fat" : 0, "Carbohydrates" : 0, "Saturated Fat" : 0, "Dietary Fiber" : 0, "Trans Fat" : 0, "Sugars" : 0, "Cholesterol" : 0, "Protein" : 0, "Sodium" : 0, "Iron" : nil, "Calcium" : nil]
         self.fetched = false
         self.excerpt = ""
+        self.isSelected = false
     }
     
     func incrementPortion() {

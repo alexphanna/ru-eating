@@ -51,6 +51,8 @@ import Foundation
         return menu
     }
     
+    var isEditing: Bool = false
+    
     var items: Category {
         let category: Category = Category(name: "All")
         
@@ -79,6 +81,10 @@ import Foundation
     }
     
     var randomItem: Item?
+    
+    var selectedItemsNames: [String] {
+        return items.items.filter { $0.isSelected }.map { $0.name }
+    }
     
     init(place: Place, settings: Settings) {
         self.place = place

@@ -17,7 +17,9 @@ import OrderedCollections
     var sortOrder: String
     var nutrientIndex: Int
     
-    init(category: Category, nutrient: String, sortBy: String, sortOrder: String, isExpandable: Bool = true) {
+    var isEditing : Bool
+    
+    init(category: Category, nutrient: String, sortBy: String, sortOrder: String, isExpandable: Bool = true, isEditing: Bool) {
         self.category = category
         self.nutrient = nutrient
         self.nutrientIndex = 0
@@ -25,6 +27,7 @@ import OrderedCollections
         self.isExpanded = true
         self.sortBy = sortBy
         self.sortOrder = sortOrder
+        self.isEditing = isEditing
     }
     
     var sortedItems: [Item] {

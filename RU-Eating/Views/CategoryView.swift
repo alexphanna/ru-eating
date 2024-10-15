@@ -17,7 +17,7 @@ struct CategoryView : View {
                 isExpanded: $viewModel.isExpanded,
                 content: {
                     ForEach(viewModel.sortedItems) { item in
-                        ItemNavigationLink(viewModel: ItemViewModel(item: item, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, settings: settings))
+                        ItemNavigationLink(viewModel: ItemViewModel(item: item, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, settings: settings, isEditing: viewModel.isEditing))
                     }
                 },
                 header: {
@@ -34,7 +34,7 @@ struct CategoryView : View {
         else {
             Section(content: {
                 ForEach(viewModel.sortedItems) { item in
-                    ItemNavigationLink(viewModel: ItemViewModel(item: item, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, settings: settings))
+                    ItemNavigationLink(viewModel: ItemViewModel(item: item, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, settings: settings, isEditing: viewModel.isEditing))
                 }
             }, header: {
                 HStack {
