@@ -68,7 +68,7 @@ struct MenuView: View {
                     }
                 }
                 .listStyle(.sidebar)
-                .navigationTitle("")
+                .navigationTitle(viewModel.meal)
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarBackButtonHidden(viewModel.isEditing)
                 .toolbar(viewModel.isEditing ? .hidden : .visible, for: .tabBar)
@@ -94,7 +94,7 @@ struct MenuView: View {
                         }
                     }
                     else {
-                        ToolbarItem(placement: .principal) {
+                        ToolbarTitleMenu {
                             Picker("Meal", selection: $viewModel.meal) {
                                 ForEach(viewModel.place.hasTakeout ? meals + ["Takeout"] : meals, id: \.self) { meal in
                                     Text(meal)
@@ -105,8 +105,7 @@ struct MenuView: View {
                                     await viewModel.updateMenu()
                                 }
                             }
-                            .pickerStyle(.segmented)
-                            .fixedSize()
+                            .pickerStyle(.inline)
                         }
                         ToolbarItem(placement: .topBarTrailing) {
                             Menu {
@@ -124,7 +123,7 @@ struct MenuView: View {
                                     Button("Select Items", systemImage: "checkmark.circle", action: { viewModel.isEditing.toggle() })
                                     Picker(selection: $viewModel.filter ) {
                                         Section {
-                                            Label("All Items", systemImage: "fork.knife").tag("All Items")
+                                            Label("All Items", systemImage: "carrot").tag("All Items")
                                         }
                                         Section {
                                             Label("Favorites", systemImage: "star").tag("Favorites")
@@ -138,20 +137,20 @@ struct MenuView: View {
                                     Menu {
                                         Section {
                                             Picker("", selection: $viewModel.sortBy) {
-                                                Text("None").tag("None")
-                                                Text("Name").tag("Name")
-                                                Text("Carbon Footprint").tag("Carbon Footprint")
+                                                Label("Name", systemImage: "textformat.alt").tag("Name")
+                                                Label("Carbon Footprint", systemImage: "leaf").tag("Carbon Footprint")
                                                 if viewModel.fetched {
-                                                    Text("Nutrient").tag("Nutrient")
-                                                    Text("Ingredients").tag("Ingredients")
+                                                    Label("Nutrient", systemImage: "carrot").tag("Nutrient")
+                                                    Label("Ingredients", systemImage: "number").tag("Ingredients")
                                                 }
                                             }
                                         }
                                         Section {
                                             Picker("", selection: $viewModel.sortOrder) {
-                                                ForEach(["Ascending", "Descending"], id: \.self) {
-                                                    Text($0)
-                                                }
+                                                Label("Ascending", systemImage: "arrow.down")
+                                                    .tag("Ascending")
+                                                Label("Descending", systemImage: "arrow.up")
+                                                    .tag("Descending")
                                             }
                                         }
                                     } label: {

@@ -106,7 +106,7 @@ import Foundation
         
         self.settings = settings
         self.isGrouped = false
-        self.sortBy = "None"
+        self.sortBy = "Name"
         self.sortOrder = "Ascending"
         self.groupByCategory = true
         self.nutrient = "Calories"
@@ -119,7 +119,7 @@ import Foundation
     func updateMenu() async {
         fetched = false
         rawMenu = [Category]()
-        sortBy = "None"
+        sortBy = "Name"
         filter = "All Items"
         do {
             rawMenu = try await place.fetchMenu(meal: meal == "Takeout" ? "Knight+Room" : meal, date: date, settings: settings)
