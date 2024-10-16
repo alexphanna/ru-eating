@@ -6,14 +6,14 @@
 //
 
 import Foundation
+import SwiftUI
 
 @Observable class AddItemsViewModel {
     var meal: Category
-    
-    private var settings: Settings
     var searchText: String
-    var searchScope: String
     private(set) var fetched: Bool
+    
+    @ObservationIgnored @AppStorage("lastDiningHall") var lastDiningHall = "Busch"
     
     private(set) var rawItems: [Item]
     var items: [Item] {
@@ -25,12 +25,10 @@ import Foundation
         }
     }
     
-    init(meal: Category, settings: Settings) {
+    init(meal: Category) {
         self.meal = meal
         
         self.searchText = ""
-        self.searchScope = settings.lastDiningHall
-        self.settings = settings
         self.fetched = false
         
         self.rawItems = [Item]()
@@ -39,7 +37,7 @@ import Foundation
     func addItem(item: Item) {
         meal.items.append(item)
         Task {
-            await item.fetchData(settings: settings)
+            await item.fetchData()
         }
     }
     
@@ -47,10 +45,10 @@ import Foundation
         fetched = false
         rawItems = [Item]()
         for place in places {
-            if !place.name.contains(searchScope) { continue }
+            if !place.name.contains(lastDiningHall) { continue }
             for meal in meals {
                 do {
-                    let menu = try await place.fetchMenu(meal: meal, date: Date.now, settings: settings, fetchItems: false)
+                    let menu = try await place.fetchMenu(meal: meal, date: Date.now)
                     
                     for category in menu {
                         for item in category.items {

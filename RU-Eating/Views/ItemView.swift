@@ -11,10 +11,14 @@ import SwiftData
 
 struct ItemView: View {
     @State var viewModel: ItemViewModel
-    @Environment(Settings.self) private var settings
+    
+    @AppStorage("carbonFootprints") var carbonFootprints: Bool = true
+    @AppStorage("hideRestricted") var hideRestricted: Bool = false
+    @AppStorage("itemDescriptions") var itemDescriptions: Bool = true
+    @AppStorage("useHearts") var useHearts: Bool = false
     
     var body : some View {
-        if (settings.hideRestricted && !viewModel.containsRestrictions) || !settings.hideRestricted {
+        if (hideRestricted && !viewModel.containsRestrictions) || !hideRestricted {
             NavigationStack {
                 VStack {
                     if !viewModel.item.fetched {
@@ -30,7 +34,7 @@ struct ItemView: View {
                                     Label("Item may contain dietary restrictions.", systemImage: "exclamationmark.triangle.fill")
                                 }
                             }
-                            if settings.itemDescriptions && !viewModel.item.excerpt.characters.isEmpty {
+                            if itemDescriptions && !viewModel.item.excerpt.characters.isEmpty {
                                 Section {
                                     Text(viewModel.item.excerpt)
                                 } header: {
@@ -42,7 +46,7 @@ struct ItemView: View {
                                     }
                                 }
                             }
-                            NutritionView(viewModel: NutritionViewModel(category: Category(name: "", items: [viewModel.item]), showServingSize: true, settings: settings))
+                            NutritionView(viewModel: NutritionViewModel(category: Category(name: "", items: [viewModel.item]), showServingSize: true))
                             Section("Ingredients") {
                                 Text(viewModel.item.ingredients)
                                     .font(.footnote)
@@ -53,7 +57,7 @@ struct ItemView: View {
                     }
                 }
                 .onAppear {
-                    if settings.itemDescriptions {
+                    if itemDescriptions {
                         Task {
                             await viewModel.item.fetchExcerpt()
                         }
@@ -65,7 +69,7 @@ struct ItemView: View {
                         HStack {
                             Text(viewModel.item.name)
                                 .font(.headline)
-                            if settings.carbonFootprints && viewModel.item.carbonFootprint > 0 {
+                            if carbonFootprints && viewModel.item.carbonFootprint > 0 {
                                 Image(systemName: "leaf")
                                     .imageScale(.medium)
                                     .foregroundStyle(viewModel.carbonFootprintColor)
@@ -74,8 +78,8 @@ struct ItemView: View {
                     }
                     ToolbarItem(placement: .topBarTrailing) {
                         // toggle was changing background color, so I use button
-                        Button(action: { settings.favorite(item: viewModel.item) }) {
-                            if settings.useHearts {
+                        Button(action: { /*settings.favorite(item: viewModel.item)*/ }) {
+                            if useHearts {
                                 Image(systemName: viewModel.item.isFavorite ? "heart.fill" : "heart")
                                     .foregroundStyle(.pink)
                             }

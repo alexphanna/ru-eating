@@ -8,6 +8,7 @@
 import Foundation
 import OrderedCollections
 import SwiftSoup
+import SwiftUI
 
 @Observable class Item : Hashable, Identifiable {
     static func == (lhs: Item, rhs: Item) -> Bool {
@@ -83,7 +84,9 @@ import SwiftSoup
         return titles
     }
     
-    init(name: String = "", id: String, servingsNumber: Float = 0, servingsUnit: String = "", portion: Float = 1, carbonFootprint: Int = 0, isFavorite: Bool = false, settings: Settings) {
+    @ObservationIgnored @AppStorage("extraPercents") var extraPercents: Bool = false
+    
+    init(name: String = "", id: String, servingsNumber: Float = 0, servingsUnit: String = "", portion: Float = 1, carbonFootprint: Int = 0, isFavorite: Bool = false) {
         self.name = name
         self.id = id
         self.servingsNumber = servingsNumber
@@ -111,13 +114,13 @@ import SwiftSoup
         if portion < 0 { portion = 0 }
     }
     
-    func fetchData(settings: Settings) async {
+    func fetchData() async {
         fetched = false
         if let doc = try? await fetchDoc(url: URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/label.aspx?&RecNumAndPort=" + id + "*1")!) {
             if hasNutritionalReport(doc: doc) {
                 parseIngredients(doc: doc)
-                parseAmounts(doc: doc, settings: settings)
-                parseDailyValues(doc: doc, settings: settings)
+                parseAmounts(doc: doc)
+                parseDailyValues(doc: doc)
             }
         }
         fetched = true
@@ -176,7 +179,7 @@ import SwiftSoup
         }
     }
     
-    func parseAmounts(doc: Document, settings: Settings) {
+    func parseAmounts(doc: Document) {
         let elements = try! doc.select("div#nutritional-info table td, div#nutritional-info p:contains(Calories)").array()
         for element in elements {
             let text = try! element.text()
@@ -189,7 +192,7 @@ import SwiftSoup
             let nutrient = perfectNutrients[String(textArray[0])]!
             if var value = Float(textArray[1].replacingOccurrences(of: nutrientUnits[nutrient]!, with: "")) {
                 value *= Float(servingsNumber)
-                if settings.extraPercents {
+                if extraPercents {
                     if nutrient == "Cholesterol" {
                         rawDailyValues[nutrient] = value / 3
                     }
@@ -199,7 +202,7 @@ import SwiftSoup
         }
     }
     
-    func parseDailyValues(doc: Document, settings: Settings) {
+    func parseDailyValues(doc: Document) {
         let elements = try! doc.select("div#nutritional-info ul li").array()
         for element in elements {
             let text = try! element.text()
@@ -212,7 +215,7 @@ import SwiftSoup
             let nutrient = perfectNutrients[String(textArray[0])]!
             if var value = Float(textArray[1].replacingOccurrences(of: "%", with: "")) {
                 value *= Float(servingsNumber)
-                if settings.extraPercents {
+                if extraPercents {
                     if nutrient == "Iron" || nutrient == "Calcium" {
                         rawAmounts[nutrient] = value / 100 * (nutrient == "Iron" ? 18 : 1300)
                     }

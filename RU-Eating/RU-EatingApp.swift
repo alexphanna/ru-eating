@@ -10,32 +10,19 @@ import SwiftData
 
 @main
 struct MenRUApp: App {
+    @Environment(\.requestReview) private var requestReview
+    
+    @AppStorage("numberOfUses") var numberOfUses: Int = 0
     
     var body: some Scene {
         WindowGroup {
-            RootView()
-                .modelContainer(for: Settings.self)
+            ContentView()
+                .onAppear {
+                    numberOfUses += 1
+                    if numberOfUses % 10 == 0 {
+                        requestReview()
+                    }
+                }
         }
-    }
-}
-
-struct RootView: View {
-    @Environment(\.modelContext) private var context
-    @Environment(\.requestReview) private var requestReview
-    @Query private var settings: [Settings]
-    
-    var body: some View {
-        ContentView()
-            .onAppear {
-                if settings.isEmpty {
-                    context.insert(Settings())
-                }
-                (settings.first ?? Settings()).numberOfUses += 1
-                if (settings.first ?? Settings()).numberOfUses % 10 == 0 {
-                    requestReview()
-                }
-            }
-            .environment(settings.first ?? Settings())
-            .preferredColorScheme(((settings.first ?? Settings())).colorScheme == nil ? nil : (((settings.first ?? Settings())!).colorScheme! ? .light : .dark))
     }
 }

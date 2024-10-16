@@ -68,14 +68,14 @@ class Place: Identifiable, Hashable {
         return URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/pickmenu.aspx?locationNum=" + String(format: "%02d", id) + "&locationName=" + name.replacingOccurrences(of: " ", with: "+") + "&dtdate=" + dateFormatter.string(from: date) + "&activeMeal=" + meal + "&sName=Rutgers+University+Dining")!
     }
     
-    func fetchMenu(meal: String, date: Date, settings: Settings, fetchItems: Bool = true) async throws -> [Category] {
+    func fetchMenu(meal: String, date: Date) async throws -> [Category] {
         var doc = try await fetchDoc(url: getURL(meal: meal, date: date))
-        var elements = try! doc.select("div.menuBox h3, div.menuBox fieldset div.col-1 label, div.menuBox fieldset div.col-2 label, div.menuBox fieldset div.col-1 img").array()
+        var elements = try! doc.select("div.menuBox h3, div.menuBox fieldset div.col-1 label, div.menuBox fieldset div.col-2 label, div.menuBox fieldset div.col-1 img[src*='green'], div.menuBox fieldset div.col-1 img[src*='orange'], div.menuBox fieldset div.col-1 img[src*='orange']").array()
         let breakfastCount = elements.count
         
         if meal == "Breakfast" {
             doc = try await fetchDoc(url: getURL(meal: "Lunch", date: date))
-            elements.append(contentsOf: try! doc.select("div.menuBox h3, div.menuBox fieldset div.col-1 label, div.menuBox fieldset div.col-2 label, div.menuBox fieldset div.col-1 img").array())
+            elements.append(contentsOf: try! doc.select("div.menuBox h3, div.menuBox fieldset div.col-1 label, div.menuBox fieldset div.col-2 label, div.menuBox fieldset div.col-1 img[src*='green'], div.menuBox fieldset div.col-1 img[src*='orange'], div.menuBox fieldset div.col-1 img[src*='orange']").array())
         }
         
         var menu = [Category]()
@@ -135,8 +135,8 @@ class Place: Identifiable, Hashable {
                 
                 let name = try! perfectName(name: element.attr("name"))
                 let id = try! element.attr("for")
-                let isFavorite = settings.favoriteItemsIDs.contains(id)
-                let item = Item(name: name, id: id, servingsNumber: servingsNumber, servingsUnit: servingsUnit, carbonFootprint: carbonFootprint, isFavorite: isFavorite, settings: settings)
+                let isFavorite = /*settings.favoriteItemsIDs.contains(id)*/ false
+                let item = Item(name: name, id: id, servingsNumber: servingsNumber, servingsUnit: servingsUnit, carbonFootprint: carbonFootprint, isFavorite: isFavorite)
                 
                 lastCategory!.items.append(item)
                 

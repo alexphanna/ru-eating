@@ -11,7 +11,6 @@ import Observation
 
 @Observable class ItemViewModel {
     var item: Item
-    var settings: Settings
     var nutrient: String
     var sortBy: String
     
@@ -22,19 +21,18 @@ import Observation
     }
     
     var containsRestrictions: Bool {
-        for restriction in settings.restrictions {
+        /*for restriction in settings.restrictions {
             if item.ingredients.lowercased().contains(restriction.lowercased()) || item.name.lowercased().contains(restriction.lowercased()) {
                 return true
             }
-        }
+        }*/
         return false
     }
     
-    init(item: Item, nutrient: String, sortBy: String, settings: Settings, isEditing: Bool) {
+    init(item: Item, nutrient: String, sortBy: String, isEditing: Bool) {
         self.item = item
         self.nutrient = nutrient
         self.sortBy = sortBy
-        self.settings = settings
         self.isEditing = isEditing
     }
 }

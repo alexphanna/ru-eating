@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct ContentView: View {
-    @Environment(Settings.self) private var settings
-    
     var body: some View {
         TabView {
             MenusView()

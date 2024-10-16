@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ItemNavigationLink : View {
     @Bindable var viewModel: ItemViewModel
-    @Environment(Settings.self) private var settings
+    
+    @AppStorage("useHearts") var useHearts: Bool = false
     
     var body: some View {
         if viewModel.isEditing {
@@ -25,8 +26,8 @@ struct ItemNavigationLink : View {
                 ItemLabel(viewModel: viewModel)
             }
             .swipeActions {
-                Button(action: { settings.favorite(item: viewModel.item) }) {
-                    if settings.useHearts {
+                Button(action: { /*settings.favorite(item: viewModel.item)*/ }) {
+                    if useHearts {
                         Image(systemName: viewModel.item.isFavorite ? "heart.slash.fill" : "heart.fill")
                             .tint(.pink)
                     }
@@ -42,7 +43,10 @@ struct ItemNavigationLink : View {
 
 struct ItemLabel : View {
     @Bindable var viewModel: ItemViewModel
-    @Environment(Settings.self) private var settings
+    
+    @AppStorage("carbonFootprints") var carbonFootprints: Bool = false
+    @AppStorage("useHearts") var useHearts: Bool = false
+    @AppStorage("filterIngredients") var filterIngredients: Bool = false
     
     var body: some View {
         HStack {
@@ -62,7 +66,7 @@ struct ItemLabel : View {
                 Text(viewModel.item.name)
             } icon: {
                 if viewModel.item.isFavorite {
-                    if settings.useHearts {
+                    if useHearts {
                         Image(systemName: "heart.fill")
                             .foregroundStyle(.pink)
                     }
@@ -71,7 +75,7 @@ struct ItemLabel : View {
                             .foregroundStyle(.yellow)
                     }
                 }
-                else if (settings.filterIngredients && viewModel.containsRestrictions) {
+                else if (filterIngredients && viewModel.containsRestrictions) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundStyle(.accent)
                 }
@@ -88,7 +92,7 @@ struct ItemLabel : View {
                 }
             }
             else if viewModel.sortBy == "Carbon Footprint" || viewModel.sortBy == "None" {
-                if (viewModel.sortBy != "None" || settings.carbonFootprints) && viewModel.item.carbonFootprint > 0 {
+                if (viewModel.sortBy != "None" || carbonFootprints) && viewModel.item.carbonFootprint > 0 {
                     Image(systemName: "leaf")
                         .imageScale(.medium)
                         .foregroundStyle(viewModel.carbonFootprintColor)

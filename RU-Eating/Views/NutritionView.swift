@@ -9,7 +9,9 @@ import SwiftUI
 
 struct NutritionView: View {
     @State var viewModel: NutritionViewModel
-    @Environment(Settings.self) private var settings
+    
+    @AppStorage("hideNils") var hideNils = false
+    @AppStorage("hideZeros") var hideZeros = false
     
     var body: some View {
         Section {
@@ -32,10 +34,10 @@ struct NutritionView: View {
                         .fontWeight(key == "Calories" ? .bold : .regular)
                 }
                 else {
-                    if viewModel.values[key]! == nil && !settings.hideNils {
+                    if viewModel.values[key]! == nil && !hideNils {
                         LabeledContent(key, value: "-")
                     }
-                    else if viewModel.values[key]! != nil && (viewModel.values[key]!! != 0 || !settings.hideZeros) {
+                    else if viewModel.values[key]! != nil && (viewModel.values[key]!! != 0 || !hideZeros) {
                         LabeledContent(key, value: formatFloat(n: viewModel.values[key]!!) + (viewModel.unit == "Amounts" ? nutrientUnits[key]! : "%"))
                     }
                 }

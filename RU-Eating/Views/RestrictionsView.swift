@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct RestrictionsView : View {
-    @Bindable var settings: Settings
     @State private var isTextFieldShowing: Bool = false
     @FocusState private var isTextFieldFocused: Bool
     @State private var ingredient: String = ""
@@ -25,7 +24,7 @@ struct RestrictionsView : View {
         NavigationStack {
             List {
                 Section {
-                    ForEach(settings.restrictions, id: \.self) { restriction in
+                    /*ForEach(settings.restrictions, id: \.self) { restriction in
                         Text(restriction)
                     }
                     .onDelete(perform: { settings.restrictions.remove(atOffsets: $0) })
@@ -41,7 +40,7 @@ struct RestrictionsView : View {
                                 }
                             }
                             .onTapGesture { }
-                    }
+                    }*/
                 } footer: {
                     if isTextFieldShowing {
                         Text("Enter dietary restrictions singularly for increased filtering accuracy, for example enter \"Peanut\", not \"Peanuts\". Dietary restrictions are not case-sensitive.")
@@ -49,7 +48,7 @@ struct RestrictionsView : View {
                 }
             }
             .overlay {
-                if settings.restrictions.count == 0 && !isTextFieldShowing {
+                /*if settings.restrictions.count == 0 && !isTextFieldShowing {
                     ContentUnavailableView {
                         Text("No Ingredients")
                             .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
@@ -60,7 +59,7 @@ struct RestrictionsView : View {
                             Text("Add Ingredient")
                         }
                     }
-                }
+                }*/
             }
             .navigationTitle("Dietary Restrictions")
             .toolbar {

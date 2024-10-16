@@ -14,7 +14,6 @@ import Foundation
     var date: Date
     
     // settings and filtering
-    private var settings: Settings
     var isGrouped: Bool
     var sortBy: String
     var groupByCategory: Bool
@@ -92,7 +91,7 @@ import Foundation
         }
     }
     
-    init(place: Place, settings: Settings) {
+    init(place: Place) {
         self.place = place
         switch Calendar.current.component(.hour, from: Date.now) {
         case ..<11:
@@ -104,7 +103,6 @@ import Foundation
         }
         self.date = Date.now
         
-        self.settings = settings
         self.isGrouped = false
         self.sortBy = "Name"
         self.sortOrder = "Ascending"
@@ -122,13 +120,13 @@ import Foundation
         sortBy = "Name"
         filter = "All Items"
         do {
-            rawMenu = try await place.fetchMenu(meal: meal == "Takeout" ? "Knight+Room" : meal, date: date, settings: settings)
+            rawMenu = try await place.fetchMenu(meal: meal == "Takeout" ? "Knight+Room" : meal, date: date)
             if !items.items.isEmpty {
                 randomItem = items.items.randomElement()!
             }
             for category in rawMenu {
                 for item in category.items {
-                    await item.fetchData(settings: settings)
+                    await item.fetchData()
                 }
             }
         } catch {
