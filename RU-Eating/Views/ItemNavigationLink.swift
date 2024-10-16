@@ -26,7 +26,7 @@ struct ItemNavigationLink : View {
                 ItemLabel(viewModel: viewModel)
             }
             .swipeActions {
-                Button(action: { /*settings.favorite(item: viewModel.item)*/ }) {
+                Button(action: { viewModel.favorite() }) {
                     if useHearts {
                         Image(systemName: viewModel.item.isFavorite ? "heart.slash.fill" : "heart.fill")
                             .tint(.pink)

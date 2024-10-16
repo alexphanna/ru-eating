@@ -11,6 +11,7 @@
 		FA79D0D42C8CAEE200F60AC4 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = FA79D0D32C8CAEE200F60AC4 /* OrderedCollections */; };
 		FA79D0D62C8CB9EF00F60AC4 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA79D0D52C8CB9EF00F60AC4 /* SettingsView.swift */; };
 		FA79D0DA2C8CCD7C00F60AC4 /* RestrictionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA79D0D92C8CCD7C00F60AC4 /* RestrictionsView.swift */; };
+		FA7BBE762CC014FF00ECC17B /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7BBE752CC014F500ECC17B /* Array.swift */; };
 		FA7CC8ED2CA5071C0017E217 /* ItemNavigationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7CC8EC2CA507160017E217 /* ItemNavigationLink.swift */; };
 		FA7E45172C8E69A800D95D96 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7E45162C8E69A800D95D96 /* MenuView.swift */; };
 		FA8647612C8E1A95000037C6 /* MealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8647602C8E1A95000037C6 /* MealView.swift */; };
@@ -31,6 +32,7 @@
 		FA5C59C32C8FE37300088E4C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		FA79D0D52C8CB9EF00F60AC4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		FA79D0D92C8CCD7C00F60AC4 /* RestrictionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictionsView.swift; sourceTree = "<group>"; };
+		FA7BBE752CC014F500ECC17B /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		FA7CC8EC2CA507160017E217 /* ItemNavigationLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemNavigationLink.swift; sourceTree = "<group>"; };
 		FA7E45162C8E69A800D95D96 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		FA8647602C8E1A95000037C6 /* MealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealView.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				FA8A32932C8B585F00D30147 /* Preview Content */,
 				FA9453F42C8BF75C00059258 /* Utils.swift */,
 				FA5C59C32C8FE37300088E4C /* Constants.swift */,
+				FA7BBE752CC014F500ECC17B /* Array.swift */,
 			);
 			path = "RU-Eating";
 			sourceTree = "<group>";
@@ -209,6 +212,7 @@
 				FA8A32A72C8B990F00D30147 /* ItemView.swift in Sources */,
 				FA8A32A12C8B84F900D30147 /* MenusView.swift in Sources */,
 				FA9453F52C8BF75C00059258 /* Utils.swift in Sources */,
+				FA7BBE762CC014FF00ECC17B /* Array.swift in Sources */,
 				FA8647632C8E21CA000037C6 /* NutritionView.swift in Sources */,
 				FA8A32902C8B585D00D30147 /* ContentView.swift in Sources */,
 				FA7E45172C8E69A800D95D96 /* MenuView.swift in Sources */,

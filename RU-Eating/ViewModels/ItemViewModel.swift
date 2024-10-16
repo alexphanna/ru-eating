@@ -21,18 +21,31 @@ import Observation
     }
     
     var containsRestrictions: Bool {
-        /*for restriction in settings.restrictions {
+        for restriction in restrictions {
             if item.ingredients.lowercased().contains(restriction.lowercased()) || item.name.lowercased().contains(restriction.lowercased()) {
                 return true
             }
-        }*/
+        }
         return false
     }
+    
+    @ObservationIgnored @AppStorage("favoriteItemsIDs") var favoriteItemsIDs: [String] = []
+    @ObservationIgnored @AppStorage("restrictions") var restrictions: [String] = []
     
     init(item: Item, nutrient: String, sortBy: String, isEditing: Bool) {
         self.item = item
         self.nutrient = nutrient
         self.sortBy = sortBy
         self.isEditing = isEditing
+    }
+    
+    func favorite() {
+        item.isFavorite = !item.isFavorite
+        if item.isFavorite {
+            favoriteItemsIDs.append(item.id)
+        }
+        else if !item.isFavorite {
+            favoriteItemsIDs.removeAll(where: { $0 == item.id })
+        }
     }
 }

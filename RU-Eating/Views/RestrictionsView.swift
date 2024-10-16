@@ -12,6 +12,8 @@ struct RestrictionsView : View {
     @FocusState private var isTextFieldFocused: Bool
     @State private var ingredient: String = ""
     
+    @ObservationIgnored @AppStorage("restrictions") var restrictions: [String] = []
+    
     private var tapGesture: some Gesture {
         isTextFieldShowing ? (TapGesture().onEnded {
             withAnimation(.easeOut) {
@@ -24,10 +26,10 @@ struct RestrictionsView : View {
         NavigationStack {
             List {
                 Section {
-                    /*ForEach(settings.restrictions, id: \.self) { restriction in
+                    ForEach(restrictions, id: \.self) { restriction in
                         Text(restriction)
                     }
-                    .onDelete(perform: { settings.restrictions.remove(atOffsets: $0) })
+                    .onDelete(perform: { restrictions.remove(atOffsets: $0) })
                     if isTextFieldShowing {
                         TextField("Ingredient Name", text: $ingredient)
                             .submitLabel(.done)
@@ -35,12 +37,12 @@ struct RestrictionsView : View {
                             .onSubmit {
                                 isTextFieldShowing = false
                                 if !ingredient.isEmpty {
-                                    settings.restrictions.append(ingredient.trimmingCharacters(in: .whitespaces))
+                                    restrictions.append(ingredient.trimmingCharacters(in: .whitespaces))
                                     ingredient = ""
                                 }
                             }
                             .onTapGesture { }
-                    }*/
+                    }
                 } footer: {
                     if isTextFieldShowing {
                         Text("Enter dietary restrictions singularly for increased filtering accuracy, for example enter \"Peanut\", not \"Peanuts\". Dietary restrictions are not case-sensitive.")
@@ -48,7 +50,7 @@ struct RestrictionsView : View {
                 }
             }
             .overlay {
-                /*if settings.restrictions.count == 0 && !isTextFieldShowing {
+                if restrictions.count == 0 && !isTextFieldShowing {
                     ContentUnavailableView {
                         Text("No Ingredients")
                             .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
@@ -59,7 +61,7 @@ struct RestrictionsView : View {
                             Text("Add Ingredient")
                         }
                     }
-                }*/
+                }
             }
             .navigationTitle("Dietary Restrictions")
             .toolbar {

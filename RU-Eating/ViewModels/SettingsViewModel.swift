@@ -12,6 +12,8 @@ import SwiftUI
 @Observable class SettingsViewModel {
     var favoriteItems: [String]
     
+    @ObservationIgnored @AppStorage("favoriteItemsIDs") var favoriteItemsIDs: [String] = []
+    
     init() {
         self.favoriteItems = [String]()
         Task {
@@ -20,11 +22,13 @@ import SwiftUI
     }
     
     func fetchData() async {
-        /*for id in settings.favoriteItemsIDs {
+        print(favoriteItemsIDs)
+        favoriteItems = [String]()
+        for id in favoriteItemsIDs {
             if let doc = try? await fetchDoc(url: URL(string: "https://menuportal23.dining.rutgers.edu/foodpronet/label.aspx?&RecNumAndPort=" + id + "*1")!) {
                 favoriteItems.append(getName(doc: doc))
             }
-        }*/
+        }
     }
     
     func getName(doc: Document) -> String {

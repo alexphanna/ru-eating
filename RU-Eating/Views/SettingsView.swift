@@ -13,17 +13,15 @@ struct SettingsView : View {
     @Bindable var viewModel: SettingsViewModel
     
     @AppStorage("filterIngredients") var filterIngredients: Bool = false
-    // @AppStorage("restrictions") var restrictions: [String] = []
+    @AppStorage("restrictions") var restrictions: [String] = []
     @AppStorage("hideRestricted") var hideRestricted: Bool = false
-    // @AppStorage("favoriteItemsIDs") var favoriteItemsIDs: [String] = true
+    @AppStorage("favoriteItemsIDs") var favoriteItemsIDs: [String] = []
     @AppStorage("numberOfUses") var numberOfUses: Int = 0
     @AppStorage("hideZeros") var hideZeros: Bool = false
     @AppStorage("hideNils") var hideNils: Bool = false
     @AppStorage("carbonFootprints") var carbonFootprints: Bool = true
     @AppStorage("extraPercents") var extraPercents: Bool = true
     @AppStorage("fdaDailyValues") var fdaDailyValues: Bool = false
-    // @AppStorage("systemColorScheme") var systemColorScheme: Bool? = nil
-    // @AppStorage("colorScheme") var colorScheme: Bool? = nil
     @AppStorage("lastDiningHall") var lastDiningHall: String = "Busch"
     @AppStorage("useHearts") var useHearts: Bool = false
     @AppStorage("itemDescriptions") var itemDescriptions: Bool = true
@@ -33,12 +31,12 @@ struct SettingsView : View {
             VStack {
                 Form {
                     Section {
-                        /*NavigationLink("Favorites") {
+                        NavigationLink("Favorites") {
                             List {
                                 ForEach(viewModel.favoriteItems, id: \.self) { item in
                                     Text(item)
                                 }
-                                .onDelete(perform: { viewModel.settings.favoriteItemsIDs.remove(atOffsets: $0) })
+                                .onDelete(perform: { favoriteItemsIDs.remove(atOffsets: $0) })
                             }
                             .navigationTitle("All Favorites")
                             .toolbar {
@@ -46,7 +44,10 @@ struct SettingsView : View {
                                     EditButton()
                                 }
                             }
-                        }*/
+                            .task {
+                                await viewModel.fetchData()
+                            }
+                        }
                         Toggle(isOn: $itemDescriptions) {
                             Text("Show Item Descriptions")
                         }
@@ -87,9 +88,9 @@ struct SettingsView : View {
                             Toggle(isOn: $hideRestricted) {
                                 Text("Hide Restricted Items")
                             }
-                            /*NavigationLink("Dietary Restrictions") {
-                                RestrictionsView(settings: viewModel.settings)
-                            }*/
+                            NavigationLink("Dietary Restrictions") {
+                                RestrictionsView()
+                            }
                         }
                     } header: {
                         Text("Dietary Restrictions")

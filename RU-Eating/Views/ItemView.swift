@@ -78,7 +78,7 @@ struct ItemView: View {
                     }
                     ToolbarItem(placement: .topBarTrailing) {
                         // toggle was changing background color, so I use button
-                        Button(action: { /*settings.favorite(item: viewModel.item)*/ }) {
+                        Button(action: { viewModel.favorite() }) {
                             if useHearts {
                                 Image(systemName: viewModel.item.isFavorite ? "heart.fill" : "heart")
                                     .foregroundStyle(.pink)

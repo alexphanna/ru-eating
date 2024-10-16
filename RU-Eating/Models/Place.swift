@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftSoup
+import SwiftUI
 
 class Place: Identifiable, Hashable {
     static func == (lhs: Place, rhs: Place) -> Bool {
@@ -52,6 +53,8 @@ class Place: Identifiable, Hashable {
     }
     
     static let defaultHours = [("09:30", "20:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("09:30", "20:00")]
+    
+    @ObservationIgnored @AppStorage("favoriteItemsIDs") var favoriteItemsIDs: [String] = []
     
     init(name: String, campus: String, id: Int, hasTakeout: Bool, hours: [(String, String)] = defaultHours) {
         self.name = name
@@ -135,7 +138,7 @@ class Place: Identifiable, Hashable {
                 
                 let name = try! perfectName(name: element.attr("name"))
                 let id = try! element.attr("for")
-                let isFavorite = /*settings.favoriteItemsIDs.contains(id)*/ false
+                let isFavorite = favoriteItemsIDs.contains(id)
                 let item = Item(name: name, id: id, servingsNumber: servingsNumber, servingsUnit: servingsUnit, carbonFootprint: carbonFootprint, isFavorite: isFavorite)
                 
                 lastCategory!.items.append(item)
