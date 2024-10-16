@@ -9,7 +9,6 @@ import SwiftUI
 
 struct CategoryView : View {
     @Bindable var viewModel: CategoryViewModel
-    @Environment(Settings.self) private var settings
     
     var body : some View {
         if viewModel.isExpandable {
@@ -17,7 +16,7 @@ struct CategoryView : View {
                 isExpanded: $viewModel.isExpanded,
                 content: {
                     ForEach(viewModel.sortedItems) { item in
-                        ItemNavigationLink(viewModel: ItemViewModel(item: item, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, settings: settings, isEditing: viewModel.isEditing))
+                        ItemNavigationLink(viewModel: ItemViewModel(item: item, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, isEditing: viewModel.isEditing))
                     }
                 },
                 header: {
@@ -34,7 +33,7 @@ struct CategoryView : View {
         else {
             Section(content: {
                 ForEach(viewModel.sortedItems) { item in
-                    ItemNavigationLink(viewModel: ItemViewModel(item: item, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, settings: settings, isEditing: viewModel.isEditing))
+                    ItemNavigationLink(viewModel: ItemViewModel(item: item, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, isEditing: viewModel.isEditing))
                 }
             }, header: {
                 HStack {

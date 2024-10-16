@@ -9,7 +9,6 @@ import SwiftUI
 
 struct MenuView: View {
     @State var viewModel: MenuViewModel
-    @Environment(Settings.self) private var settings
     
     var body: some View {
         NavigationLink {
@@ -112,7 +111,7 @@ struct MenuView: View {
                                 Section {
                                     if viewModel.randomItem != nil {
                                         NavigationLink {
-                                            ItemView(viewModel: ItemViewModel(item: viewModel.randomItem!, nutrient: viewModel.sortBy, sortBy: viewModel.sortBy, settings: settings, isEditing: viewModel.isEditing))
+                                            ItemView(viewModel: ItemViewModel(item: viewModel.randomItem!, nutrient: viewModel.sortBy, sortBy: viewModel.sortBy, isEditing: viewModel.isEditing))
                                                 .onAppear {
                                                     viewModel.randomItem = viewModel.items.items.randomElement() // update random element
                                                 }

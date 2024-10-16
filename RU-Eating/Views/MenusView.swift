@@ -11,7 +11,6 @@ import StoreKit
 
 struct MenusView : View {
     @State private var isSheetShowing = false
-    @Environment(Settings.self) private var settings
     
     var body : some View {
         NavigationStack {
@@ -20,7 +19,7 @@ struct MenusView : View {
                 if openPlaces.count > 0 {
                     Section("Open") {
                         ForEach(openPlaces, id: \.self) { place in
-                            MenuView(viewModel: MenuViewModel(place: place, settings: settings))
+                            MenuView(viewModel: MenuViewModel(place: place))
                         }
                     }
                 }
@@ -28,7 +27,7 @@ struct MenusView : View {
                 if closedPlaces.count > 0 {
                     Section("Closed") {
                         ForEach(closedPlaces, id: \.self) { place in
-                            MenuView(viewModel: MenuViewModel(place: place, settings: settings))
+                            MenuView(viewModel: MenuViewModel(place: place))
                         }
                     }
                 }
@@ -42,7 +41,7 @@ struct MenusView : View {
                 }
             }
             .sheet(isPresented: $isSheetShowing, content: {
-                SettingsView(viewModel: SettingsViewModel(settings: settings))
+                SettingsView(viewModel: SettingsViewModel())
             })
         }
     }

@@ -7,21 +7,23 @@
 
 import Foundation
 import OrderedCollections
+import SwiftUI
 
 @Observable class NutritionViewModel {
     private(set) var category: Category
     
-    private var settings: Settings
     private(set) var showServingSize: Bool
     var unit: String
     var servings: Int
+    
+    @ObservationIgnored @AppStorage("fdaDailyValues") var fdaDailyValues = false
     
     var values: OrderedDictionary<String, Float?> {
         switch(unit) {
         case "Amounts":
             return category.amounts
         default:
-            if settings.fdaDailyValues {
+            if fdaDailyValues {
                 return getFDADailyValues()
             }
             else {
@@ -30,13 +32,12 @@ import OrderedCollections
         }
     }
     
-    init(category: Category, showServingSize: Bool = false, settings: Settings) {
+    init(category: Category, showServingSize: Bool = false) {
         self.category = category
         
         self.showServingSize = showServingSize
         self.unit = "Amounts"
         self.servings = 0
-        self.settings = settings
     }
     
     func getFDADailyValues() -> OrderedDictionary<String, Float?> {

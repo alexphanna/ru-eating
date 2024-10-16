@@ -10,7 +10,6 @@ import SwiftUI
 struct MealView: View {
     @State private var isSheetShowing: Bool = false
     @State private var meal: Category = Category(name: "Meal")
-    @Environment(Settings.self) private var settings
     
     var body: some View {
         NavigationStack {
@@ -31,7 +30,7 @@ struct MealView: View {
                         }
                         .onDelete(perform: { meal.items.remove(atOffsets: $0) })
                     }
-                    NutritionView(viewModel: NutritionViewModel(category: meal, settings: settings))
+                    NutritionView(viewModel: NutritionViewModel(category: meal))
                 }
             }
             .overlay {
@@ -60,7 +59,7 @@ struct MealView: View {
                 }
             }
             .sheet(isPresented: $isSheetShowing) {
-                AddItemsView(viewModel: AddItemsViewModel(meal: meal, settings: settings))
+                AddItemsView(viewModel: AddItemsViewModel(meal: meal))
             }
          }
     }

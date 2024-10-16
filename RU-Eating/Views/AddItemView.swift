@@ -11,8 +11,9 @@ import SwiftSoup
 struct AddItemsView : View {
     @State var viewModel: AddItemsViewModel
     
+    @AppStorage("lastDiningHall") var lastDiningHall: String = "Busch"
+    
     @Environment(\.dismiss) var dismiss
-    @Environment(Settings.self) private var settings
     
     var body : some View {
         NavigationStack {
@@ -53,13 +54,12 @@ struct AddItemsView : View {
             }
         }
         .searchable(text: $viewModel.searchText)
-        .searchScopes($viewModel.searchScope, activation: .onSearchPresentation) {
+        .searchScopes($lastDiningHall, activation: .onSearchPresentation) {
             ForEach(places.map { $0.shortenName }, id: \.self) { name in
                 Text(name)
             }
         }
-        .onChange(of: viewModel.searchScope) {
-            settings.lastDiningHall = viewModel.searchScope
+        .onChange(of: lastDiningHall) {
             Task {
                 await viewModel.updateItems()
             }
