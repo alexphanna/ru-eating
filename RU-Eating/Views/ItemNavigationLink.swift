@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ItemNavigationLink : View {
-    @Bindable var viewModel: ItemViewModel
+    @ObservedObject var viewModel: ItemViewModel
     
     @AppStorage("useHearts") var useHearts: Bool = false
     
@@ -42,7 +42,7 @@ struct ItemNavigationLink : View {
 }
 
 struct ItemLabel : View {
-    @Bindable var viewModel: ItemViewModel
+    @ObservationIgnored var viewModel: ItemViewModel
     
     @AppStorage("carbonFootprints") var carbonFootprints: Bool = false
     @AppStorage("useHearts") var useHearts: Bool = false

@@ -85,16 +85,16 @@ func extractFirstSentence(text: String) -> String {
     let textArray = Array(text)
     var newText = ""
     var ignore: Bool = false
-    for char in textArray {
-        if char == "(" {
+    for i in 0..<textArray.count {
+        if textArray[i] == "(" {
             ignore = true
         }
-        else if char == ")" {
+        else if textArray[i] == ")" {
             ignore = false
         }
         else if !ignore {
-            newText.append(char)
-            if char == "." {
+            newText.append(textArray[i])
+            if textArray[i] == "." && (i + 3 >= text.count || (textArray[i + 3] != "." &&  textArray[i - 3] != ".")) { // attempts to avoid abbreviations using periods (Yuengling)
                 return newText.replacingOccurrences(of: "  ", with: " ").replacingOccurrences(of: " ,", with: ",")
             }
         }

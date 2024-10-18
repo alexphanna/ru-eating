@@ -10,12 +10,11 @@ import SwiftUI
 struct SettingsView : View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.openURL) var openURL
-    @Bindable var viewModel: SettingsViewModel
     
     @AppStorage("filterIngredients") var filterIngredients: Bool = false
     @AppStorage("restrictions") var restrictions: [String] = []
     @AppStorage("hideRestricted") var hideRestricted: Bool = false
-    @AppStorage("favoriteItemsIDs") var favoriteItemsIDs: [String] = []
+    @AppStorage("favoriteItems") var favoriteItems: [String] = []
     @AppStorage("numberOfUses") var numberOfUses: Int = 0
     @AppStorage("hideZeros") var hideZeros: Bool = false
     @AppStorage("hideNils") var hideNils: Bool = false
@@ -33,19 +32,16 @@ struct SettingsView : View {
                     Section {
                         NavigationLink("Favorites") {
                             List {
-                                ForEach(viewModel.favoriteItems, id: \.self) { item in
+                                ForEach(favoriteItems, id: \.self) { item in
                                     Text(item)
                                 }
-                                .onDelete(perform: { favoriteItemsIDs.remove(atOffsets: $0) })
+                                .onDelete(perform: { favoriteItems.remove(atOffsets: $0) })
                             }
-                            .navigationTitle("All Favorites")
+                            .navigationTitle("Favorites")
                             .toolbar {
                                 ToolbarItem(placement: .topBarTrailing) {
                                     EditButton()
                                 }
-                            }
-                            .task {
-                                await viewModel.fetchData()
                             }
                         }
                         Toggle(isOn: $itemDescriptions) {
@@ -167,7 +163,7 @@ struct SettingsView : View {
                     } header: {
                         Text("Feedback")
                     } footer: {
-                        Text("App Version: 1.2.3")
+                        Text("App Version: 1.2.4")
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
                 }

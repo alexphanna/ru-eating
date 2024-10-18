@@ -54,7 +54,7 @@ class Place: Identifiable, Hashable {
     
     static let defaultHours = [("09:30", "20:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("09:30", "20:00")]
     
-    @ObservationIgnored @AppStorage("favoriteItemsIDs") var favoriteItemsIDs: [String] = []
+    @AppStorage("favoriteItemsIDs") var favoriteItemsIDs: [String] = []
     
     init(name: String, campus: String, id: Int, hasTakeout: Bool, hours: [(String, String)] = defaultHours) {
         self.name = name

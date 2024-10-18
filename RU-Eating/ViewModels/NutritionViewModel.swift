@@ -9,21 +9,21 @@ import Foundation
 import OrderedCollections
 import SwiftUI
 
-@Observable class NutritionViewModel {
+class NutritionViewModel: ObservableObject {
     private(set) var category: Category
     
     private(set) var showServingSize: Bool
     var unit: String
     var servings: Int
     
-    @ObservationIgnored @AppStorage("fdaDailyValues") var fdaDailyValues = false
+    @AppStorage("fdaDailyValues") var fdaDailyValues: Bool?
     
     var values: OrderedDictionary<String, Float?> {
         switch(unit) {
         case "Amounts":
             return category.amounts
         default:
-            if fdaDailyValues {
+            if fdaDailyValues! {
                 return getFDADailyValues()
             }
             else {

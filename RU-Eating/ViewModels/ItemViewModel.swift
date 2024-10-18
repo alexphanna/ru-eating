@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Observation
 
-@Observable class ItemViewModel {
+class ItemViewModel: ObservableObject {
     var item: Item
     var nutrient: String
     var sortBy: String
@@ -29,8 +29,8 @@ import Observation
         return false
     }
     
-    @ObservationIgnored @AppStorage("favoriteItemsIDs") var favoriteItemsIDs: [String] = []
-    @ObservationIgnored @AppStorage("restrictions") var restrictions: [String] = []
+    @AppStorage("favoriteItems") var favoriteItems: [String] = []
+    @AppStorage("restrictions") var restrictions: [String] = []
     
     init(item: Item, nutrient: String, sortBy: String, isEditing: Bool) {
         self.item = item
@@ -42,10 +42,10 @@ import Observation
     func favorite() {
         item.isFavorite = !item.isFavorite
         if item.isFavorite {
-            favoriteItemsIDs.append(item.id)
+            favoriteItems.append(item.name)
         }
         else if !item.isFavorite {
-            favoriteItemsIDs.removeAll(where: { $0 == item.id })
+            favoriteItems.removeAll(where: { $0 == item.name })
         }
     }
 }

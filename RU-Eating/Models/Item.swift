@@ -9,8 +9,9 @@ import Foundation
 import OrderedCollections
 import SwiftSoup
 import SwiftUI
+import Observation
 
-@Observable class Item : Hashable, Identifiable {
+class Item: ObservableObject, Hashable, Identifiable {
     static func == (lhs: Item, rhs: Item) -> Bool {
         return lhs.name == rhs.name
     }
@@ -84,7 +85,7 @@ import SwiftUI
         return titles
     }
     
-    @ObservationIgnored @AppStorage("extraPercents") var extraPercents: Bool = false
+    @AppStorage("extraPercents") var extraPercents: Bool = true
     
     init(name: String = "", id: String, servingsNumber: Float = 0, servingsUnit: String = "", portion: Float = 1, carbonFootprint: Int = 0, isFavorite: Bool = false) {
         self.name = name
@@ -156,7 +157,7 @@ import SwiftUI
     }
     
     func isFoodRelated(categories: [[String : Any]]) -> Bool {
-        let foodCategories = ["food", "dish", "cuisine", /*"cooking",*/ "fruit", "berries", "berry", "vegetable"]
+        let foodCategories = ["food", "dish", "cuisine", /*"cooking",*/ "fruit", "berries", "berry", "vegetable", "sandwich"]
         
         return categories.contains { category in
             for _title in (category["title"] as? String)!.split(separator: " ") {

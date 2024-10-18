@@ -8,12 +8,12 @@
 import Foundation
 import SwiftUI
 
-@Observable class AddItemsViewModel {
+class AddItemsViewModel: ObservableObject {
     var meal: Category
     var searchText: String
     private(set) var fetched: Bool
     
-    @ObservationIgnored @AppStorage("lastDiningHall") var lastDiningHall = "Busch"
+    @AppStorage("lastDiningHall") var lastDiningHall: String?
     
     private(set) var rawItems: [Item]
     var items: [Item] {
@@ -45,7 +45,7 @@ import SwiftUI
         fetched = false
         rawItems = [Item]()
         for place in places {
-            if !place.name.contains(lastDiningHall) { continue }
+            if !place.name.contains(lastDiningHall!) { continue }
             for meal in meals {
                 do {
                     let menu = try await place.fetchMenu(meal: meal, date: Date.now)

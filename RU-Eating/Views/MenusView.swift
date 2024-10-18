@@ -41,7 +41,7 @@ struct MenusView : View {
                 }
             }
             .sheet(isPresented: $isSheetShowing, content: {
-                SettingsView(viewModel: SettingsViewModel())
+                SettingsView()
             })
         }
     }
