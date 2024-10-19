@@ -8,12 +8,10 @@
 import Foundation
 import SwiftUI
 
-class AddItemsViewModel: ObservableObject {
+@Observable class AddItemsViewModel {
     var meal: Category
     var searchText: String
     private(set) var fetched: Bool
-    
-    @AppStorage("lastDiningHall") var lastDiningHall: String?
     
     private(set) var rawItems: [Item]
     var items: [Item] {
@@ -41,11 +39,11 @@ class AddItemsViewModel: ObservableObject {
         }
     }
     
-    func updateItems() async {
+    func updateItems(lastDiningHall: String) async {
         fetched = false
         rawItems = [Item]()
         for place in places {
-            if !place.name.contains(lastDiningHall!) { continue }
+            if !place.name.contains(lastDiningHall) { continue }
             for meal in meals {
                 do {
                     let menu = try await place.fetchMenu(meal: meal, date: Date.now)

@@ -43,7 +43,7 @@ struct AddItemsView : View {
                 }
             }
             .task {
-                await viewModel.updateItems()
+                await viewModel.updateItems(lastDiningHall: lastDiningHall)
             }
             .navigationTitle("Add Item")
             .navigationBarTitleDisplayMode(.inline)
@@ -61,7 +61,7 @@ struct AddItemsView : View {
         }
         .onChange(of: lastDiningHall) {
             Task {
-                await viewModel.updateItems()
+                await viewModel.updateItems(lastDiningHall: lastDiningHall)
             }
         }
     }

@@ -19,7 +19,6 @@ struct SettingsView : View {
     @AppStorage("hideZeros") var hideZeros: Bool = false
     @AppStorage("hideNils") var hideNils: Bool = false
     @AppStorage("carbonFootprints") var carbonFootprints: Bool = true
-    @AppStorage("extraPercents") var extraPercents: Bool = true
     @AppStorage("fdaDailyValues") var fdaDailyValues: Bool = false
     @AppStorage("lastDiningHall") var lastDiningHall: String = "Busch"
     @AppStorage("useHearts") var useHearts: Bool = false
@@ -67,9 +66,6 @@ struct SettingsView : View {
                         }
                         Toggle(isOn: $fdaDailyValues) {
                             Text("FDA Daily Values")
-                        }
-                        Toggle(isOn: $extraPercents) {
-                            Text("Extra Nutrient Values")
                         }
                     } header: {
                         Text("Nutrition Facts")

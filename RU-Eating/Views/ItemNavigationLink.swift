@@ -15,9 +15,6 @@ struct ItemNavigationLink : View {
     var body: some View {
         if viewModel.isEditing {
             ItemLabel(viewModel: viewModel)
-                .onTapGesture {
-                    viewModel.item.isSelected.toggle()
-                }
         }
         else {
             NavigationLink {
@@ -42,7 +39,7 @@ struct ItemNavigationLink : View {
 }
 
 struct ItemLabel : View {
-    @ObservationIgnored var viewModel: ItemViewModel
+    @ObservedObject var viewModel: ItemViewModel
     
     @AppStorage("carbonFootprints") var carbonFootprints: Bool = false
     @AppStorage("useHearts") var useHearts: Bool = false
@@ -111,5 +108,8 @@ struct ItemLabel : View {
         }
         .listRowBackground(viewModel.item.isSelected ? Color(UIColor.systemGray4) : nil)
         .contentShape(Rectangle())
+        .onTapGesture {
+            viewModel.item.isSelected.toggle()
+        }
     }
 }

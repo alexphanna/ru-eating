@@ -28,17 +28,19 @@ struct NutritionView: View {
                 LabeledContent("Serving Size", value: viewModel.category.items[0].servingSize)
                     .fontWeight(.bold)
             }
-            ForEach(Array(viewModel.values.keys), id: \.self) { key in
-                if key == "Calories" {
-                    LabeledContent(key, value: String(formatFloat(n: viewModel.values[key]!!)) + (viewModel.unit == "Amounts" ? nutrientUnits[key]! : "%"))
-                        .fontWeight(key == "Calories" ? .bold : .regular)
-                }
-                else {
-                    if viewModel.values[key]! == nil && !hideNils {
-                        LabeledContent(key, value: "-")
+            if viewModel.values["Calories"]! != nil { // skips items without nutrients
+                ForEach(Array(viewModel.values.keys), id: \.self) { key in
+                    if key == "Calories" {
+                        LabeledContent(key, value: String(formatFloat(n: viewModel.values[key]!!)) + (viewModel.unit == "Amounts" ? nutrientUnits[key]! : "%"))
+                            .fontWeight(key == "Calories" ? .bold : .regular)
                     }
-                    else if viewModel.values[key]! != nil && (viewModel.values[key]!! != 0 || !hideZeros) {
-                        LabeledContent(key, value: formatFloat(n: viewModel.values[key]!!) + (viewModel.unit == "Amounts" ? nutrientUnits[key]! : "%"))
+                    else {
+                        if viewModel.values[key]! == nil && !hideNils {
+                            LabeledContent(key, value: "-")
+                        }
+                        else if viewModel.values[key]! != nil && (viewModel.values[key]!! != 0 || !hideZeros) {
+                            LabeledContent(key, value: formatFloat(n: viewModel.values[key]!!) + (viewModel.unit == "Amounts" ? nutrientUnits[key]! : "%"))
+                        }
                     }
                 }
             }

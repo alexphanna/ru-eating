@@ -16,14 +16,14 @@ class NutritionViewModel: ObservableObject {
     var unit: String
     var servings: Int
     
-    @AppStorage("fdaDailyValues") var fdaDailyValues: Bool?
+    @AppStorage("fdaDailyValues") var fdaDailyValues: Bool = false
     
     var values: OrderedDictionary<String, Float?> {
         switch(unit) {
         case "Amounts":
             return category.amounts
         default:
-            if fdaDailyValues! {
+            if fdaDailyValues {
                 return getFDADailyValues()
             }
             else {

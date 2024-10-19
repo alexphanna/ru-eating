@@ -10,11 +10,11 @@ import SwiftUI
 import Observation
 
 class ItemViewModel: ObservableObject {
-    var item: Item
+    @Published var item: Item
     var nutrient: String
     var sortBy: String
     
-    var isEditing : Bool
+    @Published var isEditing : Bool
     
     var carbonFootprintColor: Color {
         return item.carbonFootprint == 1 ? .green : item.carbonFootprint == 2 ? .orange : .red

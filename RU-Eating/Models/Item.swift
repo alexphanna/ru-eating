@@ -11,7 +11,7 @@ import SwiftSoup
 import SwiftUI
 import Observation
 
-class Item: ObservableObject, Hashable, Identifiable {
+@Observable class Item: Hashable, Identifiable {
     static func == (lhs: Item, rhs: Item) -> Bool {
         return lhs.name == rhs.name
     }
@@ -84,8 +84,6 @@ class Item: ObservableObject, Hashable, Identifiable {
         
         return titles
     }
-    
-    @AppStorage("extraPercents") var extraPercents: Bool = true
     
     init(name: String = "", id: String, servingsNumber: Float = 0, servingsUnit: String = "", portion: Float = 1, carbonFootprint: Int = 0, isFavorite: Bool = false) {
         self.name = name
@@ -193,10 +191,8 @@ class Item: ObservableObject, Hashable, Identifiable {
             let nutrient = perfectNutrients[String(textArray[0])]!
             if var value = Float(textArray[1].replacingOccurrences(of: nutrientUnits[nutrient]!, with: "")) {
                 value *= Float(servingsNumber)
-                if extraPercents {
-                    if nutrient == "Cholesterol" {
-                        rawDailyValues[nutrient] = value / 3
-                    }
+                if nutrient == "Cholesterol" {
+                    rawDailyValues[nutrient] = value / 3
                 }
                 rawAmounts[nutrient] = value
             }
@@ -216,10 +212,8 @@ class Item: ObservableObject, Hashable, Identifiable {
             let nutrient = perfectNutrients[String(textArray[0])]!
             if var value = Float(textArray[1].replacingOccurrences(of: "%", with: "")) {
                 value *= Float(servingsNumber)
-                if extraPercents {
-                    if nutrient == "Iron" || nutrient == "Calcium" {
-                        rawAmounts[nutrient] = value / 100 * (nutrient == "Iron" ? 18 : 1300)
-                    }
+                if nutrient == "Iron" || nutrient == "Calcium" {
+                    rawAmounts[nutrient] = value / 100 * (nutrient == "Iron" ? 18 : 1300)
                 }
                 rawDailyValues[nutrient] = value
             }
