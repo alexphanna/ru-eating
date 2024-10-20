@@ -188,7 +188,9 @@ struct MenuView: View {
         } label: {
             VStack (alignment: HorizontalAlignment.leading) {
                 Text(viewModel.place.name)
-                Text(viewModel.place.campus).font(.footnote).italic().foregroundStyle(.gray)
+                    .fontWeight(.bold)
+                Text(viewModel.place.isOpen ? "Open" : "Closed")
+                    .foregroundStyle(viewModel.place.isOpen ? .green : .red)
             }
         }
     }

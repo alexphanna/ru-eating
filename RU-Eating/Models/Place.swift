@@ -11,17 +11,15 @@ import SwiftUI
 
 class Place: Identifiable, Hashable {
     static func == (lhs: Place, rhs: Place) -> Bool {
-        return lhs.name == rhs.name && lhs.campus == rhs.campus && lhs.id == rhs.id
+        return lhs.name == rhs.name && lhs.id == rhs.id
     }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(name)
-        hasher.combine(campus)
         hasher.combine(id)
     }
     
     var name: String
-    var campus: String
     var hours: [(String, String)]
     var id: Int
     var hasTakeout: Bool
@@ -56,9 +54,8 @@ class Place: Identifiable, Hashable {
     
     @AppStorage("favoriteItemsIDs") var favoriteItemsIDs: [String] = []
     
-    init(name: String, campus: String, id: Int, hasTakeout: Bool, hours: [(String, String)] = defaultHours) {
+    init(name: String, id: Int, hasTakeout: Bool, hours: [(String, String)] = defaultHours) {
         self.name = name
-        self.campus = campus
         self.hasTakeout = hasTakeout
         self.hours = hours
         self.id = id

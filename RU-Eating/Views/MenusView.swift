@@ -15,21 +15,8 @@ struct MenusView : View {
     var body : some View {
         NavigationStack {
             List {
-                let openPlaces = getOpenPlaces()
-                if openPlaces.count > 0 {
-                    Section("Open") {
-                        ForEach(openPlaces, id: \.self) { place in
-                            MenuView(viewModel: MenuViewModel(place: place))
-                        }
-                    }
-                }
-                let closedPlaces = getClosedPlaces()
-                if closedPlaces.count > 0 {
-                    Section("Closed") {
-                        ForEach(closedPlaces, id: \.self) { place in
-                            MenuView(viewModel: MenuViewModel(place: place))
-                        }
-                    }
+                ForEach(places, id: \.self) { place in
+                    MenuView(viewModel: MenuViewModel(place: place))
                 }
             }
             .navigationTitle("Menus")
@@ -44,25 +31,5 @@ struct MenusView : View {
                 SettingsView()
             })
         }
-    }
-    
-    func getOpenPlaces() -> [Place]  {
-        var openPlaces = [Place]()
-        for place in places {
-            if place.isOpen {
-                openPlaces.append(place)
-            }
-        }
-        return openPlaces
-    }
-    
-    func getClosedPlaces() -> [Place] {
-        var closedPlaces = [Place]()
-        for place in places {
-            if !place.isOpen {
-                closedPlaces.append(place)
-            }
-        }
-        return closedPlaces
     }
 }
