@@ -15,6 +15,9 @@ struct ItemNavigationLink : View {
     var body: some View {
         if viewModel.isEditing {
             ItemLabel(viewModel: viewModel)
+                .onTapGesture {
+                    viewModel.item.isSelected.toggle()
+                }
         }
         else {
             NavigationLink {
@@ -108,8 +111,5 @@ struct ItemLabel : View {
         }
         .listRowBackground(viewModel.item.isSelected ? Color(UIColor.systemGray4) : nil)
         .contentShape(Rectangle())
-        .onTapGesture {
-            viewModel.item.isSelected.toggle()
-        }
     }
 }

@@ -10,7 +10,7 @@ import SwiftSoup
 import SwiftData
 
 struct ItemView: View {
-    @State var viewModel: ItemViewModel
+    @ObservedObject var viewModel: ItemViewModel
     
     @AppStorage("carbonFootprints") var carbonFootprints: Bool = true
     @AppStorage("hideRestricted") var hideRestricted: Bool = false
