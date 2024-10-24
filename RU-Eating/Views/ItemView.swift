@@ -16,6 +16,7 @@ struct ItemView: View {
     @AppStorage("hideRestricted") var hideRestricted: Bool = false
     @AppStorage("itemDescriptions") var itemDescriptions: Bool = true
     @AppStorage("useHearts") var useHearts: Bool = false
+    @AppStorage("filterIngredients") var filterIngredients: Bool = false
     
     var body : some View {
         if (hideRestricted && !viewModel.containsRestrictions) || !hideRestricted {
@@ -29,7 +30,7 @@ struct ItemView: View {
                     }
                     else {
                         List {
-                            if viewModel.containsRestrictions {
+                            if filterIngredients && viewModel.containsRestrictions {
                                 Section("Warning") {
                                     Label("Item may contain dietary restrictions.", systemImage: "exclamationmark.triangle.fill")
                                 }

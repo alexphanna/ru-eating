@@ -15,8 +15,19 @@ struct MenusView : View {
     var body : some View {
         NavigationStack {
             List {
-                ForEach(places, id: \.self) { place in
-                    MenuView(viewModel: MenuViewModel(place: place))
+                if !places.filter({ $0.isOpen }).isEmpty {
+                    Section("Open") {
+                        ForEach(places.filter { $0.isOpen }, id: \.self) { place in
+                            MenuView(viewModel: MenuViewModel(place: place))
+                        }
+                    }
+                }
+                if !places.filter({ !$0.isOpen }).isEmpty {
+                    Section("Closed") {
+                        ForEach(places.filter { !$0.isOpen }, id: \.self) { place in
+                            MenuView(viewModel: MenuViewModel(place: place))
+                        }
+                    }
                 }
             }
             .navigationTitle("Menus")
