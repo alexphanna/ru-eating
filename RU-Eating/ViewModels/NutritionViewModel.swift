@@ -13,7 +13,7 @@ class NutritionViewModel: ObservableObject {
     private(set) var category: Category
     
     private(set) var showServingSize: Bool
-    var unit: String
+    @Published var unit: String
     var servings: Int
     
     @AppStorage("fdaDailyValues") var fdaDailyValues: Bool = false

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NutritionView: View {
-    @State var viewModel: NutritionViewModel
+    @ObservedObject var viewModel: NutritionViewModel
     
     @AppStorage("hideNils") var hideNils = false
     @AppStorage("hideZeros") var hideZeros = false

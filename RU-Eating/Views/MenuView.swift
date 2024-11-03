@@ -13,7 +13,7 @@ struct MenuView: View {
     
     var body: some View {
         NavigationLink {
-            VStack {
+            VStack(spacing: 0) {
                 HDatePicker(accentColor: .accentColor, selectedDate: $viewModel.date)
                     .onChange(of: viewModel.date) {
                         Task {
@@ -159,7 +159,7 @@ struct MenuView: View {
                     .onAppear {
                         Task {
                             if viewModel.menu.isEmpty {
-                                //await viewModel.updateMenu()
+                                await viewModel.updateMenu()
                             }
                         }
                     }
