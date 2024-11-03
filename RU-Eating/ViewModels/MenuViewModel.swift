@@ -75,10 +75,6 @@ import Foundation
         }
     }
     
-    var dateText: String {
-        return "\(dayName ?? date.formatted(Date.FormatStyle().weekday(.wide))), \(date.formatted(Date.FormatStyle().month(.wide))) \(date.formatted(Date.FormatStyle().day()))"
-    }
-    
     var randomItem: Item?
     
     var selection: [String] {
@@ -133,15 +129,5 @@ import Foundation
             // do nothing
         }
         fetched = true
-    }
-    
-    func decrementDate() {
-        date = Calendar.current.date(byAdding: .day, value: -1, to: date)!;
-        Task { await updateMenu() }
-    }
-    
-    func incrementDate() {
-        date = Calendar.current.date(byAdding: .day, value: 1, to: date)!;
-        Task { await updateMenu() }
     }
 }

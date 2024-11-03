@@ -12,6 +12,9 @@
 		FA79D0D62C8CB9EF00F60AC4 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA79D0D52C8CB9EF00F60AC4 /* SettingsView.swift */; };
 		FA79D0DA2C8CCD7C00F60AC4 /* RestrictionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA79D0D92C8CCD7C00F60AC4 /* RestrictionsView.swift */; };
 		FA7BBE762CC014FF00ECC17B /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7BBE752CC014F500ECC17B /* Array.swift */; };
+		FA7BEDFA2CD6C42800308BAC /* HDatePicker in Frameworks */ = {isa = PBXBuildFile; productRef = FA7BEDF92CD6C42800308BAC /* HDatePicker */; };
+		FA7BEDFD2CD6C4A400308BAC /* HDatePicker in Frameworks */ = {isa = PBXBuildFile; productRef = FA7BEDFC2CD6C4A400308BAC /* HDatePicker */; };
+		FA7BEE002CD6CC9C00308BAC /* HDatePicker in Frameworks */ = {isa = PBXBuildFile; productRef = FA7BEDFF2CD6CC9C00308BAC /* HDatePicker */; };
 		FA7CC8ED2CA5071C0017E217 /* ItemNavigationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7CC8EC2CA507160017E217 /* ItemNavigationLink.swift */; };
 		FA7E45172C8E69A800D95D96 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7E45162C8E69A800D95D96 /* MenuView.swift */; };
 		FA8647612C8E1A95000037C6 /* MealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8647602C8E1A95000037C6 /* MealView.swift */; };
@@ -61,6 +64,9 @@
 			files = (
 				FA79D0D42C8CAEE200F60AC4 /* OrderedCollections in Frameworks */,
 				FA8A329F2C8B5ECA00D30147 /* SwiftSoup in Frameworks */,
+				FA7BEE002CD6CC9C00308BAC /* HDatePicker in Frameworks */,
+				FA7BEDFA2CD6C42800308BAC /* HDatePicker in Frameworks */,
+				FA7BEDFD2CD6C4A400308BAC /* HDatePicker in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,6 +154,9 @@
 			packageProductDependencies = (
 				FA8A329E2C8B5ECA00D30147 /* SwiftSoup */,
 				FA79D0D32C8CAEE200F60AC4 /* OrderedCollections */,
+				FA7BEDF92CD6C42800308BAC /* HDatePicker */,
+				FA7BEDFC2CD6C4A400308BAC /* HDatePicker */,
+				FA7BEDFF2CD6CC9C00308BAC /* HDatePicker */,
 			);
 			productName = MenRU;
 			productReference = FA8A328A2C8B585D00D30147 /* RU Eating.app */;
@@ -180,6 +189,7 @@
 			packageReferences = (
 				FA8A329D2C8B5ECA00D30147 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				FA79D0D22C8CAEE200F60AC4 /* XCRemoteSwiftPackageReference "swift-collections" */,
+				FA7BEDFE2CD6CC9C00308BAC /* XCRemoteSwiftPackageReference "HDatePicker" */,
 			);
 			productRefGroup = FA8A328B2C8B585D00D30147 /* Products */;
 			projectDirPath = "";
@@ -449,6 +459,14 @@
 				minimumVersion = 1.1.3;
 			};
 		};
+		FA7BEDFE2CD6CC9C00308BAC /* XCRemoteSwiftPackageReference "HDatePicker" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/alexphanna/HDatePicker";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		FA8A329D2C8B5ECA00D30147 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/scinfu/SwiftSoup.git";
@@ -464,6 +482,19 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FA79D0D22C8CAEE200F60AC4 /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = OrderedCollections;
+		};
+		FA7BEDF92CD6C42800308BAC /* HDatePicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HDatePicker;
+		};
+		FA7BEDFC2CD6C4A400308BAC /* HDatePicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HDatePicker;
+		};
+		FA7BEDFF2CD6CC9C00308BAC /* HDatePicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FA7BEDFE2CD6CC9C00308BAC /* XCRemoteSwiftPackageReference "HDatePicker" */;
+			productName = HDatePicker;
 		};
 		FA8A329E2C8B5ECA00D30147 /* SwiftSoup */ = {
 			isa = XCSwiftPackageProductDependency;
