@@ -14,12 +14,13 @@ struct MenuView: View {
     var body: some View {
         NavigationLink {
             VStack(spacing: 0) {
-                HDatePicker(accentColor: .accentColor, selectedDate: $viewModel.date)
+                HDatePicker(selectedDay: $viewModel.date)
                     .onChange(of: viewModel.date) {
                         Task {
                             await viewModel.updateMenu()
                         }
                     }
+                Divider()
                 NavigationStack {
                     List {
                         if viewModel.groupByCategory {

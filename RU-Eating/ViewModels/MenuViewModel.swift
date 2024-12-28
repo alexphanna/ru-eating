@@ -115,6 +115,7 @@ import Foundation
         rawMenu = [Category]()
         sortBy = "Name"
         filter = "All Items"
+        randomItem = nil
         do {
             rawMenu = try await place.fetchMenu(meal: meal == "Takeout" ? "Knight+Room" : meal, date: date)
             if !items.items.isEmpty {
