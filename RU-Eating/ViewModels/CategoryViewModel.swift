@@ -7,6 +7,7 @@
 
 import Foundation
 import OrderedCollections
+import SwiftUI
 
 @Observable class CategoryViewModel {
     var category: Category

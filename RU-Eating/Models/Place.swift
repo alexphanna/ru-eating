@@ -104,6 +104,10 @@ class Place: Identifiable, Hashable {
                 if constantCategories.contains(heading.lowercased()) {
                     menu.append(lastCategory!)
                 }
+                else if heading.contains("Cook To Order") {
+                    menu.insert(lastCategory!, at: 0)
+                    nonConstantIndex += 1
+                }
                 else {
                     menu.insert(lastCategory!, at: nonConstantIndex)
                     nonConstantIndex += 1
@@ -132,7 +136,6 @@ class Place: Identifiable, Hashable {
                 let servingsUnit = parseServingsUnit(servings: servings)
                 
                 // capitalize items
-                
                 let name = try! perfectName(name: element.attr("name"))
                 let id = try! element.attr("for")
                 let isFavorite = favoriteItemsIDs.contains(id)

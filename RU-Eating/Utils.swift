@@ -40,7 +40,7 @@ func perfectName(name: String) -> String {
         "dogs" : "dog"
     ]
     
-    var nameArray = name.capitalized.replacingOccurrences(of: "  ", with: " ").split(separator: " ")
+    var nameArray = name.capitalized.replacingOccurrences(of: "Cook To Order", with: "").replacingOccurrences(of: "  ", with: " ").split(separator: " ")
     
     for i in 0..<nameArray.count {
         if nameArray[i].hasSuffix("Oz") {
