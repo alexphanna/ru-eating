@@ -1,6 +1,15 @@
 {
-  "originHash" : "d2f259f761cf1f45d3d9f9c09f4e98ec02446d0e080cbe3d6c0661bb1788bf69",
+  "originHash" : "284dbf4e94c517ac1182c3ea60818a27e95aa63530a455b313fdc2d917756878",
   "pins" : [
+    {
+      "identity" : "hdatepicker",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/alexphanna/HDatePicker",
+      "state" : {
+        "branch" : "main",
+        "revision" : "9d3d123888fcba870b5b28037cae2442d035ab8f"
+      }
+    },
     {
       "identity" : "swift-collections",
       "kind" : "remoteSourceControl",
