@@ -136,7 +136,7 @@ class Place: Identifiable, Hashable {
                 let servingsUnit = parseServingsUnit(servings: servings)
                 
                 // capitalize items
-                let name = try! perfectName(name: element.attr("name"))
+                let name = try! perfectName(name: element.text())
                 let id = try! element.attr("for")
                 let isFavorite = favoriteItemsIDs.contains(id)
                 let item = Item(name: name, id: id, servingsNumber: servingsNumber, servingsUnit: servingsUnit, carbonFootprint: carbonFootprint, isFavorite: isFavorite)

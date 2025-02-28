@@ -25,11 +25,11 @@ struct MenuView: View {
                     List {
                         if viewModel.groupByCategory {
                             ForEach(viewModel.menu, id: \.self) { category in
-                                CategoryView(viewModel: CategoryViewModel(category: category, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, sortOrder: viewModel.sortOrder, isEditing: viewModel.isEditing))
+                                CategoryView(viewModel: CategoryViewModel(category: category, sortBy: viewModel.sortBy, sortOrder: viewModel.sortOrder, isEditing: viewModel.isEditing))
                             }
                         }
                         else {
-                            CategoryView(viewModel: CategoryViewModel(category: viewModel.items, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, sortOrder: viewModel.sortOrder, isExpandable: false, isEditing: viewModel.isEditing))
+                            CategoryView(viewModel: CategoryViewModel(category: viewModel.items, sortBy: viewModel.sortBy, sortOrder: viewModel.sortOrder, isExpandable: false, isEditing: viewModel.isEditing))
                         }
                     }
                     .overlay {
@@ -91,7 +91,7 @@ struct MenuView: View {
                                     Section {
                                         if viewModel.randomItem != nil {
                                             NavigationLink {
-                                                ItemView(viewModel: ItemViewModel(item: viewModel.randomItem!, nutrient: viewModel.sortBy, sortBy: viewModel.sortBy, isEditing: viewModel.isEditing))
+                                                ItemView(viewModel: ItemViewModel(item: viewModel.randomItem!, sortBy: viewModel.sortBy, isEditing: viewModel.isEditing))
                                                     .onAppear {
                                                         viewModel.randomItem = viewModel.items.items.randomElement() // update random element
                                                     }
@@ -118,10 +118,16 @@ struct MenuView: View {
                                                 Picker("", selection: $viewModel.sortBy) {
                                                     Label("Name", systemImage: "textformat.alt").tag("Name")
                                                     Label("Carbon Footprint", systemImage: "leaf").tag("Carbon Footprint")
-                                                    if viewModel.fetched {
-                                                        Label("Nutrient", systemImage: "carrot").tag("Nutrient")
-                                                        Label("Ingredients", systemImage: "number").tag("Ingredients")
-                                                    }
+                                                    Label("Calories", systemImage: "bolt").tag("Calories")
+                                                        .selectionDisabled(!viewModel.fetched)
+                                                    Label("Fat", systemImage: "drop").tag("Fat")
+                                                        .selectionDisabled(!viewModel.fetched)
+                                                    Label("Protein", systemImage: "fish").tag("Protein")
+                                                        .selectionDisabled(!viewModel.fetched)
+                                                    Label("Carbohydrates", systemImage: "carrot").tag("Carbohydrates")
+                                                        .selectionDisabled(!viewModel.fetched)
+                                                    Label("Ingredients", systemImage: "number").tag("Ingredients")
+                                                        .selectionDisabled(!viewModel.fetched)
                                                 }
                                             }
                                             Section {

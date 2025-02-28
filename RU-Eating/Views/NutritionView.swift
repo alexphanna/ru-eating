@@ -49,5 +49,6 @@ struct NutritionView: View {
         } footer: {
             Text("Percent Daily Values are based on a 2,000 calorie diet.")
         }
+        .headerProminence(.increased)
     }
 }

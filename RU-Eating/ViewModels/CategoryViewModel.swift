@@ -11,7 +11,6 @@ import SwiftUI
 
 @Observable class CategoryViewModel {
     var category: Category
-    var nutrient: String
     var isExpandable: Bool
     var isExpanded: Bool
     var sortBy: String
@@ -20,9 +19,8 @@ import SwiftUI
     
     var isEditing : Bool
     
-    init(category: Category, nutrient: String, sortBy: String, sortOrder: String, isExpandable: Bool = true, isEditing: Bool) {
+    init(category: Category, sortBy: String, sortOrder: String, isExpandable: Bool = true, isEditing: Bool) {
         self.category = category
-        self.nutrient = nutrient
         self.nutrientIndex = 0
         self.isExpandable = isExpandable
         self.isExpanded = true
@@ -38,8 +36,17 @@ import SwiftUI
         case "Name":
             items.sort { $0.name < $1.name }
             break
-        case "Nutrient":
-            items = category.items.filter( { $0.fetched } ).sorted { $0.amounts[nutrient]! ?? -1 < $1.amounts[nutrient]! ?? -1 }
+        case "Calories":
+            items = category.items.filter( { $0.fetched } ).sorted { $0.amounts["Calories"]! ?? -1 < $1.amounts["Calories"]! ?? -1 }
+            break
+        case "Fat":
+            items = category.items.filter( { $0.fetched } ).sorted { $0.amounts["Fat"]! ?? -1 < $1.amounts["Fat"]! ?? -1 }
+            break
+        case "Carbohydrates":
+            items = category.items.filter( { $0.fetched } ).sorted { $0.amounts["Carbohydrates"]! ?? -1 < $1.amounts["Carbohydrates"]! ?? -1 }
+            break
+        case "Protein":
+            items = category.items.filter( { $0.fetched } ).sorted { $0.amounts["Protein"]! ?? -1 < $1.amounts["Protein"]! ?? -1 }
             break
         case "Carbon Footprint":
             items = category.items.filter( { $0.carbonFootprint > 0 } ).sorted { $0.carbonFootprint < $1.carbonFootprint }
@@ -67,13 +74,5 @@ import SwiftUI
         }
         
         return items
-    }
-    
-    func nextNutrient() {
-        nutrientIndex += 1
-        if nutrientIndex == nutrients.count {
-            nutrientIndex = 0
-        }
-        nutrient = nutrients[nutrientIndex]
     }
 }

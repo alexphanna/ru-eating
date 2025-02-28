@@ -11,7 +11,6 @@ import Observation
 
 class ItemViewModel: ObservableObject {
     @Published var item: Item
-    var nutrient: String
     var sortBy: String
     
     @Published var isEditing : Bool
@@ -32,9 +31,8 @@ class ItemViewModel: ObservableObject {
     @AppStorage("favoriteItems") var favoriteItems: [String] = []
     @AppStorage("restrictions") var restrictions: [String] = []
     
-    init(item: Item, nutrient: String, sortBy: String, isEditing: Bool) {
+    init(item: Item, sortBy: String, isEditing: Bool) {
         self.item = item
-        self.nutrient = nutrient
         self.sortBy = sortBy
         self.isEditing = isEditing
     }

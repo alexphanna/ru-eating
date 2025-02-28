@@ -27,6 +27,7 @@ func formatFloat(n: Float) -> String {
 }
 
 func perfectName(name: String) -> String {
+    print(name)
     let replacements = [
         "#5" : "",
         "Ff" : "",

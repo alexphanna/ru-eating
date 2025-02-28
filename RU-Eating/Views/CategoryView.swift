@@ -16,34 +16,21 @@ struct CategoryView : View {
                 isExpanded: $viewModel.isExpanded,
                 content: {
                     ForEach(viewModel.sortedItems) { item in
-                        ItemNavigationLink(viewModel: ItemViewModel(item: item, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, isEditing: viewModel.isEditing))
+                        ItemNavigationLink(viewModel: ItemViewModel(item: item, sortBy: viewModel.sortBy, isEditing: viewModel.isEditing))
                     }
                 },
                 header: {
-                    HStack {
-                        Text(viewModel.category.name)
-                        if viewModel.sortBy == "Nutrient" {
-                            Spacer()
-                            Button(viewModel.nutrient, action: viewModel.nextNutrient )
-                                .font(.caption)
-                        }
-                    }
+                    Text(viewModel.category.name)
                 })
+            .headerProminence(.increased)
         }
         else {
             Section(content: {
                 ForEach(viewModel.sortedItems) { item in
-                    ItemNavigationLink(viewModel: ItemViewModel(item: item, nutrient: viewModel.nutrient, sortBy: viewModel.sortBy, isEditing: viewModel.isEditing))
+                    ItemNavigationLink(viewModel: ItemViewModel(item: item, sortBy: viewModel.sortBy, isEditing: viewModel.isEditing))
                 }
             }, header: {
-                HStack {
-                    Text("Name")
-                    if viewModel.sortBy == "Nutrient" {
-                        Spacer()
-                        Button(viewModel.nutrient, action: viewModel.nextNutrient )
-                            .font(.caption)
-                    }
-                }
+                Text("Name")
             })
         }
     }

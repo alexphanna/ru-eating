@@ -55,6 +55,7 @@ let constantCategories = [
     "salad bar",
     "breads",
     "fruits",
+    "fruit",
     "deli bar entree",
     "yogurt bar",
     "salad dressing"

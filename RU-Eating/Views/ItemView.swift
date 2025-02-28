@@ -34,6 +34,7 @@ struct ItemView: View {
                                 Section("Warning") {
                                     Label("Item may contain dietary restrictions.", systemImage: "exclamationmark.triangle.fill")
                                 }
+                                .headerProminence(.increased)
                             }
                             if itemDescriptions && !viewModel.item.excerpt.characters.isEmpty {
                                 Section {
@@ -46,6 +47,7 @@ struct ItemView: View {
                                             .font(.footnote)
                                     }
                                 }
+                                .headerProminence(.increased)
                             }
                             NutritionView(viewModel: NutritionViewModel(category: Category(name: "", items: [viewModel.item]), showServingSize: true))
                             Section("Ingredients") {
@@ -54,6 +56,7 @@ struct ItemView: View {
                                     .italic()
                                     .foregroundStyle(.gray)
                             }
+                            .headerProminence(.increased)
                         }
                     }
                 }

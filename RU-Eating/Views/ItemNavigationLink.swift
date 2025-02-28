@@ -81,13 +81,13 @@ struct ItemLabel : View {
                 }
             }
             Spacer()
-            if viewModel.sortBy == "Nutrient" {
-                if viewModel.item.amounts[viewModel.nutrient]! == nil {
+            if nutrients.contains(viewModel.sortBy) {
+                if viewModel.item.amounts[viewModel.sortBy]! == nil {
                     Text("-")
                         .foregroundStyle(.gray)
                 }
                 else {
-                    Text(String(formatFloat(n: viewModel.item.amounts[viewModel.nutrient]!!)) + nutrientUnits[viewModel.nutrient]!)
+                    Text(String(formatFloat(n: viewModel.item.amounts[viewModel.sortBy]!!)) + nutrientUnits[viewModel.sortBy]!)
                         .foregroundStyle(.gray)
                 }
             }
