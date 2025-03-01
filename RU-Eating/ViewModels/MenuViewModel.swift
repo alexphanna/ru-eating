@@ -9,7 +9,7 @@ import Foundation
 
 @Observable class MenuViewModel {
     // core
-    private(set) var place: Place
+    private(set) var place: DiningHall
     var meal: String
     var date: Date
     
@@ -87,7 +87,7 @@ import Foundation
         }
     }
     
-    init(place: Place) {
+    init(place: DiningHall) {
         self.place = place
         switch Calendar.current.component(.hour, from: Date.now) {
         case ..<11:
