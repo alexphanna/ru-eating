@@ -25,10 +25,12 @@ An unofficial Rutgers University-New Brunswick dining hall menu app for iOS writ
 ## Screenshots
 <div display="flex">
   <img src="./screenshots/iPhone 16 Pro/menus.png" width="32%">
-  <img src="./screenshots/iPhone 16 Pro/menu.png" width="32%">
-  <img src="./screenshots/iPhone 16 Pro/sorted-menu.png" width="32%">
+  <img src="./screenshots/iPhone 16 Pro/menu1.png" width="32%">
+  <img src="./screenshots/iPhone 16 Pro/menu2.png" width="32%">
   <img src="./screenshots/iPhone 16 Pro/item.png" width="32%">
   <img src="./screenshots/iPhone 16 Pro/meal.png" width="32%">
   <img src="./screenshots/iPhone 16 Pro/add-item.png" width="32%">
   <img src="./screenshots/iPhone 16 Pro/settings.png" width="32%">
+  <img src="./screenshots/iPhone 16 Pro/restrictions.png" width="32%">
+  <img src="./screenshots/iPhone 16 Pro/light-mode.png" width="32%">
 </div>
