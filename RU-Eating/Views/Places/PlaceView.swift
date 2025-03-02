@@ -15,6 +15,12 @@ struct PlaceView: View {
             NavigationStack {
                 List {
                     LabeledContent("Campus", value: place.campus.description)
+                    LabeledContent {
+                        Text(place.acceptsMealSwipes ? "Yes" : "No")
+                            .foregroundStyle(place.acceptsMealSwipes ? .green : .red)
+                    } label: {
+                        Text("Accepts Meal Swipes")
+                    }
                 }
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {

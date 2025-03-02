@@ -16,32 +16,37 @@ let diningHalls: [DiningHall] = [
 
 let places: [Place] = [
     // Busch
-    Place(name: "Busch Dining Hall", campus: Campus.busch),
+    Place(
+        name: "Busch Dining Hall",
+        campus: Campus.busch,
+        acceptsMealSwipes: true
+    ),
     Place(name: "Gerlanda's Pizza and Cafe", campus: Campus.busch),
-    Place(name: "Harvest Juice Bar", campus: Campus.busch),
-    Place(name: "Qdoba", campus: Campus.busch),
+    Place(name: "Harvest Juice Bar", campus: Campus.busch, acceptsMealSwipes: true),
     Place(name: "Panera Bread", campus: Campus.busch),
     Place(name: "Szechwan Ichiban", campus: Campus.busch),
+    Place(name: "Woody's Cafe", campus: Campus.busch, acceptsMealSwipes: true),
+    Place(name: "Qdoba", campus: Campus.busch),
     
     // Livingston
-    Place(name: "Henry's Diner", campus: Campus.livingston),
-    Place(name: "Kilmer's Market", campus: Campus.livingston),
-    Place(name: "Livingston Dining Commons", campus: Campus.livingston),
-    Place(name: "Sbarro", campus: Campus.livingston),
+    Place(name: "Henry's Diner", campus: Campus.livingston, acceptsMealSwipes: true),
+    Place(name: "Kilmer's Market", campus: Campus.livingston, acceptsMealSwipes: true),
+    Place(name: "Livingston Dining Commons", campus: Campus.livingston, acceptsMealSwipes: true),
+    Place(name: "Sbarro", campus: Campus.livingston, acceptsMealSwipes: true),
     Place(name: "Starbucks", campus: Campus.livingston),
     
     // College Ave
-    Place(name: "The Atrium", campus: Campus.collegeAve),
-    Place(name: "Cafe West", campus: Campus.collegeAve),
+    Place(name: "The Atrium", campus: Campus.collegeAve, acceptsMealSwipes: true),
+    Place(name: "Cafe West", campus: Campus.collegeAve, acceptsMealSwipes: true),
     Place(name: "Panera Bread", campus: Campus.collegeAve),
     
     // Cook/Douglass
-    Place(name: "Neilson Dining Hall", campus: Campus.cookDouglass),
-    Place(name: "Cook Cafe", campus: Campus.cookDouglass),
-    Place(name: "DC Bagels", campus: Campus.cookDouglass),
-    Place(name: "Douglass Cafe", campus: Campus.cookDouglass),
-    Place(name: "Harvest IFNH", campus: Campus.cookDouglass),
-    Place(name: "Red Pine Pizza", campus: Campus.cookDouglass),
+    Place(name: "Cook Cafe", campus: Campus.cookDouglass, acceptsMealSwipes: true),
+    Place(name: "DC Bagels", campus: Campus.cookDouglass, acceptsMealSwipes: true),
+    Place(name: "Douglass Cafe", campus: Campus.cookDouglass, acceptsMealSwipes: true),
+    Place(name: "Harvest IFNH", campus: Campus.cookDouglass, acceptsMealSwipes: true),
+    Place(name: "Neilson Dining Hall", campus: Campus.cookDouglass, acceptsMealSwipes: true),
+    Place(name: "Red Pine Pizza", campus: Campus.cookDouglass, acceptsMealSwipes: true),
 ]
 
 enum Campus: CaseIterable {

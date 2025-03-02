@@ -17,7 +17,7 @@ struct PlacesView : View {
                 if viewModel.groupByCampus {
                     ForEach(Campus.allCases, id: \.self) { campus in
                         Section(campus.description) {
-                            ForEach(places.filter { $0.campus == campus }) { place in
+                            ForEach(viewModel.filteredPlaces.filter { $0.campus == campus }) { place in
                                 PlaceView(place: place)
                             }
                         }
@@ -25,13 +25,13 @@ struct PlacesView : View {
                 }
                 else {
                     Section("Name") {
-                        ForEach(places.sorted{ $0.name < $1.name }) { place in
+                        ForEach(viewModel.filteredPlaces.sorted{ $0.name < $1.name }) { place in
                             PlaceView(place: place)
                         }
                     }
                 }
             }
-            .navigationTitle("Places")
+            .navigationTitle("Places to Eat")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
@@ -43,6 +43,19 @@ struct PlacesView : View {
                             } label: {
                                 Label("Sort By" , systemImage: "arrow.up.arrow.down")
                                 Text(viewModel.sortBy)
+                            }
+                            .pickerStyle(.menu)
+                            Picker(selection: $viewModel.filter ) {
+                                Section {
+                                    Label("All Places", systemImage: "fork.knife").tag("All Places")
+                                }
+                                Section {
+                                    Label("Favorites", systemImage: "star").tag("Favorites")
+                                    Label("Accepts Meal Swipes", systemImage: "dollarsign").tag("Accepts Meal Swipes")
+                                }
+                            } label: {
+                                Label("Filter", systemImage: viewModel.filter == "All Places" ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
+                                Text(viewModel.filter)
                             }
                             .pickerStyle(.menu)
                         }
