@@ -9,13 +9,15 @@ import Foundation
 import SwiftSoup
 import SwiftUI
 
-class Place: Identifiable, Hashable {
+@Observable class Place: Identifiable, Hashable {
     var name: String
-    var id: Int
+    var campus: Campus
+    var isFavorite: Bool
     
-    init(name: String, id: Int) {
+    init(name: String, campus: Campus) {
         self.name = name
-        self.id = id
+        self.campus = campus
+        self.isFavorite = false
     }
     
     static func == (lhs: Place, rhs: Place) -> Bool {

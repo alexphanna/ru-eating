@@ -29,6 +29,9 @@ struct MenRUApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .modelContainer(for: [
+                    Diary.self
+                ])
                 /*.onAppear {
                     numberOfUses += 1
                     if numberOfUses % 10 == 0 {

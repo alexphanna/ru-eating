@@ -13,6 +13,7 @@ class DiningHall: Place {
     @AppStorage("favoriteItemsIDs") var favoriteItemsIDs: [String] = []
     var hours: [(String, String)]
     var hasTakeout: Bool
+    var id: Int
     
     var isOpen: Bool {
         get {
@@ -42,10 +43,11 @@ class DiningHall: Place {
     
     static let defaultHours = [("09:30", "20:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("09:30", "20:00")]
     
-    init(name: String, id: Int, hasTakeout: Bool, hours: [(String, String)] = defaultHours) {
+    init(name: String, campus: Campus, id: Int, hasTakeout: Bool, hours: [(String, String)] = defaultHours) {
         self.hasTakeout = hasTakeout
         self.hours = hours
-        super.init(name: name, id: id)
+        self.id = id
+        super.init(name: name, campus: campus)
     }
     
     func getURL(meal: String, date: Date) -> URL {
