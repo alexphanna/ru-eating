@@ -17,7 +17,7 @@ struct PlacesView : View {
                 if viewModel.groupByCampus {
                     ForEach(Campus.allCases, id: \.self) { campus in
                         Section(campus.description) {
-                            ForEach(viewModel.filteredPlaces.filter { $0.campus == campus }) { place in
+                            ForEach(viewModel.filteredPlaces.filter { $0.campus == campus }, id: \.name) { place in
                                 PlaceView(place: place)
                             }
                         }
@@ -25,7 +25,7 @@ struct PlacesView : View {
                 }
                 else {
                     Section("Name") {
-                        ForEach(viewModel.filteredPlaces.sorted{ $0.name < $1.name }) { place in
+                        ForEach(viewModel.filteredPlaces.sorted{ $0.name < $1.name }, id: \.name) { place in
                             PlaceView(place: place)
                         }
                     }

@@ -9,26 +9,13 @@ import Foundation
 import SwiftSoup
 import SwiftUI
 
-@Observable class Place: Identifiable, Hashable {
-    var name: String
-    var campus: Campus
-    var acceptsMealSwipes: Bool
+protocol Place: Identifiable, Hashable {
+    var name: String { get }
+    var campus: Campus { get }
+    var acceptsMealSwipes: Bool { get }
+    var isFavorite: Bool { get set }
     
-    var isFavorite: Bool
+    func fetchMenu(meal: String, date: Date) async throws -> [Category]
     
-    init(name: String, campus: Campus, acceptsMealSwipes: Bool = false) {
-        self.name = name
-        self.campus = campus
-        self.acceptsMealSwipes = acceptsMealSwipes
-        self.isFavorite = false
-    }
-    
-    static func == (lhs: Place, rhs: Place) -> Bool {
-        return lhs.name == rhs.name && lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(name)
-        hasher.combine(id)
-    }
+    func hash(into hasher: inout Hasher)
 }

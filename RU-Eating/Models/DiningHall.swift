@@ -9,8 +9,15 @@ import Foundation
 import SwiftUI
 import SwiftSoup
 
-class DiningHall: Place {
-    @AppStorage("favoriteItemsIDs") var favoriteItemsIDs: [String] = []
+@Observable class DiningHall: Place, Hashable {
+    //@AppStorage("favoriteItemsIDs") var favoriteItemsIDs: [String] = []
+    
+    var name: String
+    var campus: Campus
+    var acceptsMealSwipes: Bool
+    
+    var isFavorite: Bool
+    
     var hours: [(String, String)]
     var hasTakeout: Bool
     var id: Int
@@ -44,10 +51,13 @@ class DiningHall: Place {
     static let defaultHours = [("09:30", "20:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("07:00", "21:00"), ("09:30", "20:00")]
     
     init(name: String, campus: Campus, id: Int, hasTakeout: Bool, hours: [(String, String)] = defaultHours) {
+        self.name = name
+        self.campus = campus
+        self.acceptsMealSwipes = true
+        self.isFavorite = false
         self.hasTakeout = hasTakeout
         self.hours = hours
         self.id = id
-        super.init(name: name, campus: campus)
     }
     
     func getURL(meal: String, date: Date) -> URL {
@@ -127,7 +137,7 @@ class DiningHall: Place {
                 // capitalize items
                 let name = try! perfectName(name: element.text())
                 let id = try! element.attr("for")
-                let isFavorite = favoriteItemsIDs.contains(id)
+                //let isFavorite = favoriteItemsIDs.contains(id)
                 let item = Item(name: name, id: id, servingsNumber: servingsNumber, servingsUnit: servingsUnit, carbonFootprint: carbonFootprint, isFavorite: isFavorite)
                 
                 lastCategory!.items.append(item)
@@ -195,5 +205,13 @@ class DiningHall: Place {
     
     func parseServingsUnit(servings: [String.SubSequence]) -> String {
         return String(servings[1]).lowercased()
+    }
+    
+    static func == (lhs: DiningHall, rhs: DiningHall) -> Bool {
+        return lhs.name == rhs.name
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
     }
 }

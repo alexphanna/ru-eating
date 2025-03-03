@@ -14,39 +14,34 @@ let diningHalls: [DiningHall] = [
     DiningHall(name: "The Atrium", campus: Campus.collegeAve, id : 13, hasTakeout: false, hours: [("09:30", "20:00"), ("07:00", "23:00"), ("07:00", "23:00"), ("07:00", "23:00"), ("07:00", "23:00"), ("07:00", "21:00"), ("09:30", "20:00")])
 ]
 
-let places: [Place] = [
+let places: [any Place] = [
     // Busch
-    Place(
-        name: "Busch Dining Hall",
-        campus: Campus.busch,
-        acceptsMealSwipes: true
-    ),
-    Place(name: "Gerlanda's Pizza and Cafe", campus: Campus.busch),
-    Place(name: "Harvest Juice Bar", campus: Campus.busch, acceptsMealSwipes: true),
-    Place(name: "Panera Bread", campus: Campus.busch),
-    Place(name: "Szechwan Ichiban", campus: Campus.busch),
-    Place(name: "Woody's Cafe", campus: Campus.busch, acceptsMealSwipes: true),
-    Place(name: "Qdoba", campus: Campus.busch),
+    DiningHall(name: "Busch Dining Hall", campus: Campus.busch, id : 4, hasTakeout: true, hours: [("09:30", "20:00"), ("07:00", "23:00"), ("07:00", "23:00"), ("07:00", "23:00"), ("07:00", "23:00"), ("07:00", "23:00"), ("07:00", "21:00"), ("09:30", "20:00")]),
+    // Retail(name: "Gerlanda's Pizza and Cafe", campus: Campus.busch),
+    // Retail(name: "Harvest Juice Bar", campus: Campus.busch, acceptsMealSwipes: true),
+    // Retail(name: "Panera Bread", campus: Campus.busch),
+    // Retail(name: "Szechwan Ichiban", id: "woodys", campus: Campus.busch),
+    Retail(name: "Woody's Cafe", id: "woodys", campus: Campus.busch, acceptsMealSwipes: true),
+    // Retail(name: "Qdoba", campus: Campus.busch),
     
     // Livingston
-    Place(name: "Henry's Diner", campus: Campus.livingston, acceptsMealSwipes: true),
-    Place(name: "Kilmer's Market", campus: Campus.livingston, acceptsMealSwipes: true),
-    Place(name: "Livingston Dining Commons", campus: Campus.livingston, acceptsMealSwipes: true),
-    Place(name: "Sbarro", campus: Campus.livingston, acceptsMealSwipes: true),
-    Place(name: "Starbucks", campus: Campus.livingston),
+    Retail(name: "Henry's Diner", id: "henrys", campus: Campus.livingston, acceptsMealSwipes: true),
+    Retail(name: "Kilmer's Market", id: "kilmers", campus: Campus.livingston, acceptsMealSwipes: true),
+    DiningHall(name: "Livingston Dining Commons", campus: Campus.livingston, id : 3, hasTakeout: false),
+    Retail(name: "Sbarro", id: "sbarro", campus: Campus.livingston, acceptsMealSwipes: true),
+    // Retail(name: "Starbucks", campus: Campus.livingston),
     
     // College Ave
-    Place(name: "The Atrium", campus: Campus.collegeAve, acceptsMealSwipes: true),
-    Place(name: "Cafe West", campus: Campus.collegeAve, acceptsMealSwipes: true),
-    Place(name: "Panera Bread", campus: Campus.collegeAve),
+    DiningHall(name: "The Atrium", campus: Campus.collegeAve, id : 13, hasTakeout: false, hours: [("09:30", "20:00"), ("07:00", "23:00"), ("07:00", "23:00"), ("07:00", "23:00"), ("07:00", "23:00"), ("07:00", "21:00"), ("09:30", "20:00")]),
+    Retail(name: "Cafe West", id: "cafe-west", campus: Campus.collegeAve, acceptsMealSwipes: true),
     
     // Cook/Douglass
-    Place(name: "Cook Cafe", campus: Campus.cookDouglass, acceptsMealSwipes: true),
-    Place(name: "DC Bagels", campus: Campus.cookDouglass, acceptsMealSwipes: true),
-    Place(name: "Douglass Cafe", campus: Campus.cookDouglass, acceptsMealSwipes: true),
-    Place(name: "Harvest IFNH", campus: Campus.cookDouglass, acceptsMealSwipes: true),
-    Place(name: "Neilson Dining Hall", campus: Campus.cookDouglass, acceptsMealSwipes: true),
-    Place(name: "Red Pine Pizza", campus: Campus.cookDouglass, acceptsMealSwipes: true),
+    Retail(name: "Cook Cafe", id: "cook-cafe", campus: Campus.cookDouglass, acceptsMealSwipes: true),
+    Retail(name: "DC Bagels", id: "dc-bagels",  campus: Campus.cookDouglass, acceptsMealSwipes: true),
+    Retail(name: "Douglass Cafe", id: "douglass-cafe", campus: Campus.cookDouglass, acceptsMealSwipes: true),
+    Retail(name: "Harvest IFNH", id: "harvest", campus: Campus.cookDouglass, acceptsMealSwipes: true),
+    DiningHall(name: "Neilson Dining Hall", campus: Campus.cookDouglass, id : 5, hasTakeout: true),
+    Retail(name: "Red Pine Pizza", id: "red-pine", campus: Campus.cookDouglass, acceptsMealSwipes: true),
 ]
 
 enum Campus: CaseIterable {

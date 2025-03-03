@@ -12,7 +12,7 @@ import SwiftUI
     var filter: String
     var groupByCampus: Bool
     
-    var filteredPlaces: [Place] {
+    var filteredPlaces: [any Place] {
         switch filter {
         case "Favorites":
             return places.filter { $0.isFavorite }

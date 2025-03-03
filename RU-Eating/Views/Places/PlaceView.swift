@@ -8,12 +8,22 @@
 import SwiftUI
 
 struct PlaceView: View {
-    @State var place: Place
+    @State var place: any Place
     
     var body: some View {
         NavigationLink {
             NavigationStack {
                 List {
+                    if (place is DiningHall) {
+                        NavigationLink("Menu") {
+                            MenuView(viewModel: MenuViewModel(place: place as! DiningHall))
+                        }
+                    }
+                    else {
+                        NavigationLink("Menu") {
+                            SimpleMenuView(place: place as! Retail)
+                        }
+                    }
                     LabeledContent("Campus", value: place.campus.description)
                     LabeledContent {
                         Text(place.acceptsMealSwipes ? "Yes" : "No")
