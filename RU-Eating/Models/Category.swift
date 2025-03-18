@@ -33,7 +33,7 @@ import OrderedCollections
         }
         
         var dailyValues: OrderedDictionary<String, Float?> {
-            var dailyValues: OrderedDictionary<String, Float?> = ["Calories" : nil, "Fat" : nil, "Carbohydrates" : nil, "Saturated Fat" : nil, "Dietary Fiber" : nil, "Trans Fat" : nil, "Sugars" : nil, "Cholesterol" : nil, "Protein" : nil, "Sodium" : nil, "Iron" : nil, "Calcium" : nil]
+            var dailyValues: OrderedDictionary<String, Float?> = ["Calorie" : nil, "Fat" : nil, "Carbohydrates" : nil, "Saturated Fat" : nil, "Dietary Fiber" : nil, "Trans Fat" : nil, "Sugars" : nil, "Cholesterol" : nil, "Protein" : nil, "Sodium" : nil, "Iron" : nil, "Calcium" : nil]
             for item in items {
                 for key in Array(dailyValues.keys) {
                     if item.dailyValues[key]! != nil {
